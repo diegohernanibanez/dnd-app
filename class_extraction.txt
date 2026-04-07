@@ -1,0 +1,4 @@
+  File "<string>", line 21
+    print(f'\n{\
+              ^
+SyntaxError: '{' was never closed

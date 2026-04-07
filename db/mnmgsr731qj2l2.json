@@ -1,0 +1,80 @@
+{
+  "id": "mnmgsr731qj2l2",
+  "nivel": 3,
+  "claseSeleccionada": "clerigo",
+  "eleccionNivel1": null,
+  "subclaseSeleccionada": null,
+  "bonusASI": {},
+  "dotesElegidos": {},
+  "origen": {
+    "trasfondo": "ermitano",
+    "especie": "humano",
+    "idiomas": [
+      "Común"
+    ],
+    "linaje": null,
+    "habilidadDiestro": "Supervivencia",
+    "habilidadSentidos": null,
+    "habilidadesHabilidoso": []
+  },
+  "puntuaciones": {
+    "Fuerza": 14,
+    "Destreza": 8,
+    "Constitución": 13,
+    "Inteligencia": 10,
+    "Sabiduría": 15,
+    "Carisma": 12
+  },
+  "bonusTrasfondo": {
+    "modo": null,
+    "stats": {}
+  },
+  "habilidadesClase": [],
+  "descripcion": {
+    "nombre": "",
+    "alineamiento": "legal-bueno",
+    "apariencia": {},
+    "personalidad": {
+      "rasgos": "",
+      "ideal": "",
+      "vinculo": "",
+      "defecto": ""
+    },
+    "trasfondoId": "ermitano"
+  },
+  "equipo": {
+    "opcionClase": null,
+    "opcionTrasfondo": null,
+    "oroDisponible": 0,
+    "extras": [],
+    "bagatela": null
+  },
+  "hoja2": {
+    "historia": "",
+    "aliados": "",
+    "orgNombre": "",
+    "rasgosAdicionales": "",
+    "tesoro": "",
+    "descApariencia": ""
+  },
+  "monedas": {
+    "CP": 0,
+    "PP": 0,
+    "EP": 0,
+    "PO": 0,
+    "PA": 0
+  },
+  "pgActuales": 8,
+  "pgTemporales": 0,
+  "muerte": {
+    "exitos": 0,
+    "fallos": 0
+  },
+  "trucosSeleccionados": [],
+  "grimorioConjuros": [],
+  "conjurosSeleccionados": [],
+  "espaciosUsados": {},
+  "armasCustom": [],
+  "fechaModificacion": "2026-04-07T04:05:31.812Z",
+  "fechaCreacion": "2026-04-07T04:05:31.812Z"
+}

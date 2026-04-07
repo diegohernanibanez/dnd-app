@@ -1,0 +1,704 @@
+.class-selector {
+  padding: 32px;
+  text-align: left;
+  max-width: 1060px;
+  margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    padding: 20px;
+  }
+}
+
+.class-selector__intro {
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 28px;
+    margin: 0 0 8px;
+    color: var(--text-h);
+  }
+
+  p {
+    color: var(--text);
+    font-size: 16px;
+  }
+}
+
+/* Grid de clases */
+.clase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tarjeta de clase */
+.clase-card {
+  background: var(--social-bg);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--sans);
+  color: var(--text);
+  width: 100%;
+
+  &:hover {
+    border-color: var(--accent-border);
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.clase-card--seleccionada {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+
+  .clase-card__nombre {
+    color: var(--accent);
+  }
+}
+
+.clase-card__icono {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.clase-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.clase-card__nombre {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+.clase-card__dado {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--code-bg);
+  color: var(--text-h);
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.clase-card__descripcion {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.4;
+  flex-grow: 1;
+}
+
+.clase-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+/* Tags */
+.tag {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.tag--principal {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+.tag--magia {
+  background: var(--dnd-gold-bg);
+  color: var(--dnd-gold);
+  border: 1px solid var(--dnd-gold-border);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--dnd-gold);
+    border-color: var(--dnd-gold-border);
+  }
+}
+
+/* Panel de detalle */
+.clase-detalle {
+  background: var(--social-bg);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.clase-detalle__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.clase-detalle__icono {
+  font-size: 40px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.clase-detalle__nombre {
+  font-size: 24px;
+  margin: 0 0 2px;
+  color: var(--text-h);
+}
+
+.clase-detalle__rol {
+  color: var(--accent);
+  font-size: 14px;
+  margin: 0;
+}
+
+.clase-detalle__cerrar {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text);
+  padding: 4px 8px;
+  flex-shrink: 0;
+  transition: background 0.2s;
+
+  &:hover {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border-color: var(--accent-border);
+  }
+}
+
+.clase-detalle__descripcion {
+  color: var(--text);
+  font-size: 15px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.clase-detalle__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  background: var(--code-bg);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.stat__valor {
+  font-size: 14px;
+  color: var(--text-h);
+  font-weight: 500;
+}
+
+.stat__valor--grande {
+  font-family: var(--mono);
+  font-size: 22px;
+  color: var(--accent);
+}
+
+.clase-detalle__habilidades,
+.clase-detalle__subclases {
+  margin-bottom: 16px;
+
+  h4 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    margin: 0 0 8px;
+  }
+
+  p, ul {
+    font-size: 14px;
+    color: var(--text-h);
+    margin: 0;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    li {
+      background: var(--code-bg);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 13px;
+    }
+  }
+}
+
+/* Confirmación */
+.class-selector__confirmacion {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+  font-size: 15px;
+  color: var(--text-h);
+  text-align: center;
+}
+
+/* ── Rasgos de nivel 1 ── */
+.clase-detalle__rasgos {
+  margin-top: 20px;
+
+  h4 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+}
+
+.rasgos-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rasgo-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.rasgo-item__nombre {
+  color: var(--text-h);
+}
+
+/* ── Elección de nivel 1 ── */
+.clase-detalle__eleccion {
+  margin-top: 20px;
+  background: var(--dnd-gold-bg);
+  border: 1px solid var(--dnd-gold-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+
+  h4 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--dnd-gold);
+    margin: 0 0 6px;
+  }
+}
+
+.eleccion-descripcion {
+  font-size: 13px;
+  color: var(--text);
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.eleccion-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.eleccion-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  color: var(--text);
+
+  &:hover {
+    border-color: var(--dnd-gold);
+    background: var(--dnd-gold-bg);
+  }
+}
+
+.eleccion-btn--activa {
+  border-color: var(--dnd-gold);
+  background: var(--dnd-gold-bg);
+}
+
+.eleccion-btn__check {
+  font-size: 16px;
+  color: var(--dnd-gold);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.eleccion-btn__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.eleccion-btn__nombre {
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.eleccion-btn__desc {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.5;
+  opacity: .85;
+}
+
+.eleccion-aviso {
+  font-size: 12px;
+  color: var(--dnd-gold);
+  margin: 8px 0 0;
+}
+
+/* ── Tabs ─────────────────────────── */
+.detalle-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0 0;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0;
+}
+
+.detalle-tab {
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+
+  &:hover { color: var(--accent); }
+}
+
+.detalle-tab--activa {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.detalle-tab-contenido {
+  padding-top: 16px;
+}
+
+/* ── Rasgos por nivel ─────────────── */
+.rasgos-por-nivel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 65vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.nivel-bloque {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  overflow: visible;
+}
+
+.nivel-bloque--asi {
+  border-color: var(--teal-border);
+}
+
+.nivel-bloque--subclase {
+  border-color: var(--teal-border);
+}
+
+.nivel-bloque__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--code-bg);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.nivel-bloque__num {
+  min-width: 60px;
+}
+
+.nivel-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.nivel-badge--asi {
+  background: var(--teal-bg);
+  color: var(--dnd-gold);
+}
+
+.nivel-badge--sub {
+  background: var(--teal-bg);
+  color: var(--dnd-gold);
+}
+
+.nivel-bloque .rasgos-lista {
+  padding: 8px 12px;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rasgo-item--asi .rasgo-item__nombre,
+.rasgo-item--subclase .rasgo-item__nombre {
+  color: var(--accent);
+}
+
+.rasgo-badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  margin-right: 6px;
+}
+
+.rasgo-badge--asi {
+  background: var(--teal-bg);
+  color: var(--dnd-gold);
+}
+
+.rasgo-badge--sub {
+  background: var(--teal-bg);
+  color: var(--dnd-gold);
+}
+
+.nivel-preview-hint {
+  font-size: 12px;
+  color: var(--text);
+  opacity: 0.65;
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* ── Subclases grid ───────────────── */
+.subclases-intro {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 14px;
+  font-style: italic;
+}
+
+.subclases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.subclase-card {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--social-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.subclase-card--btn {
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: var(--sans);
+  color: var(--text);
+  transition: border-color 0.15s, background 0.15s, transform 0.12s;
+
+  &:hover {
+    border-color: var(--dnd-gold-border);
+    background: var(--dnd-gold-bg);
+    transform: translateY(-1px);
+  }
+}
+
+.subclase-card--seleccionada {
+  border-color: var(--dnd-gold);
+  background: var(--dnd-gold-bg);
+
+  .subclase-card__nombre {
+    color: var(--dnd-gold);
+  }
+}
+
+.subclase-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.subclase-card__check {
+  color: var(--dnd-gold);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.subclase-card__nombre {
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.subclase-card__desc {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.subclase-card__niveles {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-top: 1px solid var(--border);
+  padding-top: 6px;
+
+  li {
+    font-size: 11px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  strong {
+    color: var(--dnd-gold);
+  }
+}
+
+/* ── Subclase picker inline (en rasgos tab) ── */
+.subclase-inline-picker {
+  border-top: 1px dashed var(--teal-border);
+  margin: 8px 12px 12px;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.subclase-inline-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  color: var(--text);
+  font-family: var(--sans);
+
+  &:hover {
+    border-color: var(--dnd-gold-border);
+    background: var(--dnd-gold-bg);
+  }
+}
+
+.subclase-inline-btn--activa {
+  border-color: var(--dnd-gold);
+  background: var(--dnd-gold-bg);
+}
+
+.subclase-inline-btn__check {
+  font-size: 16px;
+  color: var(--dnd-gold);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.subclase-inline-btn__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  strong {
+    font-size: 14px;
+    color: var(--text-h);
+  }
+
+  span {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+    opacity: .85;
+  }
+}

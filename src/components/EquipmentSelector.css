@@ -1,0 +1,502 @@
+.equip-selector {
+  padding: 32px;
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: left;
+
+  @media (max-width: 700px) { padding: 20px; }
+}
+
+.equip-selector__intro {
+  margin-bottom: 28px;
+
+  h2 { font-size: 28px; margin: 0 0 8px; color: var(--text-h); }
+  p  { color: var(--text); font-size: 16px; }
+}
+
+/* ── Sección ── */
+.equip-section {
+  margin-bottom: 28px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.equip-section__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--code-bg);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-h);
+  border-bottom: 1px solid var(--border);
+}
+
+.equip-section__title--empty {
+  color: var(--text);
+}
+
+.equip-section__note {
+  font-size: 13px;
+  color: var(--text);
+  margin: 0;
+  padding: 8px 16px;
+  background: var(--social-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.equip-section__empty {
+  font-size: 13px;
+  color: var(--text);
+  font-style: italic;
+  padding: 14px 16px;
+  margin: 0;
+}
+
+/* ── Badges ── */
+.equip-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.equip-badge--trasfondo {
+  background: var(--teal-bg);
+  color: var(--dnd-gold);
+}
+
+.equip-badge--clase {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.equip-badge--extra {
+  background: var(--dnd-gold-bg);
+  color: var(--dnd-gold);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--dnd-gold);
+    background: var(--dnd-gold-bg);
+  }
+}
+
+/* ── Listas ── */
+.equip-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 12px;
+}
+
+.equip-list--fixed {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 4px;
+}
+
+.equip-list--opcion {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.equip-list--extras {
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.equip-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: var(--text-h);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.equip-item--fixed {
+  background: var(--social-bg);
+}
+
+.equip-item--extra {
+  justify-content: space-between;
+}
+
+.equip-item__icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.equip-item__texto {
+  flex: 1;
+}
+
+.equip-item__del {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.15s;
+
+  &:hover { background: var(--dnd-gold-bg); color: var(--dnd-gold); }
+}
+
+/* ── Opciones de clase (A y B) ── */
+.equip-opciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.equip-opcion {
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-right: 1px solid var(--border);
+
+  &:last-child { border-right: none; }
+  &:hover { background: var(--social-bg); }
+
+  @media (max-width: 640px) {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    &:last-child { border-bottom: none; }
+  }
+}
+
+.equip-opcion--active {
+  background: var(--accent-bg);
+  border-right-color: var(--accent-border);
+
+  &:hover { background: var(--accent-bg); }
+}
+
+.equip-opcion__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+/* Radio custom */
+.equip-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  flex-shrink: 0;
+  position: relative;
+  transition: border-color 0.15s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: transparent;
+    transition: background 0.15s;
+  }
+}
+
+.equip-radio--sel {
+  border-color: var(--accent);
+
+  &::after { background: var(--accent); }
+}
+
+/* Oro */
+.equip-oro {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 0 6px;
+}
+
+.equip-oro__num {
+  font-family: var(--mono);
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--text-h);
+}
+
+.equip-oro__label {
+  font-size: 16px;
+  color: var(--text);
+}
+
+.equip-oro__nota {
+  font-size: 12px;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* Añadir objeto */
+.equip-add-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.equip-add-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-family: var(--sans);
+  font-size: 14px;
+
+  &:focus { outline: none; border-color: var(--accent); }
+  &::placeholder { color: var(--text); opacity: 0.5; }
+}
+
+.equip-add-btn {
+  padding: 8px 18px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.88; }
+}
+
+/* ── Resumen consolidado ── */
+.equip-resumen {
+  .equip-section__title {
+    background: var(--accent);
+    color: #fff;
+    border-bottom-color: var(--accent);
+  }
+}
+
+.equip-resumen__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 6px;
+  padding: 12px;
+}
+
+.equip-resumen__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--social-bg);
+}
+
+.equip-resumen__fuente {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.equip-resumen__fuente--clase {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.equip-resumen__fuente--trasfondo {
+  background: var(--teal-bg);
+  color: var(--dnd-gold);
+}
+
+.equip-resumen__fuente--extra {
+  background: var(--dnd-gold-bg);
+  color: var(--dnd-gold);
+}
+
+.equip-resumen__fuente--Añadido {
+  background: var(--dnd-gold-bg);
+  color: var(--dnd-gold);
+}
+
+.equip-resumen__texto {
+  font-size: 13px;
+  color: var(--text-h);
+  line-height: 1.3;
+}
+
+/* ── Bagatela ── */
+.equip-badge--bagatela {
+  background: var(--dnd-gold-bg);
+  color: var(--dnd-gold);
+}
+
+.bagatela-empty {
+  padding: 20px 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.bagatela-roll-btn {
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--dnd-gold), #a88a30);
+  color: var(--text-h);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover { opacity: 0.88; }
+}
+
+.bagatela-resultado {
+  padding: 16px;
+}
+
+.bagatela-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--dnd-gold-bg);
+  border: 1.5px solid var(--dnd-gold-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.bagatela-num {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dnd-gold);
+  white-space: nowrap;
+  padding: 2px 8px;
+  background: var(--dnd-gold-bg);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.bagatela-texto {
+  font-size: 15px;
+  color: var(--text-h);
+  line-height: 1.5;
+}
+
+.bagatela-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.bagatela-reroll-btn,
+.bagatela-clear-btn {
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover { opacity: 0.8; }
+}
+
+.bagatela-reroll-btn {
+  background: var(--dnd-gold-bg);
+  color: var(--dnd-gold);
+  border: 1.5px solid var(--dnd-gold-border);
+}
+
+.bagatela-clear-btn {
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+}
+
+.equip-resumen__fuente--bagatela {
+  background: var(--dnd-gold-bg);
+  color: var(--dnd-gold);
+}
+
+/* ── Bagatela mode toggle ── */
+.bagatela-mode-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.bagatela-mode-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .15s;
+
+  &:hover {
+    border-color: var(--dnd-gold);
+    color: var(--dnd-gold);
+  }
+}
+
+.bagatela-mode-btn--active {
+  background: var(--teal-bg);
+  border-color: var(--dnd-gold);
+  color: var(--dnd-gold);
+  font-weight: 600;
+}
+
+/* ── Bagatela picker (list mode) ── */
+.bagatela-picker {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.bagatela-select {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--dnd-gold);
+  border-radius: 8px;
+  color: var(--text-h);
+  font-size: 13px;
+  cursor: pointer;
+
+  &:focus {
+    outline: 2px solid var(--dnd-gold);
+    outline-offset: 2px;
+  }
+
+  option {
+    background: var(--card-bg);
+    color: var(--text-h);
+  }
+}

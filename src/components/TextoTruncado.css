@@ -1,0 +1,17 @@
+.texto-truncado__btn {
+  background: none;
+  border: none;
+  color: var(--dnd-gold);
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: 600;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: var(--text-h);
+  }
+}
