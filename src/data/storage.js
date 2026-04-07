@@ -1,36 +1,67 @@
-// Servicio de almacenamiento — guarda JSON en carpeta db/ del proyecto vía API
+// Servicio de almacenamiento — guarda JSON en localStorage del navegador
 
-const API = '/api/personajes'
+const STORAGE_PREFIX = 'dnd_personaje_'
+const INDEX_KEY = 'dnd_personajes_index'
 
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8)
 }
 
+function getIndex() {
+  try {
+    return JSON.parse(localStorage.getItem(INDEX_KEY)) || []
+  } catch {
+    return []
+  }
+}
+
+function saveIndex(index) {
+  localStorage.setItem(INDEX_KEY, JSON.stringify(index))
+}
+
 // ── CRUD ─────────────────────────────────────────────────────────────
 
-export async function listarPersonajes() {
-  const res = await fetch(API)
-  return res.ok ? res.json() : []
+export function listarPersonajes() {
+  return getIndex()
 }
 
-export async function cargarPersonaje(id) {
-  const res = await fetch(`${API}/${id}`)
-  return res.ok ? res.json() : null
+export function cargarPersonaje(id) {
+  try {
+    const raw = localStorage.getItem(`${STORAGE_PREFIX}${id}`)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
 }
 
-export async function guardarPersonaje(data) {
+export function guardarPersonaje(data) {
   const id = data.id || generateId()
-  const res = await fetch(`${API}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...data, id }),
-  })
-  const json = await res.json()
-  return json.id
+  const ahora = new Date().toISOString()
+  const personaje = { ...data, id, fechaModificacion: ahora }
+  if (!personaje.fechaCreacion) personaje.fechaCreacion = ahora
+
+  localStorage.setItem(`${STORAGE_PREFIX}${id}`, JSON.stringify(personaje))
+
+  const index = getIndex()
+  const meta = {
+    id,
+    nombre: data.descripcion?.nombre || 'Sin nombre',
+    clase: data.claseSeleccionada || null,
+    nivel: data.nivel || 1,
+    fechaCreacion: personaje.fechaCreacion,
+    fechaModificacion: ahora,
+  }
+  const pos = index.findIndex(p => p.id === id)
+  if (pos >= 0) index[pos] = meta
+  else index.push(meta)
+  saveIndex(index)
+
+  return id
 }
 
-export async function eliminarPersonaje(id) {
-  await fetch(`${API}/${id}`, { method: 'DELETE' })
+export function eliminarPersonaje(id) {
+  localStorage.removeItem(`${STORAGE_PREFIX}${id}`)
+  saveIndex(getIndex().filter(p => p.id !== id))
 }
 
 // ── Exportar / Importar JSON ─────────────────────────────────────────

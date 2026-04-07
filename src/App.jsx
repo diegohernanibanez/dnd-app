@@ -174,8 +174,8 @@ function App() {
   useEffect(() => {
     if (!characterId) return
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
-    autoSaveTimer.current = setTimeout(async () => {
-      await guardarPersonaje(serializarPersonaje())
+    autoSaveTimer.current = setTimeout(() => {
+      guardarPersonaje(serializarPersonaje())
     }, 1000)
     return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current) }
   }, [characterId, serializarPersonaje])
@@ -186,17 +186,25 @@ function App() {
     setPasoActual(1)
   }, [cargarDesdeData])
 
-  const handleCargar = useCallback(async (meta) => {
-    const data = meta.id ? await cargarPersonaje(meta.id) : meta
+  const handleCargar = useCallback((metaOrData) => {
+    let data
+    // Si tiene claves de personaje completo (import o data completa), usar directo
+    if ('puntuaciones' in metaOrData || 'claseSeleccionada' in metaOrData) {
+      data = metaOrData
+      guardarPersonaje(data)
+    } else {
+      // Es metadata del listado, cargar datos completos de localStorage
+      data = cargarPersonaje(metaOrData.id)
+    }
     if (data) {
       cargarDesdeData(data)
       setPasoActual(6)
     }
   }, [cargarDesdeData])
 
-  const handleGuardar = useCallback(async () => {
+  const handleGuardar = useCallback(() => {
     const data = serializarPersonaje()
-    const id = await guardarPersonaje(data)
+    const id = guardarPersonaje(data)
     setCharacterId(id)
   }, [serializarPersonaje])
 

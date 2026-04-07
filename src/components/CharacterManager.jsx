@@ -18,7 +18,7 @@ export default function CharacterManager({
   // Cargar lista al abrir dropdown
   useEffect(() => {
     if (listaAbierta) {
-      listarPersonajes().then(setPersonajes)
+      setPersonajes(listarPersonajes())
     }
   }, [listaAbierta])
 
@@ -39,8 +39,8 @@ export default function CharacterManager({
     e.target.value = ''
   }
 
-  const handleEliminar = async (id) => {
-    await eliminarPersonaje(id)
+  const handleEliminar = (id) => {
+    eliminarPersonaje(id)
     setConfirmEliminar(null)
     setPersonajes(prev => prev.filter(p => p.id !== id))
     if (id === personajeActualId) onNuevo()
