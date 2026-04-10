@@ -126,6 +126,11 @@ export function calcularPersonaje({
     }
   }
 
+  // Normalize dotesLibres (backward compat: can be string[] or object[])
+  const normalizedDotesLibres = (dotesLibres ?? []).map(d =>
+    typeof d === 'string' ? { doteId: d } : d
+  )
+
   // Sum stat bonuses from dotes chosen at ASI levels
   const dotesStatBonus = {}
   for (const [lvl, doteData] of Object.entries(dotesElegidos ?? {})) {
@@ -138,7 +143,22 @@ export function calcularPersonaje({
       } else if (efecto.tipo === 'stat-elegir' && doteData.statElegido) {
         dotesStatBonus[doteData.statElegido] = (dotesStatBonus[doteData.statElegido] ?? 0) + efecto.valor
       } else if (efecto.tipo === 'resiliente' && doteData.statElegido) {
-        // Resiliente: +1 to chosen stat
+        dotesStatBonus[doteData.statElegido] = (dotesStatBonus[doteData.statElegido] ?? 0) + 1
+      }
+    }
+  }
+
+  // Sum stat bonuses from free feats (dotesLibres)
+  for (const doteData of normalizedDotesLibres) {
+    if (!doteData?.doteId) continue
+    const dote = getDoteById(doteData.doteId)
+    if (!dote) continue
+    for (const efecto of dote.efectos) {
+      if (efecto.tipo === 'stat') {
+        dotesStatBonus[efecto.stat] = (dotesStatBonus[efecto.stat] ?? 0) + efecto.valor
+      } else if (efecto.tipo === 'stat-elegir' && doteData.statElegido) {
+        dotesStatBonus[doteData.statElegido] = (dotesStatBonus[doteData.statElegido] ?? 0) + efecto.valor
+      } else if (efecto.tipo === 'resiliente' && doteData.statElegido) {
         dotesStatBonus[doteData.statElegido] = (dotesStatBonus[doteData.statElegido] ?? 0) + 1
       }
     }
@@ -190,6 +210,43 @@ export function calcularPersonaje({
   // Process dotes' skill/save/resiliente/pericia effects
   for (const [lvl, doteData] of Object.entries(dotesElegidos ?? {})) {
     if (Number(lvl) > nivel || !doteData?.doteId) continue
+    const dote = getDoteById(doteData.doteId)
+    if (!dote) continue
+    for (const efecto of dote.efectos) {
+      if (efecto.tipo === 'skill-elegir') {
+        if (efecto.pool === 'todas') {
+          ;(doteData.skillsElegidos ?? []).forEach(s => competenciasHabilidad.add(s))
+        }
+      }
+      if (efecto.tipo === 'skill-fijo') {
+        if (efecto.habilidades === 'todas') {
+          HABILIDADES_LISTA.forEach(h => competenciasHabilidad.add(h))
+        } else {
+          ;(efecto.habilidades ?? []).forEach(h => competenciasHabilidad.add(h))
+        }
+      }
+      if (efecto.tipo === 'skill-o-pericia-elegir') {
+        const sk = doteData.skillOPericiaElegido
+        if (sk) {
+          if (competenciasHabilidad.has(sk)) {
+            pericias.add(sk)
+          } else {
+            competenciasHabilidad.add(sk)
+          }
+        }
+      }
+      if (efecto.tipo === 'pericia-elegir') {
+        ;(doteData.periciasElegidas ?? []).forEach(p => pericias.add(p))
+      }
+      if (efecto.tipo === 'resiliente' && doteData.statElegido) {
+        competenciasSalvacion.add(doteData.statElegido)
+      }
+    }
+  }
+
+  // Process dotesLibres skill/save/pericia effects
+  for (const doteData of normalizedDotesLibres) {
+    if (!doteData?.doteId) continue
     const dote = getDoteById(doteData.doteId)
     if (!dote) continue
     for (const efecto of dote.efectos) {

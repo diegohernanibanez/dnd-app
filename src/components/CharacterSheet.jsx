@@ -635,6 +635,274 @@ function ASIModal({ nivel, puntuacionesSinEsteASI, seleccionActual, doteActual,
 
 
 
+// ── Modal para añadir dote libre ────────────────────────────────────
+function DoteLibreModal({
+  nivel, puntuaciones, claseInfo,
+  dotesExistentes,
+  competenciasActuales, periciasActuales, salvacionesActuales,
+  onConfirmar, onCerrar,
+}) {
+  const overlayRef = useRef(null)
+  const [busqueda, setBusqueda] = useState('')
+  const [doteSelId, setDoteSelId] = useState(null)
+  const [statElegido, setStatElegido] = useState(null)
+  const [skillsElegidos, setSkillsElegidos] = useState([])
+  const [skillOPericiaElegido, setSkillOPericiaElegido] = useState(null)
+  const [periciasElegidas, setPericiasElegidas] = useState([])
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onCerrar() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onCerrar])
+
+  const existentesSet = new Set(dotesExistentes ?? [])
+
+  const dotesBase = TODAS_LAS_DOTES.filter(d => d.id !== 'mejora-de-caracteristica')
+  const dotesFiltradas = dotesBase
+    .filter(d => {
+      if (!busqueda.trim()) return true
+      return d.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    })
+    .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))
+
+  const doteSelObj = doteSelId ? getDoteById(doteSelId) : null
+  const yaElegida = doteSelId && !doteSelObj?.repetible && existentesSet.has(doteSelId)
+
+  const efectoStatElegir     = doteSelObj?.efectos?.find(e => e.tipo === 'stat-elegir') ?? null
+  const efectoSkillElegir    = doteSelObj?.efectos?.find(e => e.tipo === 'skill-elegir') ?? null
+  const efectoSkillOPericia  = doteSelObj?.efectos?.find(e => e.tipo === 'skill-o-pericia-elegir') ?? null
+  const efectoPericiaElegir  = doteSelObj?.efectos?.find(e => e.tipo === 'pericia-elegir') ?? null
+  const efectoResiliente     = doteSelObj?.efectos?.find(e => e.tipo === 'resiliente') ?? null
+
+  const skillPoolElegir   = efectoSkillElegir
+    ? (efectoSkillElegir.pool === 'todas' ? HABILIDADES_LISTA : efectoSkillElegir.pool)
+    : []
+  const skillPoolOPericia = efectoSkillOPericia?.pool ?? []
+  const periciaPool       = efectoPericiaElegir
+    ? (efectoPericiaElegir.pool === 'competencias' ? (competenciasActuales ?? []) : efectoPericiaElegir.pool)
+    : []
+
+  const isComplete = !!doteSelId && !yaElegida
+    && (!efectoStatElegir    || !!statElegido)
+    && (!efectoSkillElegir   || skillsElegidos.length === efectoSkillElegir.cantidad)
+    && (!efectoSkillOPericia || !!skillOPericiaElegido)
+    && (!efectoPericiaElegir || periciasElegidas.length >= 1)
+    && (!efectoResiliente    || !!statElegido)
+
+  const handleConfirmar = () => {
+    onConfirmar({
+      doteId: doteSelId,
+      statElegido: statElegido ?? null,
+      skillsElegidos: skillsElegidos.length ? skillsElegidos : [],
+      skillOPericiaElegido: skillOPericiaElegido ?? null,
+      periciasElegidas: periciasElegidas.length ? periciasElegidas : [],
+    })
+    onCerrar()
+  }
+
+  const selectDote = (id) => {
+    setDoteSelId(id)
+    setStatElegido(null)
+    setSkillsElegidos([])
+    setSkillOPericiaElegido(null)
+    setPericiasElegidas([])
+  }
+
+  return (
+    <div
+      className="asi-modal-overlay"
+      ref={overlayRef}
+      onClick={e => e.target === overlayRef.current && onCerrar()}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Añadir dote libre"
+    >
+      <div className="asi-modal">
+        <div className="asi-modal__header">
+          <div>
+            <h2 className="asi-modal__titulo">Añadir dote</h2>
+            <p className="asi-modal__subtitulo">Elige una dote para añadir a la planilla</p>
+          </div>
+          <button className="asi-modal__cerrar" onClick={onCerrar} aria-label="Cerrar">✕</button>
+        </div>
+
+        <div className="asi-dote-picker">
+          <input
+            className="asi-dote-busqueda"
+            type="text"
+            placeholder="Buscar dote…"
+            value={busqueda}
+            onChange={e => setBusqueda(e.target.value)}
+            autoFocus
+          />
+          <div className="asi-dote-lista">
+            {dotesFiltradas.map(d => {
+              const duplicada = !d.repetible && existentesSet.has(d.id)
+              return (
+                <button
+                  key={d.id}
+                  className={`asi-dote-opcion${doteSelId === d.id ? ' asi-dote-opcion--sel' : ''}${duplicada ? ' asi-dote-opcion--bloqueada' : ''}`}
+                  disabled={duplicada}
+                  title={duplicada ? 'Ya tienes esta dote' : d.descripcion}
+                  onClick={() => !duplicada && selectDote(d.id)}
+                >
+                  <div className="asi-dote-opcion__nombre">
+                    {d.nombre}
+                    {duplicada && <span className="asi-dote-opcion__bloq">🔒 Ya elegida</span>}
+                  </div>
+                  <div className="asi-dote-opcion__desc">{d.descripcion}</div>
+                </button>
+              )
+            })}
+            {dotesFiltradas.length === 0 && (
+              <p className="asi-dote-empty">No hay dotes que coincidan.</p>
+            )}
+          </div>
+
+          {efectoStatElegir && (
+            <div className="asi-dote-stat-elegir">
+              <p className="asi-dote-stat-elegir__titulo">
+                Elige la característica que mejora +{efectoStatElegir.valor}:
+              </p>
+              <div className="asi-dote-stat-elegir__opciones">
+                {efectoStatElegir.opciones.map(stat => (
+                  <button
+                    key={stat}
+                    className={`asi-dote-stat-btn${statElegido === stat ? ' asi-dote-stat-btn--sel' : ''}`}
+                    onClick={() => setStatElegido(stat)}
+                  >
+                    {CARACTERISTICAS_ABBREV[stat]} ({stat})
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {efectoResiliente && (
+            <div className="asi-dote-stat-elegir">
+              <p className="asi-dote-stat-elegir__titulo">
+                Elige característica (+1 stat + competencia en salvación):
+              </p>
+              <div className="asi-dote-stat-elegir__opciones">
+                {CARACTERISTICAS_ORDER.map(stat => {
+                  const yaTieneSave = (salvacionesActuales ?? []).includes(stat)
+                  return (
+                    <button
+                      key={stat}
+                      className={`asi-dote-stat-btn${statElegido === stat ? ' asi-dote-stat-btn--sel' : ''}${yaTieneSave ? ' asi-dote-stat-btn--disabled' : ''}`}
+                      onClick={() => !yaTieneSave && setStatElegido(stat)}
+                      disabled={yaTieneSave}
+                      title={yaTieneSave ? 'Ya tienes competencia en esta salvación' : undefined}
+                    >
+                      {CARACTERISTICAS_ABBREV[stat]}{yaTieneSave && ' ✓'}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {efectoSkillElegir && (
+            <div className="asi-dote-stat-elegir">
+              <p className="asi-dote-stat-elegir__titulo">
+                Elige {efectoSkillElegir.cantidad} habilidad{efectoSkillElegir.cantidad > 1 ? 'es' : ''} ({skillsElegidos.length}/{efectoSkillElegir.cantidad}):
+              </p>
+              <div className="asi-dote-stat-elegir__opciones asi-dote-stat-elegir__opciones--wrap">
+                {skillPoolElegir.map(hab => {
+                  const sel  = skillsElegidos.includes(hab)
+                  const full = skillsElegidos.length >= efectoSkillElegir.cantidad && !sel
+                  return (
+                    <button
+                      key={hab}
+                      className={`asi-dote-stat-btn${sel ? ' asi-dote-stat-btn--sel' : ''}${full ? ' asi-dote-stat-btn--disabled' : ''}`}
+                      onClick={() => { if (full) return; setSkillsElegidos(prev => sel ? prev.filter(s => s !== hab) : [...prev, hab]) }}
+                      disabled={full}
+                    >
+                      {hab}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {efectoSkillOPericia && (
+            <div className="asi-dote-stat-elegir">
+              <p className="asi-dote-stat-elegir__titulo">
+                Elige habilidad (competencia → pericia si ya la tienes):
+              </p>
+              <div className="asi-dote-stat-elegir__opciones">
+                {skillPoolOPericia.map(hab => {
+                  const tieneComp = (competenciasActuales ?? []).includes(hab)
+                  const sel = skillOPericiaElegido === hab
+                  return (
+                    <button
+                      key={hab}
+                      className={`asi-dote-stat-btn${sel ? ' asi-dote-stat-btn--sel' : ''}`}
+                      onClick={() => setSkillOPericiaElegido(hab)}
+                    >
+                      {hab}
+                      <span style={{ fontSize: '10px', marginLeft: 4, opacity: 0.7 }}>
+                        {tieneComp ? '→ Pericia' : '→ Comp.'}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {efectoPericiaElegir && (
+            <div className="asi-dote-stat-elegir">
+              <p className="asi-dote-stat-elegir__titulo">
+                Elige habilidad para ganar Pericia (ya tienes comp.):
+              </p>
+              <div className="asi-dote-stat-elegir__opciones asi-dote-stat-elegir__opciones--wrap">
+                {periciaPool.length > 0 ? periciaPool.map(hab => {
+                  const sel       = periciasElegidas.includes(hab)
+                  const yaPericia = (periciasActuales ?? []).includes(hab)
+                  return (
+                    <button
+                      key={hab}
+                      className={`asi-dote-stat-btn${sel ? ' asi-dote-stat-btn--sel' : ''}${yaPericia ? ' asi-dote-stat-btn--disabled' : ''}`}
+                      onClick={() => { if (yaPericia) return; setPericiasElegidas(prev => sel ? prev.filter(p => p !== hab) : [...prev, hab]) }}
+                      disabled={yaPericia}
+                      title={yaPericia ? 'Ya tienes pericia en esta habilidad' : undefined}
+                    >
+                      {hab}
+                    </button>
+                  )
+                }) : (
+                  <p style={{ fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                    Necesitas competencias en habilidades primero.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="asi-modal__footer">
+          <button className="asi-modal__btn asi-modal__btn--cancelar" onClick={onCerrar}>
+            Cancelar
+          </button>
+          <button
+            className="asi-modal__btn asi-modal__btn--confirmar"
+            disabled={!isComplete}
+            onClick={handleConfirmar}
+          >
+            {isComplete
+              ? `Añadir ${doteSelObj?.nombre ?? ''}`
+              : (doteSelId && !yaElegida ? 'Completa las elecciones' : 'Selecciona una dote')}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
 // Skills grouped by ability score (matches the official sheet layout)
 const SKILLS_BY_ABILITY = {
   Fuerza:        ['Atletismo'],
@@ -663,8 +931,7 @@ function Hoja1({
   const [modalSubclase, setModalSubclase] = useState(false)
   const [asiModalNivel, setAsiModalNivel] = useState(null)
   const [mostrarFormAtaque, setMostrarFormAtaque] = useState(false)
-  const [busquedaDoteLibre, setBusquedaDoteLibre] = useState('')
-  const [doteLibreNueva, setDoteLibreNueva] = useState('')
+  const [modalDoteLibreAbierto, setModalDoteLibreAbierto] = useState(false)
 
   const toggleMuerte = (tipo) => {
     const k = tipo === 'exito' ? 'exitos' : 'fallos'
@@ -731,32 +998,19 @@ function Hoja1({
     })
     .filter(Boolean)
 
-  const dotesLibresResueltas = (dotesLibres ?? []).map((doteId, idx) => {
-    const dote = getDoteById(doteId)
-    return {
-      idx,
-      id: doteId,
-      nombre: dote?.nombre ?? doteId,
-    }
+  const dotesLibresResueltas = (dotesLibres ?? []).map((d, idx) => {
+    const doteId = typeof d === 'string' ? d : d.doteId
+    const dote   = getDoteById(doteId)
+    const data   = typeof d === 'string' ? {} : d
+    let detalle  = ''
+    if (data.statElegido) detalle = `+1 ${CARACTERISTICAS_ABBREV[data.statElegido] ?? data.statElegido}`
+    else if (data.skillsElegidos?.length) detalle = data.skillsElegidos.join(', ')
+    else if (data.skillOPericiaElegido) detalle = data.skillOPericiaElegido
+    return { idx, id: doteId, nombre: dote?.nombre ?? doteId, detalle }
   })
 
-  const dotesLibresSet = new Set(dotesLibres ?? [])
-  const dotesFiltrables = TODAS_LAS_DOTES
-    .filter(d => {
-      if (!d.repetible && dotesLibresSet.has(d.id)) return false
-      if (!busquedaDoteLibre.trim()) return true
-      return d.nombre.toLowerCase().includes(busquedaDoteLibre.toLowerCase())
-    })
-    .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))
-
-  const agregarDoteLibre = () => {
-    if (!doteLibreNueva) return
-    const d = getDoteById(doteLibreNueva)
-    if (!d) return
-    if (!d.repetible && dotesLibresSet.has(d.id)) return
-    onDotesLibresCambiar(prev => [...(prev ?? []), d.id])
-    setDoteLibreNueva('')
-  }
+  const dotesLibresIds  = (dotesLibres ?? []).map(d => typeof d === 'string' ? d : d.doteId)
+  const dotesLibresSet  = new Set(dotesLibresIds)
 
   return (
     <div className="cs-hoja cs-hoja--1">
@@ -1284,6 +1538,19 @@ function Hoja1({
               ) : <em className="cs-empty">—</em>}
             </SheetSection>
             <SheetSection title="Dotes">
+              {modalDoteLibreAbierto && (
+                <DoteLibreModal
+                  nivel={personaje.nivel}
+                  puntuaciones={personaje.puntuaciones}
+                  claseInfo={personaje.clase}
+                  dotesExistentes={dotesLibresIds}
+                  competenciasActuales={personaje.habilidadesCompetencia}
+                  periciasActuales={personaje.habilidadesPericias}
+                  salvacionesActuales={personaje.tiradasSalvacionCompetencia}
+                  onConfirmar={(data) => onDotesLibresCambiar(prev => [...(prev ?? []), data])}
+                  onCerrar={() => setModalDoteLibreAbierto(false)}
+                />
+              )}
               {(personaje.dote || dotesPorASI.length > 0 || dotesLibresResueltas.length > 0) ? (
                 <div className="cs-mini-traits">
                   {personaje.dote && (
@@ -1296,7 +1563,11 @@ function Hoja1({
                   ))}
                   {dotesLibresResueltas.map(d => (
                     <div key={`${d.id}-${d.idx}`} className="cs-mini-traits__item cs-mini-traits__item--editable">
-                      <span><strong>{d.nombre}</strong> <em>(Manual)</em></span>
+                      <span>
+                        <strong>{d.nombre}</strong>
+                        {d.detalle && <em> · {d.detalle}</em>}
+                        {' '}<em>(Manual)</em>
+                      </span>
                       <button
                         className="cs-mini-traits__del"
                         title="Quitar dote"
@@ -1310,28 +1581,9 @@ function Hoja1({
               ) : <em className="cs-empty">—</em>}
 
               <div className="cs-dotes-libres-add">
-                <input
-                  className="cs-field__input"
-                  type="text"
-                  placeholder="Buscar dote para añadir..."
-                  value={busquedaDoteLibre}
-                  onChange={e => setBusquedaDoteLibre(e.target.value)}
-                />
-                <div className="cs-dotes-libres-add__row">
-                  <select
-                    className="cs-header__meta-select"
-                    value={doteLibreNueva}
-                    onChange={e => setDoteLibreNueva(e.target.value)}
-                  >
-                    <option value="">Selecciona una dote</option>
-                    {dotesFiltrables.map(d => (
-                      <option key={d.id} value={d.id}>{d.nombre}</option>
-                    ))}
-                  </select>
-                  <button className="cs-attacks__add-btn" onClick={agregarDoteLibre} disabled={!doteLibreNueva}>
-                    + Añadir
-                  </button>
-                </div>
+                <button className="cs-attacks__add-btn" onClick={() => setModalDoteLibreAbierto(true)}>
+                  + Añadir dote
+                </button>
               </div>
             </SheetSection>
           </div>
