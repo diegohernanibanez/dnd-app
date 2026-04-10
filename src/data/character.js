@@ -101,6 +101,7 @@ export function calcularPersonaje({
   bonusTrasfondo,
   bonusASI,
   dotesElegidos,
+  dotesLibres,
   habilidadesClase,
   idiomas,
   descripcion,
