@@ -860,7 +860,7 @@ function DoteLibreModal({
               </p>
               <div className="asi-dote-stat-elegir__opciones asi-dote-stat-elegir__opciones--wrap">
                 {periciaPool.length > 0 ? periciaPool.map(hab => {
-                  const sel       = periciasElegidas.includes(hab)
+                  const sel      = periciasElegidas.includes(hab)
                   const yaPericia = (periciasActuales ?? []).includes(hab)
                   return (
                     <button
@@ -1009,8 +1009,8 @@ function Hoja1({
     return { idx, id: doteId, nombre: dote?.nombre ?? doteId, detalle }
   })
 
-  const dotesLibresIds  = (dotesLibres ?? []).map(d => typeof d === 'string' ? d : d.doteId)
-  const dotesLibresSet  = new Set(dotesLibresIds)
+  const dotesLibresIds = (dotesLibres ?? []).map(d => typeof d === 'string' ? d : d.doteId)
+  const dotesLibresSet = new Set(dotesLibresIds)
 
   return (
     <div className="cs-hoja cs-hoja--1">
