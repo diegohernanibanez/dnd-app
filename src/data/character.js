@@ -311,13 +311,28 @@ export function calcularPersonaje({
   const desMod = mods['Destreza']     ?? 0
   const conMod = mods['Constitución'] ?? 0
   const sabMod = mods['Sabiduría']    ?? 0
+  const carMod = mods['Carisma']      ?? 0
 
-  // Clase armadura base: varía según clase y elección de nivel 1
-  let ca = 10 + desMod
-  if (claseId === 'barbaro')        ca = 10 + desMod + conMod
-  else if (claseId === 'monje')     ca = 10 + desMod + sabMod
-  // Guerrero con Defensa: +1 CA (se añade si tiene armadura, simplificamos como siempre visible)
-  if (claseId === 'guerrero' && eleccionNivel1 === 'defensa') ca += 1
+  // Clase armadura base según clase/subclase (Defensa sin armadura u otras fórmulas)
+  let ca = 10 + desMod  // default sin armadura
+  if (claseId === 'barbaro') {
+    // Defensa sin armadura: 10 + DES + CON (escudo permitido)
+    ca = 10 + desMod + conMod
+  } else if (claseId === 'monje') {
+    // Defensa sin armadura: 10 + DES + SAB (sin escudo)
+    ca = 10 + desMod + sabMod
+  } else if (
+    (claseId === 'hechicero' && subclaseId === 'draconico' && nivel >= 3) ||
+    (claseId === 'bardo'     && subclaseId === 'danza'     && nivel >= 3)
+  ) {
+    // Resistencia dracónica / Juego de pies deslumbrante: 10 + DES + CAR (sin armadura)
+    ca = 10 + desMod + carMod
+  }
+
+  // Bonus de la elección de nivel 1 (p. ej. Estilo de combate: Defensa → +1 CA con armadura)
+  const caEleccionBonus = clase?.eleccionNivel1?.opciones
+    ?.find(o => o.id === eleccionNivel1)?.beneficios?.caBonus ?? 0
+  ca += caEleccionBonus
   const iniciativa  = desMod
   const velocidad   = especie?.velocidad ?? '9 m'
 
@@ -475,7 +490,16 @@ export function calcularPersonaje({
         preparadosMax:     getConjurosPreparadosMax(claseId, nivel),
         nivelMaxConjuro:   getNivelMaxConjuro(claseId, nivel),
         grimorioMax:       tipoPrepara === 'grimorio' ? getGrimorioMax(nivel) : 0,
-        siemprePreparados: subclaseId ? getConjurosSubclase(claseId, subclaseId, nivel) : [],
+        siemprePreparados: (() => {
+          const lista = subclaseId ? getConjurosSubclase(claseId, subclaseId, nivel) : []
+          // Agregar conjuros de linaje de especie (p.ej. elfo altivo, drow, tiefling, gnomo)
+          if (linaje?.conjuros) {
+            for (const c of linaje.conjuros) {
+              if (nivel >= c.nivel && c.nombre) lista.push(c.nombre)
+            }
+          }
+          return lista
+        })(),
       }
     })(),
 

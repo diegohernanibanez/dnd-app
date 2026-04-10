@@ -265,6 +265,7 @@ export const CONJUROS_SUBCLASE = {
       5:  ['Clarividencia', 'Hambre de Hadar'],
       7:  ['Confusión', 'Invocar Aberración'],
       9:  ['Alterar los Recuerdos', 'Telequinesis'],
+      10: ['Maleficio'],
     },
   },
 
@@ -329,6 +330,9 @@ export const CONJUROS_SUBCLASE = {
       7:  ['Polimorfar'],
       9:  ['Plaga de Insectos'],
     },
+    estrellas: {
+      3:  ['Guía', 'Saeta Guía'],
+    },
     mar: {
       3:  ['Hacer Añicos', 'Nube de Oscurecimiento', 'Ola Atronadora', 'Ráfaga de Viento', 'Rayo de Escarcha'],
       5:  ['Relámpago', 'Respirar Bajo el Agua'],
@@ -370,7 +374,7 @@ export const CONJUROS_SUBCLASE = {
       17: ['Conocer las Leyendas', 'Presencia Regia de Yolande'],
     },
     antiguos: {
-      3:  ['Hablar con los Animales'],   // TODO: Añadir 'Golpe Apresador' a spells.js
+      3:  ['Golpe Apresador', 'Hablar con los Animales'],
       5:  ['Paso Brumoso', 'Rayo de Luna'],
       9:  ['Crecimiento Vegetal', 'Protección Contra Energía'],
       13: ['Piel Pétrea', 'Tormenta de Hielo'],
@@ -389,6 +393,45 @@ export const CONJUROS_SUBCLASE = {
     glamour: {
       3:  ['Hechizar Persona', 'Imagen Múltiple'],
       6:  ['Orden Imperiosa'],
+    },
+  },
+
+  hechicero: {
+    aberrante: {
+      3:  ['Brazos de Hadar', 'Calmar Emociones', 'Detectar Pensamientos', 'Fragmento Mental', 'Susurros Discordantes'],
+      5:  ['Hambre de Hadar', 'Recado'],
+      7:  ['Invocar Aberración', 'Tentáculos Negros de Evard'],
+      9:  ['Enlace Telepático de Rary', 'Telequinesis'],
+    },
+    draconico: {
+      3:  ['Aliento de Dragón', 'Alterar el Propio Aspecto', 'Orbe Cromático', 'Orden Imperiosa'],
+      5:  ['Terror', 'Volar'],
+      7:  ['Hechizar Monstruo', 'Ojo Arcano'],
+      9:  ['Conocer las Leyendas', 'Invocar Dragón'],
+    },
+    mecanica: {
+      3:  ['Alarma', 'Auxilio', 'Protección Contra el Bien y el Mal', 'Restablecimiento Menor'],
+      5:  ['Disipar Magia', 'Protección Contra Energía'],
+      7:  ['Invocar Autómata', 'Libertad de Movimiento'],
+      9:  ['Muro de Fuerza', 'Restablecimiento Mayor'],
+    },
+  },
+
+  mago: {
+    // Abjurador nv.10: Rompeconjuros
+    abjurador: {
+      10: ['Contrahechizo', 'Disipar Magia'],
+    },
+    // Ilusionista nv.6: Criaturas fantasmales
+    ilusionista: {
+      6:  ['Invocar Bestia', 'Invocar Feérico'],
+    },
+  },
+
+  guerrero: {
+    // Guerrero Psiónico nv.18: Maestro telequinético
+    psiconico: {
+      18: ['Telequinesis'],
     },
   },
 }

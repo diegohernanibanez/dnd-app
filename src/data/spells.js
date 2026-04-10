@@ -1706,6 +1706,16 @@ Cuando inscribes el glifo, decides qué lo activa y eliges si se trata de una ru
     descripcion: `Una barrera inmóvil y brillante surge en una emanación de 3 m alrededor de ti y permanece hasta que el conjuro termine. Cualquier conjuro de nivel 5 o inferior que se lance desde fuera de la barrera no puede afectar a nada dentro de ella. Tales conjuros pueden hacer objetivo a criaturas y objetos que estén dentro de la barrera, pero no tendrán ningún efecto sobre ellos. De forma similar, el interior de la barrera estará excluido de las áreas de efecto creadas por dichos conjuros.
 Con un espacio de conjuro de nivel superior. La barrera bloquea los conjuros de un nivel más por cada nivel por encima de 6 que tenga el espacio. GOLPE APRESADOR Conjuración de nivel 1 (explorador) Tiempo de lanzamiento: Acción adicional, que realizas de inmediato tras acertar a una criatura con un arma Alcance: Lanzador Componentes: V Duración: Concentración, hasta 1 minuto Al acertar al objetivo, unas enredaderas aparecerán sobre él y deberá hacer una tirada de salvación de Fuerza. Las criaturas Grandes o de mayor tamaño tienen ventaja en esta tirada. Si la falla, tendrá el estado de apresado hasta que el conjuro termine. Si la supera, las enredaderas se marchitan y el conjuro termina. Mientras esté apresado, el objetivo sufrirá 1d6 de daño perforante al principio de cada uno de sus turnos. El objetivo o una criatura a su alcance puede emplear una acción para hacer una prueba de Fuerza (Atletismo) contra tu CD de salvación de conjuros. Si la supera, el conjuro termina. Con un espacio de conjuro de nivel superior. El daño aumenta en 1d6 por cada nivel por encima de 1 que tenga el espacio`
   },
+  'Golpe Apresador': {
+    nivel: 1,
+    escuela: 'Conjuración',
+    clases: ['explorador', 'paladin'],
+    tiempoLanzamiento: 'Acción adicional',
+    alcance: 'Lanzador',
+    componentes: 'V',
+    duracion: 'Concentración, hasta 1 minuto',
+    descripcion: `Al acertar al objetivo, unas enredaderas aparecerán sobre él y deberá hacer una tirada de salvación de Fuerza. Las criaturas Grandes o de mayor tamaño tienen ventaja en esta tirada. Si la falla, tendrá el estado de apresado hasta que el conjuro termine. Si la supera, las enredaderas se marchitan y el conjuro termina. Mientras esté apresado, el objetivo sufrirá 1d6 de daño perforante al principio de cada uno de sus turnos. El objetivo o una criatura a su alcance puede emplear una acción para hacer una prueba de Fuerza (Atletismo) contra tu CD de salvación de conjuros. Si la supera, el conjuro termina. Con un espacio de conjuro de nivel superior. El daño aumenta en 1d6 por cada nivel por encima de 1 que tenga el espacio.`
+  },
   'Golpe Flamígero': {
     nivel: 5,
     escuela: 'Evocación',
