@@ -387,7 +387,7 @@ Si la falla, tendrá el estado de hechizado hasta que termine el conjuro. Mientr
     alcance: 'Lanzador',
     componentes: 'V, S',
     duracion: 'Instantáneo',
-    descripcion: `Invocas a Hadar y unas extremidades surgen de ti. Todas las criaturas en una emanación de 3 m que se origina en ti deben hacer una tirada de salvación de Fuerza. Si la fallan, sufrirán 2d6 de daño necrótico y no podrán llevar a cabo reacciones hasta el principio de su siguiente turno. Si la superan, solamente recibirán la mitad de ese daño. Con un espacio de conjuro de nivel superior. El daño aumenta en 1d6 por cada nivel por encima de 1 que tenga el espacio. BUENAS BAYAS Conjuración de nivel 1 (druida, explorador) Tiempo de lanzamiento: Acción Alcance: Lanzador Componentes: V, S, M (una rama de muérdago) Duración: 24 horas En tu mano aparecen diez bayas, que están impregnadas de magia hasta que termine el conjuro`
+    descripcion: `Invocas a Hadar y unas extremidades surgen de ti. Todas las criaturas en una emanación de 3 m que se origina en ti deben hacer una tirada de salvación de Fuerza. Si la fallan, sufrirán 2d6 de daño necrótico y no podrán llevar a cabo reacciones hasta el principio de su siguiente turno. Si la superan, solamente recibirán la mitad de ese daño. Con un espacio de conjuro de nivel superior. El daño aumenta en 1d6 por cada nivel por encima de 1 que tenga el espacio.`
   },
   'Buenas Bayas': {
     nivel: 1,
