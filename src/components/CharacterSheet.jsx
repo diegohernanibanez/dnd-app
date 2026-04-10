@@ -9,7 +9,7 @@ import { CAMPOS_APARIENCIA, ALINEAMIENTOS } from '../data/description'
 import { formatModificador } from '../data/abilityScores'
 import { CLASES } from '../data/classes'
 import { TRASFONDOS, ESPECIES } from '../data/origins'
-import { getDoteById, DOTES_GENERALES, DOTES_DON_EPICO, cumpleRequisitos } from '../data/dotes'
+import { getDoteById, DOTES_GENERALES, DOTES_DON_EPICO, TODAS_LAS_DOTES, cumpleRequisitos } from '../data/dotes'
 import { CONJUROS } from '../data/spells'
 import TextoTruncado from './TextoTruncado'
 import './CharacterSheet.css'
@@ -656,12 +656,15 @@ function Hoja1({
   muerte, onMuerteCambiar,
   bonusASI, onBonusASICambiar,
   dotesElegidos, onDotesElegidosCambiar,
+  dotesLibres, onDotesLibresCambiar,
   armasCustom, onArmasCustomCambiar,
   trucosSeleccionados,
 }) {
   const [modalSubclase, setModalSubclase] = useState(false)
   const [asiModalNivel, setAsiModalNivel] = useState(null)
   const [mostrarFormAtaque, setMostrarFormAtaque] = useState(false)
+  const [busquedaDoteLibre, setBusquedaDoteLibre] = useState('')
+  const [doteLibreNueva, setDoteLibreNueva] = useState('')
 
   const toggleMuerte = (tipo) => {
     const k = tipo === 'exito' ? 'exitos' : 'fallos'
@@ -711,6 +714,48 @@ function Hoja1({
         </div>
       </div>
     )
+  }
+
+  const dotesPorASI = Object.entries(dotesElegidos ?? {})
+    .sort((a, b) => Number(a[0]) - Number(b[0]))
+    .map(([lvl, data]) => {
+      if (!data?.doteId) return null
+      const dote = getDoteById(data.doteId)
+      if (!dote) return null
+      return {
+        id: `${data.doteId}-${lvl}`,
+        nombre: dote.nombre,
+        fuente: `Nivel ${lvl}`,
+        detalle: data.statElegido ? `+1 ${CARACTERISTICAS_ABBREV[data.statElegido]}` : '',
+      }
+    })
+    .filter(Boolean)
+
+  const dotesLibresResueltas = (dotesLibres ?? []).map((doteId, idx) => {
+    const dote = getDoteById(doteId)
+    return {
+      idx,
+      id: doteId,
+      nombre: dote?.nombre ?? doteId,
+    }
+  })
+
+  const dotesLibresSet = new Set(dotesLibres ?? [])
+  const dotesFiltrables = TODAS_LAS_DOTES
+    .filter(d => {
+      if (!d.repetible && dotesLibresSet.has(d.id)) return false
+      if (!busquedaDoteLibre.trim()) return true
+      return d.nombre.toLowerCase().includes(busquedaDoteLibre.toLowerCase())
+    })
+    .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'))
+
+  const agregarDoteLibre = () => {
+    if (!doteLibreNueva) return
+    const d = getDoteById(doteLibreNueva)
+    if (!d) return
+    if (!d.repetible && dotesLibresSet.has(d.id)) return
+    onDotesLibresCambiar(prev => [...(prev ?? []), d.id])
+    setDoteLibreNueva('')
   }
 
   return (
@@ -1239,11 +1284,55 @@ function Hoja1({
               ) : <em className="cs-empty">—</em>}
             </SheetSection>
             <SheetSection title="Dotes">
-              {personaje.dote ? (
+              {(personaje.dote || dotesPorASI.length > 0 || dotesLibresResueltas.length > 0) ? (
                 <div className="cs-mini-traits">
-                  <div className="cs-mini-traits__item"><strong>{personaje.dote}</strong> <em>({personaje.trasfondo?.nombre})</em></div>
+                  {personaje.dote && (
+                    <div className="cs-mini-traits__item"><strong>{personaje.dote}</strong> <em>({personaje.trasfondo?.nombre})</em></div>
+                  )}
+                  {dotesPorASI.map(d => (
+                    <div key={d.id} className="cs-mini-traits__item">
+                      <strong>{d.nombre}</strong> <em>({d.fuente}{d.detalle ? ` · ${d.detalle}` : ''})</em>
+                    </div>
+                  ))}
+                  {dotesLibresResueltas.map(d => (
+                    <div key={`${d.id}-${d.idx}`} className="cs-mini-traits__item cs-mini-traits__item--editable">
+                      <span><strong>{d.nombre}</strong> <em>(Manual)</em></span>
+                      <button
+                        className="cs-mini-traits__del"
+                        title="Quitar dote"
+                        onClick={() => onDotesLibresCambiar(prev => (prev ?? []).filter((_, i) => i !== d.idx))}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
                 </div>
               ) : <em className="cs-empty">—</em>}
+
+              <div className="cs-dotes-libres-add">
+                <input
+                  className="cs-field__input"
+                  type="text"
+                  placeholder="Buscar dote para añadir..."
+                  value={busquedaDoteLibre}
+                  onChange={e => setBusquedaDoteLibre(e.target.value)}
+                />
+                <div className="cs-dotes-libres-add__row">
+                  <select
+                    className="cs-header__meta-select"
+                    value={doteLibreNueva}
+                    onChange={e => setDoteLibreNueva(e.target.value)}
+                  >
+                    <option value="">Selecciona una dote</option>
+                    {dotesFiltrables.map(d => (
+                      <option key={d.id} value={d.id}>{d.nombre}</option>
+                    ))}
+                  </select>
+                  <button className="cs-attacks__add-btn" onClick={agregarDoteLibre} disabled={!doteLibreNueva}>
+                    + Añadir
+                  </button>
+                </div>
+              </div>
             </SheetSection>
           </div>
 
@@ -2061,6 +2150,7 @@ export default function CharacterSheet({
   muerte, onMuerteCambiar,
   bonusASI, onBonusASICambiar,
   dotesElegidos, onDotesElegidosCambiar,
+  dotesLibres, onDotesLibresCambiar,
   trucosSeleccionados, onTrucosSeleccionadosCambiar,
   grimorioConjuros, onGrimorioCambiar,
   conjurosSeleccionados, onConjurosSeleccionadosCambiar,
@@ -2133,6 +2223,8 @@ export default function CharacterSheet({
           onBonusASICambiar={onBonusASICambiar}
           dotesElegidos={dotesElegidos}
           onDotesElegidosCambiar={onDotesElegidosCambiar}
+          dotesLibres={dotesLibres}
+          onDotesLibresCambiar={onDotesLibresCambiar}
           armasCustom={armasCustom}
           onArmasCustomCambiar={onArmasCustomCambiar}
           trucosSeleccionados={trucosSeleccionados}

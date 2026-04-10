@@ -26,6 +26,11 @@ const ESCUELAS = ['Abjuración', 'Adivinación', 'Conjuración', 'Encantamiento'
 const NIVELES_CONJURO = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 const CLASES_CONJURO = ['bardo', 'brujo', 'clérigo', 'druida', 'explorador', 'guerrero', 'hechicero', 'mago', 'monje', 'paladín', 'pícaro']
 
+const normalizarTexto = (texto = '') => texto
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase()
+
 // ── Section: Conjuros ──
 function SeccionConjuros({ busqueda }) {
   const [expanded, setExpanded] = useState(null)
@@ -46,7 +51,10 @@ function SeccionConjuros({ busqueda }) {
     }
     if (filtroNivel !== '') arr = arr.filter(c => c.nivel === Number(filtroNivel))
     if (filtroEscuela) arr = arr.filter(c => c.escuela === filtroEscuela)
-    if (filtroClase) arr = arr.filter(c => c.clases.includes(filtroClase))
+    if (filtroClase) {
+      const claseFiltrada = normalizarTexto(filtroClase)
+      arr = arr.filter(c => c.clases.some(clase => normalizarTexto(clase) === claseFiltrada))
+    }
     return arr
   }, [conjurosArr, busqueda, filtroNivel, filtroEscuela, filtroClase])
 

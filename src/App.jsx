@@ -60,6 +60,7 @@ function App() {
   const [subclaseSeleccionada, setSubclaseSeleccionada] = useState(null)
   const [bonusASI, setBonusASI] = useState({})
   const [dotesElegidos, setDotesElegidos] = useState({})
+  const [dotesLibres, setDotesLibres] = useState([])
   const [origen, setOrigen] = useState({ trasfondo: null, especie: null, idiomas: ['Común'], linaje: null, habilidadDiestro: null, habilidadSentidos: null, habilidadesHabilidoso: [] })
   const [puntuaciones, setPuntuaciones] = useState(
     Object.fromEntries(CARACTERISTICAS.map((c) => [c, null]))
@@ -102,6 +103,7 @@ function App() {
     setSubclaseSeleccionada(null)
     setBonusASI({})
     setDotesElegidos({})
+    setDotesLibres([])
     setTrucosSeleccionados([])
     setGrimorioConjuros([])
     setConjurosSeleccionados([])
@@ -122,6 +124,7 @@ function App() {
     subclaseSeleccionada,
     bonusASI,
     dotesElegidos,
+    dotesLibres,
     origen,
     puntuaciones,
     bonusTrasfondo,
@@ -138,7 +141,7 @@ function App() {
     conjurosSeleccionados,
     espaciosUsados,
     armasCustom,
-  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom])
+  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom])
 
   const cargarDesdeData = useCallback((data) => {
     cargandoRef.current = true
@@ -149,6 +152,7 @@ function App() {
     setSubclaseSeleccionada(data.subclaseSeleccionada ?? null)
     setBonusASI(data.bonusASI ?? {})
     setDotesElegidos(data.dotesElegidos ?? {})
+    setDotesLibres(data.dotesLibres ?? [])
     setOrigen(data.origen ?? { trasfondo: null, especie: null, idiomas: ['Común'], linaje: null, habilidadDiestro: null, habilidadSentidos: null, habilidadesHabilidoso: [] })
     setPuntuaciones(data.puntuaciones ?? Object.fromEntries(CARACTERISTICAS.map(c => [c, null])))
     setBonusTrasfondo(data.bonusTrasfondo ?? { modo: null, stats: {} })
@@ -222,13 +226,14 @@ function App() {
     bonusTrasfondo,
     bonusASI,
     dotesElegidos,
+    dotesLibres,
     habilidadesClase,
     idiomas:          origen.idiomas,
     descripcion,
     equipo,
     eleccionNivel1,
     nivel,
-  }), [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel])
+  }), [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel])
 
   // Sincronizar pgActuales cuando cambia pgMax
   useEffect(() => {
@@ -330,6 +335,8 @@ function App() {
             onBonusASICambiar={setBonusASI}
             dotesElegidos={dotesElegidos}
             onDotesElegidosCambiar={setDotesElegidos}
+            dotesLibres={dotesLibres}
+            onDotesLibresCambiar={setDotesLibres}
             // Callbacks de edición
             onNombreCambiar={(v) => setDescripcion(d => ({ ...d, nombre: v }))}
             onAlineamientoCambiar={(v) => setDescripcion(d => ({ ...d, alineamiento: v }))}

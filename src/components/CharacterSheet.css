@@ -587,6 +587,43 @@
   &:last-child { border-bottom: none; }
 }
 
+.cs-mini-traits__item--editable {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cs-mini-traits__del {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.cs-mini-traits__del:hover {
+  color: var(--danger, #b32020);
+}
+
+.cs-dotes-libres-add {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cs-dotes-libres-add__row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.cs-dotes-libres-add__row select {
+  flex: 1;
+}
+
 /* ── Footer row ─────────────────────────────────────── */
 .cs-footer-row {
   display: flex;
