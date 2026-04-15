@@ -108,6 +108,7 @@ export function calcularPersonaje({
   equipo,
   eleccionNivel1,
   nivel = 1,
+  pgGananciaPorNivel = {},
 }) {
   const clase     = getClaseById(claseId) ?? null
   const trasfondo = TRASFONDOS.find(t => t.id === trasfondoId) ?? null
@@ -338,7 +339,9 @@ export function calcularPersonaje({
 
   // PG: nivel 1 = máximo del dado + CON; niveles 2+ suman valor fijo + CON por nivel
   const dadoGolpe = clase?.dadoGolpe ?? 'd8'
-  const pgMax = getPGMax(nivel, dadoGolpe, conMod)
+  const pgBase = getPGMax(nivel, dadoGolpe, conMod, pgGananciaPorNivel)
+  const pgBonusEspecie = (especie?.pgPorNivelBonus ?? 0) * nivel
+  const pgMax = pgBase + pgBonusEspecie
 
   // ── Percepción pasiva ──
   const percepcionTotal  = habilidades['Percepción']?.total

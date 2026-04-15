@@ -240,6 +240,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1.2fr 50px 70px 1fr;
   gap: 6px;
+  align-items: end;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -422,6 +423,127 @@
   opacity: 0.55;
   font-weight: 600;
   font-family: var(--heading);
+}
+
+/* Método de PG (fijo/tirada) */
+.cs-header__pg-method {
+  flex: 1.7;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1.5px solid var(--cs-ink);
+  border-radius: 8px;
+  padding: 8px 10px 6px;
+  background: var(--bg);
+  min-width: 0;
+}
+
+.cs-header__pg-method-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.cs-header__pg-method-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-family: var(--heading);
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.cs-pg-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cs-pg-toggle__text {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  opacity: 0.55;
+}
+
+.cs-pg-toggle__text.is-active {
+  opacity: 1;
+  color: var(--cs-ink-strong);
+}
+
+.cs-pg-toggle__switch {
+  position: relative;
+  width: 38px;
+  height: 20px;
+  display: inline-block;
+}
+
+.cs-pg-toggle__switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.cs-pg-toggle__slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1.5px solid var(--cs-ink);
+  background: var(--bg-soft, rgba(0, 0, 0, 0.08));
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.cs-pg-toggle__slider::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cs-ink);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.cs-pg-toggle__switch input:checked + .cs-pg-toggle__slider {
+  background: var(--cs-red-bg);
+}
+
+.cs-pg-toggle__switch input:checked + .cs-pg-toggle__slider::before {
+  transform: translateX(18px);
+  background: var(--cs-red);
+}
+
+.cs-header__pg-method-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text);
+}
+
+.cs-header__pg-reroll {
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--heading);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.cs-header__pg-reroll:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* Dados de golpe */

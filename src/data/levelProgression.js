@@ -39,14 +39,22 @@ export function getBonoCompetencia(nivel) {
 }
 
 /** Devuelve los PG máximos acumulados para un nivel y modificador de CON dados. */
-export function getPGMax(nivel, dadoGolpe, modCon) {
+export function getPGMax(nivel, dadoGolpe, modCon, pgGananciaPorNivel = {}) {
   const dadoNum = parseInt(dadoGolpe.replace('d', ''), 10) || 8
   const fijo    = PG_FIJO_POR_DADO[dadoGolpe] ?? 5
   // Nivel 1: máximo del dado + CON
-  const pgNivel1 = dadoNum + modCon
-  // Niveles 2+: sumar fijo + CON por cada nivel adicional
-  const pgExtra  = (nivel - 1) * (fijo + modCon)
-  return Math.max(nivel, pgNivel1 + pgExtra)  // mínimo 1 PG por nivel
+  let total = dadoNum + modCon
+
+  // Niveles 2+: usar ganancia guardada por nivel (tirada/fijo) o, si no existe, fijo por clase.
+  for (let lvl = 2; lvl <= nivel; lvl++) {
+    const gananciaGuardada = pgGananciaPorNivel?.[lvl]
+    const gananciaNivel = gananciaGuardada != null
+      ? gananciaGuardada
+      : Math.max(1, fijo + modCon)
+    total += gananciaNivel
+  }
+
+  return Math.max(nivel, total)  // mínimo 1 PG por nivel
 }
 
 /** Devuelve el XP requerido para el siguiente nivel (null si ya es nivel 20). */

@@ -129,7 +129,7 @@ export function crearEstadoInicial(CARACTERISTICAS) {
       descApariencia: '',
     },
     monedas: { PC: 0, PP: 0, PE: 0, PO: 0, PA: 0 },
-    pgActuales: null,
+    pgActuales: 0,
     pgTemporales: 0,
     muerte: { exitos: 0, fallos: 0 },
     trucosSeleccionados: [],
@@ -137,5 +137,6 @@ export function crearEstadoInicial(CARACTERISTICAS) {
     conjurosSeleccionados: [],
     espaciosUsados: {},
     armasCustom: [],
+    pgGananciaPorNivel: {},
   }
 }

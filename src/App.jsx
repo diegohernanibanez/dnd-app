@@ -79,7 +79,7 @@ function App() {
   // ── Estado extra (hoja de personaje) ──
   const [hoja2, setHoja2] = useState(ESTADO_VACIO.hoja2)
   const [monedas, setMonedas] = useState(ESTADO_VACIO.monedas)
-  const [pgActuales, setPgActuales] = useState(null)
+  const [pgActuales, setPgActuales] = useState(0)
   const [pgTemporales, setPgTemporales] = useState(0)
   const [muerte, setMuerte] = useState({ exitos: 0, fallos: 0 })
   const [trucosSeleccionados, setTrucosSeleccionados] = useState([])
@@ -90,6 +90,7 @@ function App() {
   const [dadosGolpeGastados, setDadosGolpeGastados] = useState(0)
   const [pgMaxPersonalizado, setPgMaxPersonalizado] = useState(null)
   const [xpNivelActual, setXpNivelActual] = useState(0)
+  const [pgGananciaPorNivel, setPgGananciaPorNivel] = useState({})
 
   // Flag para evitar que los useEffect de reset se disparen al cargar un personaje
   const cargandoRef = useRef(false)
@@ -147,7 +148,8 @@ function App() {
     dadosGolpeGastados,
     pgMaxPersonalizado,
     xpNivelActual,
-  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual])
+    pgGananciaPorNivel,
+  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, pgGananciaPorNivel])
 
   const cargarDesdeData = useCallback((data) => {
     cargandoRef.current = true
@@ -167,7 +169,7 @@ function App() {
     setEquipo(data.equipo ?? ESTADO_VACIO.equipo)
     setHoja2(data.hoja2 ?? ESTADO_VACIO.hoja2)
     setMonedas(data.monedas ?? ESTADO_VACIO.monedas)
-    setPgActuales(data.pgActuales ?? null)
+    setPgActuales(0)
     setPgTemporales(data.pgTemporales ?? 0)
     setMuerte(data.muerte ?? { exitos: 0, fallos: 0 })
     setTrucosSeleccionados(data.trucosSeleccionados ?? [])
@@ -178,6 +180,7 @@ function App() {
     setDadosGolpeGastados(data.dadosGolpeGastados ?? 0)
     setPgMaxPersonalizado(data.pgMaxPersonalizado ?? null)
     setXpNivelActual(data.xpNivelActual ?? 0)
+    setPgGananciaPorNivel(data.pgGananciaPorNivel ?? {})
     // Resetear flag después de que React procese los setState
     requestAnimationFrame(() => { cargandoRef.current = false })
   }, [])
@@ -243,16 +246,11 @@ function App() {
       equipo,
       eleccionNivel1,
       nivel,
+      pgGananciaPorNivel,
     })
     return { ...p, xpNivelActual }
-  }, [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel, xpNivelActual])
+  }, [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel, xpNivelActual, pgGananciaPorNivel])
 
-  // Sincronizar pgActuales cuando cambia pgMax
-  useEffect(() => {
-    if (pgActuales === null && personaje.pgMax) {
-      setPgActuales(personaje.pgMax)
-    }
-  }, [personaje.pgMax, pgActuales])
 
   // Scroll arriba al cambiar de paso
   useEffect(() => {
@@ -394,6 +392,8 @@ function App() {
             pgMaxPersonalizado={pgMaxPersonalizado}
             onPgMaxPersonalizadoCambiar={setPgMaxPersonalizado}
             onXpNivelActualCambiar={setXpNivelActual}
+            pgGananciaPorNivel={pgGananciaPorNivel}
+            onPgGananciaPorNivelCambiar={setPgGananciaPorNivel}
           />
         )}
       </main>

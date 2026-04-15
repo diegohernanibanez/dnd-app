@@ -12,6 +12,7 @@ import { TRASFONDOS, ESPECIES } from '../data/origins'
 import { getDoteById, DOTES_GENERALES, DOTES_DON_EPICO, TODAS_LAS_DOTES, cumpleRequisitos } from '../data/dotes'
 import { CONJUROS } from '../data/spells'
 import './CharacterSheet.css'
+import { PG_FIJO_POR_DADO } from '../data/levelProgression'
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
@@ -957,6 +958,7 @@ function Hoja1({
   trucosSeleccionados,
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
   onXpNivelActualCambiar,
+  pgGananciaPorNivel, onPgGananciaPorNivelCambiar,
 }) {
   const [modalSubclase, setModalSubclase] = useState(false)
   const [asiModalNivel, setAsiModalNivel] = useState(null)
@@ -1045,10 +1047,17 @@ function Hoja1({
   const pgMaxEfectivo = pgMaxPersonalizado ?? personaje.pgMax
   const dadoGolpeTipo = personaje.clase?.dadoGolpe ?? 'd8'
   const dadosGolpeTotal = personaje.nivel ?? 1
+  const nivelActual = personaje.nivel ?? 1
   const gastadosActuales = dadosGolpeGastados ?? 0
   const dadosGolpeDisponibles = dadosGolpeTotal - gastadosActuales
+  const conModActual = personaje.modificadores?.['Constitución'] ?? 0
+  const fijoBaseNivel = Math.max(1, (PG_FIJO_POR_DADO[dadoGolpeTipo] ?? 5) + conModActual)
+  const gananciaTiradaNivel = pgGananciaPorNivel?.[nivelActual] ?? null
+  const metodoPgNivel = gananciaTiradaNivel != null ? 'tirada' : 'fijo'
+  const dadoTiradoMostrado = gananciaTiradaNivel != null
+    ? Math.max(1, gananciaTiradaNivel - conModActual)
+    : null
   const claseActual = personaje.clase
-  const nivelActual = personaje.nivel ?? 1
   const nivelSubclase = claseActual?.nivelSubclase ?? 3
   const subclaseDisponible = !!(claseActual?.subclases?.length && nivelActual >= nivelSubclase)
   const subclaseActual = subclaseDisponible
@@ -1185,6 +1194,66 @@ function Hoja1({
             </div>
             <span className="cs-header__section-title">Puntos de golpe</span>
           </div>
+
+          {/* Selector de método de PG (Fijo o Tirada) — solo nivel 2+ */}
+          {nivelActual > 1 && (
+            <div className="cs-header__pg-method">
+              <div className="cs-header__pg-method-head">
+                <span className="cs-header__pg-method-label">Método niv. {nivelActual}</span>
+                <div className="cs-pg-toggle" role="group" aria-label={`Método de PG nivel ${nivelActual}`}>
+                  <span className={`cs-pg-toggle__text ${metodoPgNivel === 'fijo' ? 'is-active' : ''}`}>Fijo</span>
+                  <label className="cs-pg-toggle__switch">
+                    <input
+                      type="checkbox"
+                      checked={metodoPgNivel === 'tirada'}
+                      onChange={(e) => {
+                        if (!onPgGananciaPorNivelCambiar) return
+                        if (e.target.checked) {
+                          const caras = parseInt(String(dadoGolpeTipo).replace('d', ''), 10) || 8
+                          const tirada = Math.floor(Math.random() * caras) + 1
+                          const ganancia = Math.max(1, tirada + conModActual)
+                          onPgGananciaPorNivelCambiar({ ...pgGananciaPorNivel, [nivelActual]: ganancia })
+                        } else {
+                          const nuevoMapa = { ...(pgGananciaPorNivel ?? {}) }
+                          delete nuevoMapa[nivelActual]
+                          onPgGananciaPorNivelCambiar(nuevoMapa)
+                        }
+                      }}
+                    />
+                    <span className="cs-pg-toggle__slider" />
+                  </label>
+                  <span className={`cs-pg-toggle__text ${metodoPgNivel === 'tirada' ? 'is-active' : ''}`}>Tirada</span>
+                </div>
+              </div>
+
+              <div className="cs-header__pg-method-info">
+                {metodoPgNivel === 'fijo' ? (
+                  <span>Fijo: <strong>{fijoBaseNivel} PG</strong></span>
+                ) : (
+                  <span>
+                    Tirada: <strong>{gananciaTiradaNivel} PG</strong>
+                    {dadoTiradoMostrado != null ? ` (dado ${dadoGolpeTipo}: ${dadoTiradoMostrado}${conModActual >= 0 ? ` + ${conModActual}` : ` - ${Math.abs(conModActual)}`})` : ''}
+                  </span>
+                )}
+
+                {metodoPgNivel === 'tirada' && (
+                  <button
+                    type="button"
+                    className="cs-header__pg-reroll"
+                    onClick={() => {
+                      if (!onPgGananciaPorNivelCambiar) return
+                      const caras = parseInt(String(dadoGolpeTipo).replace('d', ''), 10) || 8
+                      const tirada = Math.floor(Math.random() * caras) + 1
+                      const ganancia = Math.max(1, tirada + conModActual)
+                      onPgGananciaPorNivelCambiar({ ...pgGananciaPorNivel, [nivelActual]: ganancia })
+                    }}
+                  >
+                    Volver a tirar
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Dados de golpe — gastados y máximos */}
           <div className="cs-header__dg-section">
@@ -2574,6 +2643,7 @@ export default function CharacterSheet({
   armasCustom, onArmasCustomCambiar,
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
   onXpNivelActualCambiar,
+  pgGananciaPorNivel, onPgGananciaPorNivelCambiar,
 }) {
   const [pestaña, setPestaña] = useState(1)
   const tieneMagia = !!personaje.conjuros
@@ -2651,6 +2721,8 @@ export default function CharacterSheet({
           dadosGolpeGastados={dadosGolpeGastados}
           onDadosGolpeGastadosCambiar={onDadosGolpeGastadosCambiar}
           onXpNivelActualCambiar={onXpNivelActualCambiar}
+          pgGananciaPorNivel={pgGananciaPorNivel}
+          onPgGananciaPorNivelCambiar={onPgGananciaPorNivelCambiar}
         />
       )}
       {pestaña === 2 && (
