@@ -722,7 +722,7 @@ function DoteLibreModal({
         <div className="asi-modal__header">
           <div>
             <h2 className="asi-modal__titulo">Añadir dote</h2>
-            <p className="asi-modal__subtitulo">Elige una dote para añadir a la planilla</p>
+            <p className="asi-modal__subtitulo">Elige una dote para añadir a la hoja</p>
           </div>
           <button className="asi-modal__cerrar" onClick={onCerrar} aria-label="Cerrar">✕</button>
         </div>
@@ -921,12 +921,14 @@ function Hoja1({
   onEquipoCambiar, equipoState,
   monedas, onMonedasCambiar,
   pgActuales, onPgActualesCambiar, pgTemporales, onPgTemporalesCambiar,
+  pgMaxPersonalizado, onPgMaxPersonalizadoCambiar,
   muerte, onMuerteCambiar,
   bonusASI, onBonusASICambiar,
   dotesElegidos, onDotesElegidosCambiar,
   dotesLibres, onDotesLibresCambiar,
   armasCustom, onArmasCustomCambiar,
   trucosSeleccionados,
+  dadosGolpeGastados, onDadosGolpeGastadosCambiar,
 }) {
   const [modalSubclase, setModalSubclase] = useState(false)
   const [asiModalNivel, setAsiModalNivel] = useState(null)
@@ -1012,12 +1014,19 @@ function Hoja1({
   const dotesLibresIds = (dotesLibres ?? []).map(d => typeof d === 'string' ? d : d.doteId)
   const dotesLibresSet = new Set(dotesLibresIds)
 
+  const pgMaxEfectivo = pgMaxPersonalizado ?? personaje.pgMax
+  const dadoGolpeTipo = personaje.clase?.dadoGolpe ?? 'd8'
+  const dadosGolpeTotal = personaje.nivel ?? 1
+  const gastadosActuales = dadosGolpeGastados ?? 0
+  const dadosGolpeDisponibles = dadosGolpeTotal - gastadosActuales
+
   return (
     <div className="cs-hoja cs-hoja--1">
 
-      {/* ═══ Cabecera — nombre + datos + combate ═══ */}
+      {/* ═══ Cabecera — Hoja de personaje ═══ */}
       <header className="cs-header">
-        {/* Fila 1: Nombre + Cajas de combate */}
+
+        {/* Fila 1: Nombre del personaje */}
         <div className="cs-header__row1">
           <div className="cs-header__nombre">
             <input
@@ -1028,32 +1037,148 @@ function Hoja1({
             />
             <span className="cs-header__nombre-label">Nombre del personaje</span>
           </div>
-          <div className="cs-header__combat">
+        </div>
+
+        {/* Fila 2: Identidad (trasfondo, especie, clase, subclase, nivel, XP, alineamiento) */}
+        <div className="cs-header__row2">
+          <div className="cs-header__meta-item">
+            <select className="cs-header__meta-select" value={origen.trasfondo || ''} onChange={e => onOrigenCambiar(prev => ({ ...prev, trasfondo: e.target.value || null }))}>
+              <option value="">—</option>
+              {TRASFONDOS.map(t => <option key={t.id} value={t.id}>{t.nombre}</option>)}
+            </select>
+            <span className="cs-header__meta-label">Trasfondo</span>
+          </div>
+          <div className="cs-header__meta-item">
+            <select className="cs-header__meta-select" value={origen.especie || ''} onChange={e => onOrigenCambiar(prev => ({ ...prev, especie: e.target.value || null }))}>
+              <option value="">—</option>
+              {ESPECIES.map(es => <option key={es.id} value={es.id}>{es.nombre}</option>)}
+            </select>
+            <span className="cs-header__meta-label">Especie</span>
+          </div>
+          <div className="cs-header__meta-item">
+            <select className="cs-header__meta-select" value={claseSeleccionada || ''} onChange={e => onClaseCambiar(e.target.value || null)}>
+              <option value="">—</option>
+              {CLASES.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
+            </select>
+            <span className="cs-header__meta-label">Clase</span>
+          </div>
+          <div className="cs-header__meta-item cs-header__meta-item--subclase">
+            {(() => {
+              const clase = personaje.clase
+              if (!clase?.subclases?.length) return <span className="cs-header__meta-val">—</span>
+              const nivelSub = clase.nivelSubclase ?? 3
+              const scActual = clase.subclases.find(s => s.id === subclaseSeleccionada)
+              if ((personaje.nivel ?? 1) < nivelSub) {
+                return <span className="cs-header__meta-val cs-header__meta-val--muted">Nivel {nivelSub}</span>
+              }
+              return (
+                <button
+                  className={`cs-header__subclase-btn${scActual ? ' cs-header__subclase-btn--elegida' : ' cs-header__subclase-btn--pendiente'}`}
+                  onClick={() => setModalSubclase(true)}
+                >
+                  {scActual ? scActual.nombre : '🔱 Elegir subclase'}
+                </button>
+              )
+            })()}
+            <span className="cs-header__meta-label">Subclase</span>
+          </div>
+          <div className="cs-header__meta-item cs-header__meta-item--narrow">
+            <input className="cs-header__meta-input" type="number" min={1} max={20} value={nivel} onChange={e => onNivelCambiar(Math.max(1, Math.min(20, Number(e.target.value) || 1)))} />
+            <span className="cs-header__meta-label">Nivel</span>
+          </div>
+          <div className="cs-header__meta-item cs-header__meta-item--narrow">
+            <span className="cs-header__meta-val">{personaje.xpNivelActual ?? 0}</span>
+            <span className="cs-header__meta-label">Experiencia</span>
+          </div>
+          <div className="cs-header__meta-item">
+            <select className="cs-header__meta-select" value={personaje.alineamiento ? (ALINEAMIENTOS.find(a => a.nombre === personaje.alineamiento)?.id ?? '') : ''} onChange={e => onAlineamientoCambiar(e.target.value || null)}>
+              <option value="">—</option>
+              {ALINEAMIENTOS.map(a => <option key={a.id} value={a.id}>{a.nombre}</option>)}
+            </select>
+            <span className="cs-header__meta-label">Alineamiento</span>
+          </div>
+        </div>
+
+        {/* Fila 3: Puntos de golpe (editables) + Dados de golpe */}
+        <div className="cs-header__row3">
+
+          {/* Puntos de golpe — todos editables */}
+          <div className="cs-header__pg-section">
+            <div className="cs-header__pg-cells">
+              <div className="cs-header__pg-cell">
+                <input
+                  className="cs-header__pg-input"
+                  type="number"
+                  min={0}
+                  value={pgTemporales || 0}
+                  onChange={e => onPgTemporalesCambiar(Math.max(0, Number(e.target.value) || 0))}
+                />
+                <span className="cs-header__pg-label">Temporales</span>
+              </div>
+              <div className="cs-header__pg-cell cs-header__pg-cell--main">
+                <input
+                  className="cs-header__pg-input cs-header__pg-input--main"
+                  type="number"
+                  min={0}
+                  value={pgActuales ?? pgMaxEfectivo ?? 0}
+                  onChange={e => onPgActualesCambiar(Math.max(0, Number(e.target.value) || 0))}
+                />
+                <span className="cs-header__pg-label">Actuales</span>
+              </div>
+              <div className="cs-header__pg-cell">
+                <input
+                  className="cs-header__pg-input"
+                  type="number"
+                  min={0}
+                  value={pgMaxEfectivo ?? 0}
+                  onChange={e => {
+                    const val = Math.max(0, Number(e.target.value) || 0)
+                    onPgMaxPersonalizadoCambiar(val === (personaje.pgMax ?? 0) ? null : val)
+                  }}
+                />
+                <span className="cs-header__pg-label">Máximo</span>
+              </div>
+            </div>
+            <span className="cs-header__section-title">Puntos de golpe</span>
+          </div>
+
+          {/* Dados de golpe — gastados y máximos */}
+          <div className="cs-header__dg-section">
+            <div className="cs-header__dg-content">
+              <div className="cs-header__dg-info">
+                <span className="cs-header__dg-tipo">{dadoGolpeTipo}</span>
+                <span className="cs-header__dg-total">×{dadosGolpeTotal}</span>
+              </div>
+              <div className="cs-header__dg-tracker">
+                <div className="cs-header__dg-bubbles">
+                  {Array.from({ length: dadosGolpeTotal }).map((_, i) => {
+                    const gastado = i >= dadosGolpeDisponibles
+                    return (
+                      <button
+                        key={i}
+                        className={`cs-dg-bubble${gastado ? ' cs-dg-bubble--gastado' : ''}`}
+                        title={gastado ? 'Clic para recuperar dado' : 'Clic para gastar dado'}
+                        onClick={() => {
+                          const nuevoGastados = gastado
+                            ? Math.max(0, gastadosActuales - 1)
+                            : Math.min(dadosGolpeTotal, gastadosActuales + 1)
+                          onDadosGolpeGastadosCambiar(nuevoGastados)
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+                <span className="cs-header__dg-count">{dadosGolpeDisponibles}/{dadosGolpeTotal}</span>
+              </div>
+            </div>
+            <span className="cs-header__section-title">Dados de golpe</span>
+          </div>
+
+          {/* Clase de armadura + Salvaciones contra muerte */}
+          <div className="cs-header__combat-extra">
             <div className="cs-header__cbox">
               <span className="cs-header__cbox-val">{personaje.ca ?? '—'}</span>
-              <span className="cs-header__cbox-label">Clase de armadura</span>
-            </div>
-            <div className="cs-header__cbox cs-header__cbox--wide">
-              <div className="cs-header__hp-row">
-                <div className="cs-header__hp-cell">
-                  <span className="cs-header__hp-num">{pgTemporales || '—'}</span>
-                  <span className="cs-header__hp-sub">Temp.</span>
-                </div>
-                <div className="cs-header__hp-cell cs-header__hp-cell--main">
-                  <span className="cs-header__hp-num cs-header__hp-num--big">{pgActuales ?? personaje.pgMax ?? '—'}</span>
-                  <span className="cs-header__hp-sub">Actuales</span>
-                </div>
-                <div className="cs-header__hp-cell">
-                  <span className="cs-header__hp-num">{personaje.pgMax ?? '—'}</span>
-                  <span className="cs-header__hp-sub">Máx.</span>
-                </div>
-              </div>
-              <span className="cs-header__cbox-label">Puntos de golpe</span>
-            </div>
-            <div className="cs-header__cbox">
-              <span className="cs-header__cbox-val">{personaje.dadosGolpe ?? '—'}</span>
-              <span className="cs-header__cbox-sub">×{personaje.nivel}</span>
-              <span className="cs-header__cbox-label">Dados de golpe</span>
+              <span className="cs-header__cbox-label">CA</span>
             </div>
             <div className="cs-header__cbox">
               <div className="cs-header__death">
@@ -1074,48 +1199,8 @@ function Hoja1({
                   ))}
                 </div>
               </div>
-              <span className="cs-header__cbox-label">Salvaciones contra muerte</span>
+              <span className="cs-header__cbox-label">Muerte</span>
             </div>
-          </div>
-        </div>
-
-        {/* Fila 2: Meta (trasfondo, clase, nivel, especie, PX) */}
-        <div className="cs-header__row2">
-          <div className="cs-header__meta-item">
-            <select className="cs-header__meta-select" value={origen.trasfondo || ''} onChange={e => onOrigenCambiar(prev => ({ ...prev, trasfondo: e.target.value || null }))}>
-              <option value="">—</option>
-              {TRASFONDOS.map(t => <option key={t.id} value={t.id}>{t.nombre}</option>)}
-            </select>
-            <span className="cs-header__meta-label">Trasfondo</span>
-          </div>
-          <div className="cs-header__meta-item">
-            <select className="cs-header__meta-select" value={claseSeleccionada || ''} onChange={e => onClaseCambiar(e.target.value || null)}>
-              <option value="">—</option>
-              {CLASES.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
-            </select>
-            <span className="cs-header__meta-label">Clase</span>
-          </div>
-          <div className="cs-header__meta-item cs-header__meta-item--narrow">
-            <input className="cs-header__meta-input" type="number" min={1} max={20} value={nivel} onChange={e => onNivelCambiar(Math.max(1, Math.min(20, Number(e.target.value) || 1)))} />
-            <span className="cs-header__meta-label">Nivel</span>
-          </div>
-          <div className="cs-header__meta-item cs-header__meta-item--narrow">
-            <span className="cs-header__meta-val">{personaje.xpNivelActual ?? 0}</span>
-            <span className="cs-header__meta-label">PX</span>
-          </div>
-          <div className="cs-header__meta-item">
-            <select className="cs-header__meta-select" value={origen.especie || ''} onChange={e => onOrigenCambiar(prev => ({ ...prev, especie: e.target.value || null }))}>
-              <option value="">—</option>
-              {ESPECIES.map(es => <option key={es.id} value={es.id}>{es.nombre}</option>)}
-            </select>
-            <span className="cs-header__meta-label">Especie</span>
-          </div>
-          <div className="cs-header__meta-item">
-            <select className="cs-header__meta-select" value={personaje.alineamiento ? (ALINEAMIENTOS.find(a => a.nombre === personaje.alineamiento)?.id ?? '') : ''} onChange={e => onAlineamientoCambiar(e.target.value || null)}>
-              <option value="">—</option>
-              {ALINEAMIENTOS.map(a => <option key={a.id} value={a.id}>{a.nombre}</option>)}
-            </select>
-            <span className="cs-header__meta-label">Alineamiento</span>
           </div>
         </div>
       </header>
@@ -1518,7 +1603,7 @@ function Hoja1({
             </div>
           </SheetSection>
 
-          {/* Atributos de especie + Dotes (lado a lado como en planilla) */}
+          {/* Atributos de especie + Dotes (lado a lado como en la hoja) */}
           <div className="cs-pair cs-pair--gap">
             <SheetSection title="Atributos de especie">
               {(personaje.especie?.rasgosDestacados?.length > 0 || personaje.especie?.linajeSel || personaje.habilidadDiestro || personaje.habilidadSentidos) ? (
@@ -2399,6 +2484,7 @@ export default function CharacterSheet({
   hoja2, onHoja2Cambiar,
   monedas, onMonedasCambiar,
   pgActuales, onPgActualesCambiar, pgTemporales, onPgTemporalesCambiar,
+  pgMaxPersonalizado, onPgMaxPersonalizadoCambiar,
   muerte, onMuerteCambiar,
   bonusASI, onBonusASICambiar,
   dotesElegidos, onDotesElegidosCambiar,
@@ -2408,6 +2494,7 @@ export default function CharacterSheet({
   conjurosSeleccionados, onConjurosSeleccionadosCambiar,
   espaciosUsados, onEspaciosUsadosCambiar,
   armasCustom, onArmasCustomCambiar,
+  dadosGolpeGastados, onDadosGolpeGastadosCambiar,
 }) {
   const [pestaña, setPestaña] = useState(1)
   const tieneMagia = !!personaje.conjuros
@@ -2469,6 +2556,8 @@ export default function CharacterSheet({
           onPgActualesCambiar={onPgActualesCambiar}
           pgTemporales={pgTemporales}
           onPgTemporalesCambiar={onPgTemporalesCambiar}
+          pgMaxPersonalizado={pgMaxPersonalizado}
+          onPgMaxPersonalizadoCambiar={onPgMaxPersonalizadoCambiar}
           muerte={muerte}
           onMuerteCambiar={onMuerteCambiar}
           bonusASI={bonusASI}
@@ -2480,6 +2569,8 @@ export default function CharacterSheet({
           armasCustom={armasCustom}
           onArmasCustomCambiar={onArmasCustomCambiar}
           trucosSeleccionados={trucosSeleccionados}
+          dadosGolpeGastados={dadosGolpeGastados}
+          onDadosGolpeGastadosCambiar={onDadosGolpeGastadosCambiar}
         />
       )}
       {pestaña === 2 && (

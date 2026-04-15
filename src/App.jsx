@@ -20,7 +20,7 @@ const PASOS = [
   { id: 3, label: 'Características' },
   { id: 4, label: 'Descripción' },
   { id: 5, label: 'Equipo' },
-  { id: 6, label: 'Planilla' },
+  { id: 6, label: 'Hoja' },
 ]
 
 const ESTADO_VACIO = crearEstadoInicial(CARACTERISTICAS)
@@ -76,7 +76,7 @@ function App() {
   })
   const [equipo, setEquipo] = useState({ opcionClase: null, opcionTrasfondo: null, oroDisponible: 0, extras: [], bagatela: null })
 
-  // ── Estado extra (planilla) ──
+  // ── Estado extra (hoja de personaje) ──
   const [hoja2, setHoja2] = useState(ESTADO_VACIO.hoja2)
   const [monedas, setMonedas] = useState(ESTADO_VACIO.monedas)
   const [pgActuales, setPgActuales] = useState(null)
@@ -87,6 +87,8 @@ function App() {
   const [conjurosSeleccionados, setConjurosSeleccionados] = useState([])
   const [espaciosUsados, setEspaciosUsados] = useState({})
   const [armasCustom, setArmasCustom] = useState([])
+  const [dadosGolpeGastados, setDadosGolpeGastados] = useState(0)
+  const [pgMaxPersonalizado, setPgMaxPersonalizado] = useState(null)
 
   // Flag para evitar que los useEffect de reset se disparen al cargar un personaje
   const cargandoRef = useRef(false)
@@ -141,7 +143,9 @@ function App() {
     conjurosSeleccionados,
     espaciosUsados,
     armasCustom,
-  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom])
+    dadosGolpeGastados,
+    pgMaxPersonalizado,
+  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, dadosGolpeGastados, pgMaxPersonalizado])
 
   const cargarDesdeData = useCallback((data) => {
     cargandoRef.current = true
@@ -169,6 +173,8 @@ function App() {
     setConjurosSeleccionados(data.conjurosSeleccionados ?? [])
     setEspaciosUsados(data.espaciosUsados ?? {})
     setArmasCustom(data.armasCustom ?? [])
+    setDadosGolpeGastados(data.dadosGolpeGastados ?? 0)
+    setPgMaxPersonalizado(data.pgMaxPersonalizado ?? null)
     // Resetear flag después de que React procese los setState
     requestAnimationFrame(() => { cargandoRef.current = false })
   }, [])
@@ -356,7 +362,7 @@ function App() {
             puntuacionesBase={puntuaciones}
             onEquipoCambiar={setEquipo}
             equipoState={equipo}
-            // Estado de planilla
+            // Estado de hoja de personaje
             hoja2={hoja2}
             onHoja2Cambiar={setHoja2}
             monedas={monedas}
@@ -377,6 +383,10 @@ function App() {
             onEspaciosUsadosCambiar={setEspaciosUsados}
             armasCustom={armasCustom}
             onArmasCustomCambiar={setArmasCustom}
+            dadosGolpeGastados={dadosGolpeGastados}
+            onDadosGolpeGastadosCambiar={setDadosGolpeGastados}
+            pgMaxPersonalizado={pgMaxPersonalizado}
+            onPgMaxPersonalizadoCambiar={setPgMaxPersonalizado}
           />
         )}
       </main>
