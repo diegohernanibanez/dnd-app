@@ -10,7 +10,7 @@ import { formatModificador } from '../data/abilityScores'
 import { CLASES } from '../data/classes'
 import { TRASFONDOS, ESPECIES } from '../data/origins'
 import { getDoteById, DOTES_GENERALES, DOTES_DON_EPICO, TODAS_LAS_DOTES, cumpleRequisitos } from '../data/dotes'
-import { CONJUROS } from '../data/spells'
+import { CONJUROS, getTrucoDanioEtiqueta, getTrucoNivel0Info } from '../data/spells'
 import './CharacterSheet.css'
 import { PG_FIJO_POR_DADO } from '../data/levelProgression'
 import { TODAS_LAS_PROPIEDADES_ARMA, PROPIEDADES_ARMA_DESC, TODAS_LAS_MAESTRIAS_ARMA, MAESTRIAS_ARMA_DESC } from '../data/weapons'
@@ -187,29 +187,57 @@ function EquipoInlineAdd({ onAñadir }) {
 }
 
 const CARACTERISTICAS_ATAQUE = ['Fuerza', 'Destreza', 'Inteligencia', 'Sabiduría', 'Carisma']
+const TIPOS_DANIO_ATAQUE = ['contundente', 'cortante', 'perforante']
+const TIPOS_DANIO_COMPLETOS = ['ácido', 'contundente', 'cortante', 'frío', 'fuego', 'fuerza', 'necrótico', 'perforante', 'psíquico', 'radiante', 'relámpago', 'trueno', 'veneno']
+
+function inferirTipoDanio(texto = '') {
+  const t = texto.toLowerCase()
+  for (const tipo of TIPOS_DANIO_COMPLETOS) {
+    if (t.includes(`daño ${tipo}`) || t.includes(`daño de ${tipo}`) || t.includes(tipo)) return tipo
+  }
+  return null
+}
+
+function inferirSalvacionConjuro(texto = '') {
+  const t = texto.toLowerCase()
+  const mapa = {
+    fuerza: 'Fuerza',
+    destreza: 'Destreza',
+    constitucion: 'Constitución',
+    inteligencia: 'Inteligencia',
+    sabiduria: 'Sabiduría',
+    carisma: 'Carisma',
+  }
+  const m = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/tirada de salvacion de\s+(fuerza|destreza|constitucion|inteligencia|sabiduria|carisma)/)
+  if (!m) return null
+  return mapa[m[1]] ?? null
+}
 
 function AtaqueCustomModal({ personaje, inicial, tieneMaestria, onGuardar, onCerrar }) {
   const overlayRef = useRef(null)
   const [nombre, setNombre] = useState(inicial?.nombre ?? '')
-  const [tipoAtaque, setTipoAtaque] = useState(inicial?.tipoAtaque ?? inicial?.tipo ?? 'cac')
-  const [caracteristica, setCaracteristica] = useState(inicial?.caracteristica ?? 'Fuerza')
+  const [tipoAtaque, setTipoAtaque] = useState(inicial?.tipoAtaque ?? inicial?.tipo ?? '')
+  const [caracteristica, setCaracteristica] = useState(inicial?.caracteristica ?? '')
   const [usaCompetencia, setUsaCompetencia] = useState(inicial?.usaCompetencia ?? true)
-  const [bonoMagico, setBonoMagico] = useState(inicial?.bonoMagico ?? 0)
-  const [bonoExtra, setBonoExtra] = useState(inicial?.bonoExtra ?? 0)
-  const [dadoDanio, setDadoDanio] = useState(inicial?.dadoDanio ?? '1d8')
-  const [tipoDanio, setTipoDanio] = useState(inicial?.tipoDanio ?? 'cortante')
+  const [bonoMagico, setBonoMagico] = useState(inicial?.bonoMagico ?? '')
+  const [bonoExtra, setBonoExtra] = useState(inicial?.bonoExtra ?? '')
+  const [dadoDanio, setDadoDanio] = useState(inicial?.dadoDanio ?? '')
+  const [tipoDanio, setTipoDanio] = useState(inicial?.tipoDanio ?? '')
   const [usaModDanio, setUsaModDanio] = useState(inicial?.usaModDanio ?? true)
-  const [critRango, setCritRango] = useState(inicial?.critRango ?? 20)
+  const [critRango, setCritRango] = useState(inicial?.critRango ?? '')
   const [alcance, setAlcance] = useState(inicial?.alcance ?? '')
   const [propiedades, setPropiedades] = useState(inicial?.propiedades ?? [])
   const [maestria, setMaestria] = useState(inicial?.maestria ?? '')
   const [usarMaestria, setUsarMaestria] = useState(inicial?.usarMaestria ?? false)
   const [notas, setNotas] = useState(inicial?.notas ?? '')
 
-  const mod = personaje.modificadores?.[caracteristica] ?? 0
+  const caracteristicaCalculada = caracteristica || 'Fuerza'
+  const mod = personaje.modificadores?.[caracteristicaCalculada] ?? 0
   const bonoCompetencia = usaCompetencia ? (personaje.bonificadorCompetencia ?? 0) : 0
+  const abrevCar = CARACTERISTICAS_ABBREV[caracteristicaCalculada] ?? caracteristicaCalculada
   const bonAtaque = mod + bonoCompetencia + Number(bonoMagico || 0) + Number(bonoExtra || 0)
-  const danoTotal = `${dadoDanio || '1'}${usaModDanio ? ` ${mod >= 0 ? '+' : '-'} ${Math.abs(mod)}` : ''} ${tipoDanio}`.trim()
+  const danoTotal = `${dadoDanio || '1d8'}${usaModDanio ? ` ${mod >= 0 ? '+' : '-'} ${Math.abs(mod)}` : ''} ${tipoDanio || 'dano'}`.trim()
+  const danoPreview = `${dadoDanio || '1d8'}${usaModDanio ? ` + ${abrevCar}` : ''} ${tipoDanio || 'dano'}`.trim()
 
   const toggleProp = (prop) => {
     setPropiedades(prev => prev.includes(prop) ? prev.filter(p => p !== prop) : [...prev, prop])
@@ -221,14 +249,14 @@ function AtaqueCustomModal({ personaje, inicial, tieneMaestria, onGuardar, onCer
       id: inicial?.id ?? `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
       custom: true,
       nombre: nombre.trim(),
-      tipoAtaque,
-      tipo: tipoAtaque,
-      caracteristica,
+      tipoAtaque: tipoAtaque || 'cac',
+      tipo: tipoAtaque || 'cac',
+      caracteristica: caracteristica || 'Fuerza',
       usaCompetencia,
       bonoMagico: Number(bonoMagico || 0),
       bonoExtra: Number(bonoExtra || 0),
-      dadoDanio: (dadoDanio || '1').trim(),
-      tipoDanio: (tipoDanio || '').trim(),
+      dadoDanio: (dadoDanio || '1d8').trim(),
+      tipoDanio: (tipoDanio || 'contundente').trim(),
       usaModDanio,
       critRango: Math.max(2, Math.min(20, Number(critRango || 20))),
       alcance: alcance.trim(),
@@ -253,12 +281,14 @@ function AtaqueCustomModal({ personaje, inicial, tieneMaestria, onGuardar, onCer
         </div>
 
         <div className="sc-modal__body cs-atk-modal-grid">
-          <input className="cs-field__input" placeholder="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} />
+          <input className="cs-field__input" placeholder="Nombre del ataque" value={nombre} onChange={e => setNombre(e.target.value)} />
           <select className="cs-field__input" value={tipoAtaque} onChange={e => setTipoAtaque(e.target.value)}>
+            <option value="" disabled>Tipo de ataque</option>
             <option value="cac">Cuerpo a cuerpo</option>
             <option value="dist">A distancia</option>
           </select>
           <select className="cs-field__input" value={caracteristica} onChange={e => setCaracteristica(e.target.value)}>
+            <option value="" disabled>Característica para atacar</option>
             {CARACTERISTICAS_ATAQUE.map(c => <option key={c} value={c}>{CARACTERISTICAS_ABBREV[c]} ({c})</option>)}
           </select>
           <label className="cs-atk-check"><input type="checkbox" checked={usaCompetencia} onChange={e => setUsaCompetencia(e.target.checked)} /> Competente</label>
@@ -266,12 +296,17 @@ function AtaqueCustomModal({ personaje, inicial, tieneMaestria, onGuardar, onCer
           <input className="cs-field__input" type="number" placeholder="Bono mágico" value={bonoMagico} onChange={e => setBonoMagico(e.target.value)} />
           <input className="cs-field__input" type="number" placeholder="Bono extra" value={bonoExtra} onChange={e => setBonoExtra(e.target.value)} />
           <input className="cs-field__input" placeholder="Dado daño (ej: 1d8)" value={dadoDanio} onChange={e => setDadoDanio(e.target.value)} />
-          <input className="cs-field__input" placeholder="Tipo daño" value={tipoDanio} onChange={e => setTipoDanio(e.target.value)} />
+          <select className="cs-field__input" value={tipoDanio} onChange={e => setTipoDanio(e.target.value)}>
+            <option value="" disabled>Tipo de daño</option>
+            {TIPOS_DANIO_ATAQUE.map(t => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
 
           <label className="cs-atk-check"><input type="checkbox" checked={usaModDanio} onChange={e => setUsaModDanio(e.target.checked)} /> Sumar mod al daño</label>
-          <input className="cs-field__input" type="number" min={2} max={20} placeholder="Crit" value={critRango} onChange={e => setCritRango(e.target.value)} />
+          <input className="cs-field__input" type="number" min={2} max={20} placeholder="Rango crítico (20)" value={critRango} onChange={e => setCritRango(e.target.value)} />
           <input className="cs-field__input" placeholder="Alcance (ej: 6/18 m)" value={alcance} onChange={e => setAlcance(e.target.value)} />
-          <input className="cs-field__input" placeholder="Notas" value={notas} onChange={e => setNotas(e.target.value)} />
+          <input className="cs-field__input" placeholder="Notas (opcional)" value={notas} onChange={e => setNotas(e.target.value)} />
 
           <div className="cs-atk-props">
             <div className="cs-atk-props__title">Propiedades</div>
@@ -297,12 +332,74 @@ function AtaqueCustomModal({ personaje, inicial, tieneMaestria, onGuardar, onCer
             {maestria && <small className="cs-atk-help">{MAESTRIAS_ARMA_DESC[maestria]}</small>}
           </div>
 
-          <div className="cs-atk-preview">Ataque: <strong>{bonAtaque >= 0 ? `+${bonAtaque}` : bonAtaque}</strong> · Daño: <strong>{danoTotal}</strong></div>
+          <div className="cs-atk-preview">Ataque: <strong>{bonAtaque >= 0 ? `+${bonAtaque}` : bonAtaque}</strong> · Daño: <strong>{danoPreview}</strong></div>
         </div>
 
         <div className="sc-modal__footer">
           <button className="sc-modal__btn sc-modal__btn--cancelar" onClick={onCerrar}>Cancelar</button>
           <button className="sc-modal__btn sc-modal__btn--confirmar" onClick={confirmar}>Guardar ataque</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function AtaqueDetalleModal({ detalle, personaje, onGuardar, onCerrar }) {
+  const [descripcion, setDescripcion] = useState(detalle?.descripcion ?? '')
+  const [tipoDanio, setTipoDanio] = useState(detalle?.tipoDanio ?? '')
+  const [salvacion, setSalvacion] = useState(detalle?.salvacion ?? '')
+
+  const guardar = () => {
+    onGuardar({
+      descripcion: descripcion.trim(),
+      tipoDanio: tipoDanio || null,
+      salvacion: salvacion || null,
+    })
+  }
+
+  return (
+    <div className="sc-modal-overlay" role="dialog" aria-modal="true" aria-label="Detalle de ataque">
+      <div className="sc-modal" style={{ maxWidth: 760, width: '95vw' }}>
+        <div className="sc-modal__header">
+          <div>
+            <h2 className="sc-modal__titulo">{detalle?.nombre}</h2>
+            <p className="sc-modal__subtitulo">Configurable solo para esta hoja del jugador</p>
+          </div>
+          <button className="sc-modal__cerrar" onClick={onCerrar} aria-label="Cerrar">✕</button>
+        </div>
+
+        <div className="sc-modal__body cs-atk-detail-grid">
+          <input className="cs-field__input" value={detalle?.ataqueLabel ?? ''} disabled readOnly />
+          <input className="cs-field__input" value={detalle?.danioLabel ?? ''} disabled readOnly />
+
+          <select className="cs-field__input" value={tipoDanio} onChange={e => setTipoDanio(e.target.value)}>
+            <option value="">Tipo de daño (sin forzar)</option>
+            {TIPOS_DANIO_COMPLETOS.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+
+          <select className="cs-field__input" value={salvacion} onChange={e => setSalvacion(e.target.value)}>
+            <option value="">Sin tirada de salvación</option>
+            {CARACTERISTICAS_ATAQUE.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+
+          {salvacion && (
+            <div className="cs-atk-preview" style={{ gridColumn: '1 / -1' }}>
+              CD de salvación: <strong>{personaje.conjuros?.cdSalvacion ?? '—'} ({CARACTERISTICAS_ABBREV[salvacion] ?? salvacion})</strong>
+            </div>
+          )}
+
+          <textarea
+            className="cs-field__textarea"
+            style={{ gridColumn: '1 / -1', minHeight: 140 }}
+            value={descripcion}
+            onChange={e => setDescripcion(e.target.value)}
+            placeholder="Descripción visible en la hoja"
+          />
+        </div>
+
+        <div className="sc-modal__footer">
+          <button className="sc-modal__btn sc-modal__btn--cancelar" onClick={onCerrar}>Cancelar</button>
+          <button className="sc-modal__btn sc-modal__btn--confirmar" onClick={guardar}>Guardar</button>
         </div>
       </div>
     </div>
@@ -1098,6 +1195,7 @@ function Hoja1({
   dotesElegidos, onDotesElegidosCambiar,
   dotesLibres, onDotesLibresCambiar,
   armasCustom, onArmasCustomCambiar,
+  ataquesHojaConfig, onAtaquesHojaConfigCambiar,
   ataquesOcultos, onAtaquesOcultosCambiar,
   itemsOcultos, onItemsOcultosCambiar,
   trucosSeleccionados,
@@ -1108,6 +1206,7 @@ function Hoja1({
   const [modalSubclase, setModalSubclase] = useState(false)
   const [asiModalNivel, setAsiModalNivel] = useState(null)
   const [ataqueModal, setAtaqueModal] = useState(null)
+  const [detalleAtaqueModal, setDetalleAtaqueModal] = useState(null)
   const [modalDoteLibreAbierto, setModalDoteLibreAbierto] = useState(false)
   const [inspiracion, setInspiracion] = useState(false)
   const [pgMetodoAbierto, setPgMetodoAbierto] = useState(false)
@@ -1219,7 +1318,13 @@ function Hoja1({
   const doteTrasfondoDesc = personaje.trasfondo?.doteId
     ? (getDoteById(personaje.trasfondo.doteId)?.desc ?? '')
     : ''
-  const tieneMaestriaArmas = (personaje.rasgosClase ?? []).some(r => /maestr/i.test(r?.nombre ?? ''))
+  const tieneMaestriaArmas = !!personaje.maestriaArmas?.tiene
+
+  const getCfgAtaque = (key) => (ataquesHojaConfig ?? {})[key] ?? {}
+  const saveCfgAtaque = (key, patch) => {
+    if (!key) return
+    onAtaquesHojaConfigCambiar?.(prev => ({ ...prev, [key]: { ...(prev?.[key] ?? {}), ...patch } }))
+  }
 
   return (
     <div className="cs-hoja cs-hoja--1">
@@ -1535,24 +1640,42 @@ function Hoja1({
           <SheetSection title="Armas y trucos de daño">
             <div className="cs-attacks">
               <div className="cs-attacks__head">
-                <span>Nombre</span><span>Bonif. ato./CD</span><span>Daño y tipo</span><span>Notas</span>
+                <span>Nombre</span><span>Bonif. ato./CD</span><span>Daño y tipo</span><span>Notas</span><span className="cs-attacks__head-actions">Acc.</span>
               </div>
 
               {/* Armas automáticas (del equipo) */}
               {personaje.ataques?.map((atk, i) => {
+                const atkKey = atk.key ?? `auto-fallback-${i}`
+                const cfg = getCfgAtaque(atkKey)
                 const notasAuto = [
                   atk.tipo === 'dist' ? 'A distancia' : 'Cuerpo a cuerpo',
                   atk.propiedades?.length ? `Propiedades: ${atk.propiedades.join(', ')}` : null,
                   (tieneMaestriaArmas && atk.maestria) ? `Maestría: ${atk.maestria}` : null,
                   atk.fuente ? `Fuente: ${atk.fuente}` : null,
+                  cfg.descripcion ? `Desc: ${cfg.descripcion}` : null,
                 ].filter(Boolean).join(' · ')
                 return (
                   <div key={atk.key ?? `a-${i}`} className="cs-attacks__row cs-attacks__row--data">
                     <span className="cs-attacks__cell">{atk.nombre}</span>
                     <span className="cs-attacks__cell cs-attacks__cell--bon">{atk.bonAtaque >= 0 ? `+${atk.bonAtaque}` : atk.bonAtaque}</span>
-                    <span className="cs-attacks__cell">{atk.daño}</span>
+                    <span className="cs-attacks__cell">{atk.daño}{cfg.tipoDanio ? ` (${cfg.tipoDanio})` : ''}</span>
                     <span className="cs-attacks__cell cs-attacks__cell--notas">
                       {notasAuto}
+                    </span>
+                    <span className="cs-attacks__cell cs-attacks__cell--actions">
+                      <button
+                        className="cs-attacks__del"
+                        title="Ver/editar descripción"
+                        onClick={() => setDetalleAtaqueModal({
+                          key: atkKey,
+                          nombre: atk.nombre,
+                          ataqueLabel: atk.bonAtaque >= 0 ? `+${atk.bonAtaque}` : `${atk.bonAtaque}`,
+                          danioLabel: atk.daño,
+                          descripcion: cfg.descripcion ?? notasAuto,
+                          tipoDanio: cfg.tipoDanio ?? inferirTipoDanio(atk.daño),
+                          salvacion: cfg.salvacion ?? null,
+                        })}
+                      >i</button>
                       <button
                         className="cs-attacks__del"
                         title="Quitar arma de esta hoja"
@@ -1571,11 +1694,27 @@ function Hoja1({
               {/* Armas/ataques personalizados */}
               {(armasCustom ?? []).map((atk, i) => (
                 <div key={atk.id ?? `c-${i}`} className="cs-attacks__row cs-attacks__row--data cs-attacks__row--custom">
+                  {(() => {
+                    const key = `custom:${atk.id ?? i}`
+                    const cfg = getCfgAtaque(key)
+                    return (
+                      <>
                   <span className="cs-attacks__cell">{atk.nombre}</span>
                   <span className="cs-attacks__cell cs-attacks__cell--bon">{atk.bonAtaque >= 0 ? `+${atk.bonAtaque}` : atk.bonAtaque}</span>
-                  <span className="cs-attacks__cell">{atk.daño}</span>
+                  <span className="cs-attacks__cell">{atk.daño}{cfg.tipoDanio ? ` (${cfg.tipoDanio})` : ''}</span>
                   <span className="cs-attacks__cell cs-attacks__cell--notas">
-                    {[atk.tipoAtaque === 'dist' ? 'A distancia' : 'Cuerpo a cuerpo', atk.alcance ? `Alcance ${atk.alcance}` : null, atk.propiedades?.length ? `Propiedades: ${atk.propiedades.join(', ')}` : null, (atk.usarMaestria && atk.maestria) ? `Maestría: ${atk.maestria}` : null, atk.notas || null].filter(Boolean).join(' · ')}
+                    {[atk.tipoAtaque === 'dist' ? 'A distancia' : 'Cuerpo a cuerpo', atk.alcance ? `Alcance ${atk.alcance}` : null, atk.propiedades?.length ? `Propiedades: ${atk.propiedades.join(', ')}` : null, (atk.usarMaestria && atk.maestria) ? `Maestría: ${atk.maestria}` : null, (cfg.descripcion ?? atk.notas ?? null)].filter(Boolean).join(' · ')}
+                  </span>
+                  <span className="cs-attacks__cell cs-attacks__cell--actions">
+                    <button className="cs-attacks__del" title="Ver/editar descripción" onClick={() => setDetalleAtaqueModal({
+                      key,
+                      nombre: atk.nombre,
+                      ataqueLabel: atk.bonAtaque >= 0 ? `+${atk.bonAtaque}` : `${atk.bonAtaque}`,
+                      danioLabel: atk.daño,
+                      descripcion: cfg.descripcion ?? atk.notas ?? '',
+                      tipoDanio: cfg.tipoDanio ?? inferirTipoDanio(atk.daño),
+                      salvacion: cfg.salvacion ?? null,
+                    })}>i</button>
                     <button className="cs-attacks__del" title="Editar" onClick={() => setAtaqueModal({ modo: 'editar', idx: i })}>✎</button>
                     <button
                       className="cs-attacks__del"
@@ -1583,28 +1722,51 @@ function Hoja1({
                       onClick={() => onArmasCustomCambiar(prev => prev.filter((_, j) => j !== i))}
                     >✕</button>
                   </span>
+                      </>
+                    )
+                  })()}
                 </div>
               ))}
 
               {/* Trucos de daño seleccionados */}
               {personaje.conjuros && trucosSeleccionados
-                .filter(nombre => {
-                  const c = CONJUROS[nombre]
-                  return c?.nivel === 0 && /da[ñn]o|ataque|salvaci[oó]n/i.test(c.descripcion ?? '')
-                })
+                .filter(nombre => getTrucoNivel0Info(nombre)?.muestraEnTablaAtaques)
                 .map(nombre => {
                   const c = CONJUROS[nombre]
-                  const usaAtaque = /ataque de conjuro/i.test(c.descripcion ?? '')
+                  const trucoInfo = getTrucoNivel0Info(nombre, c)
+                  const key = `truco:${nombre}`
+                  const cfg = getCfgAtaque(key)
+                  const saveBase = inferirSalvacionConjuro(c.descripcion ?? '')
+                  const tipoBase = trucoInfo?.tipoDanio ?? inferirTipoDanio(c.descripcion ?? '')
+                  const dadoBase = getTrucoDanioEtiqueta({ ...trucoInfo, tipoDanio: null }, personaje.nivel ?? 1)
+                  const salvacionMostrada = cfg.salvacion ?? saveBase
+                  const tipoDanioMostrado = cfg.tipoDanio ?? tipoBase
+                  const danioTrucoMostrado = [dadoBase, tipoDanioMostrado].filter(Boolean).join(' ')
+                  const notasTruco = [
+                    cfg.descripcion ? cfg.descripcion : c.escuela,
+                    salvacionMostrada ? `Salvación: ${CARACTERISTICAS_ABBREV[salvacionMostrada] ?? salvacionMostrada}` : null,
+                  ].filter(Boolean).join(' · ')
                   return (
                     <div key={`t-${nombre}`} className="cs-attacks__row cs-attacks__row--data cs-attacks__row--truco">
                       <span className="cs-attacks__cell">✨ {nombre}</span>
                       <span className="cs-attacks__cell cs-attacks__cell--bon">
-                        {usaAtaque
-                          ? `+${personaje.conjuros.bonAtaque}`
-                          : `CD ${personaje.conjuros.cdSalvacion}`}
+                        {`+${personaje.conjuros.bonAtaque}`}
                       </span>
-                      <span className="cs-attacks__cell cs-attacks__cell--ver">Ver desc.</span>
-                      <span className="cs-attacks__cell">{c.escuela}</span>
+                      <span className="cs-attacks__cell cs-attacks__cell--ver">{danioTrucoMostrado || 'Ver desc.'}</span>
+                      <span className="cs-attacks__cell cs-attacks__cell--notas">
+                        {notasTruco}
+                      </span>
+                      <span className="cs-attacks__cell cs-attacks__cell--actions">
+                        <button className="cs-attacks__del" title="Ver/editar descripción" onClick={() => setDetalleAtaqueModal({
+                          key,
+                          nombre: `✨ ${nombre}`,
+                          ataqueLabel: `+${personaje.conjuros.bonAtaque}`,
+                          danioLabel: danioTrucoMostrado || '—',
+                          descripcion: cfg.descripcion ?? c.descripcion ?? '',
+                          tipoDanio: tipoDanioMostrado,
+                          salvacion: salvacionMostrada,
+                        })}>i</button>
+                      </span>
                     </div>
                   )
                 })}
@@ -1613,7 +1775,7 @@ function Hoja1({
               {(!personaje.ataques?.length && !(armasCustom ?? []).length && !trucosSeleccionados?.length) && (
                 [0, 1, 2].map(i => (
                   <div key={i} className="cs-attacks__row">
-                    <span className="cs-attacks__cell" /><span className="cs-attacks__cell" /><span className="cs-attacks__cell" /><span className="cs-attacks__cell" />
+                    <span className="cs-attacks__cell" /><span className="cs-attacks__cell" /><span className="cs-attacks__cell" /><span className="cs-attacks__cell" /><span className="cs-attacks__cell" />
                   </div>
                 ))
               )}
@@ -1632,6 +1794,18 @@ function Hoja1({
                     onArmasCustomCambiar(prev => [...(prev ?? []), atk])
                   }
                   setAtaqueModal(null)
+                }}
+              />
+            )}
+
+            {detalleAtaqueModal && (
+              <AtaqueDetalleModal
+                detalle={detalleAtaqueModal}
+                personaje={personaje}
+                onCerrar={() => setDetalleAtaqueModal(null)}
+                onGuardar={(patch) => {
+                  saveCfgAtaque(detalleAtaqueModal.key, patch)
+                  setDetalleAtaqueModal(null)
                 }}
               />
             )}
@@ -2271,8 +2445,27 @@ function EtiquetaEscuela({ escuela }) {
   )
 }
 
+function EtiquetaTruco({ info }) {
+  if (!info) return null
+  return (
+    <span className={`conj-truco-tag${info.esDeDanio ? ' conj-truco-tag--danio' : ''}`}>
+      {info.esDeDanio ? 'Daño' : 'Utilidad'}
+    </span>
+  )
+}
+
+function MetaTrucoCompacta({ info }) {
+  if (!info) return null
+  return (
+    <span className="conj-truco-meta">
+      {info.esDeDanio ? info.resumenCorto : 'Sin daño directo'}
+    </span>
+  )
+}
+
 function ConjuroDetalle({ conjuro, nombre, onCerrar }) {
   if (!conjuro) return null
+  const trucoInfo = getTrucoNivel0Info(nombre, conjuro)
   return (
     <div className="conj-detalle-overlay" onClick={onCerrar}>
       <div className="conj-detalle" onClick={e => e.stopPropagation()}>
@@ -2284,8 +2477,31 @@ function ConjuroDetalle({ conjuro, nombre, onCerrar }) {
             <span className="conj-detalle__nivel">
               {conjuro.nivel === 0 ? 'Truco' : `Nivel ${conjuro.nivel}`}
             </span>
+            {trucoInfo ? <EtiquetaTruco info={trucoInfo} /> : null}
           </div>
         </div>
+        {trucoInfo ? (
+          <div className="conj-detalle__cantrip-box">
+            <div className="conj-detalle__cantrip-row">
+              <span className="conj-detalle__stat-lbl">Clasificación</span>
+              <span>{trucoInfo.esDeDanio ? (trucoInfo.modoDanio === 'arma' ? 'Truco de daño con arma' : 'Truco de daño directo') : 'Truco sin daño directo'}</span>
+            </div>
+            {trucoInfo.esDeDanio ? (
+              <>
+                <div className="conj-detalle__cantrip-row">
+                  <span className="conj-detalle__stat-lbl">Daño</span>
+                  <span>{getTrucoDanioEtiqueta(trucoInfo, 1) ?? trucoInfo.resumenDanio ?? 'Ver descripción'}</span>
+                </div>
+                {trucoInfo.resumenEscalado ? (
+                  <div className="conj-detalle__cantrip-row conj-detalle__cantrip-row--stacked">
+                    <span className="conj-detalle__stat-lbl">Escalado</span>
+                    <span>{trucoInfo.resumenEscalado}</span>
+                  </div>
+                ) : null}
+              </>
+            ) : null}
+          </div>
+        ) : null}
         <div className="conj-detalle__stats">
           <div className="conj-detalle__stat"><span className="conj-detalle__stat-lbl">Tiempo</span><span>{conjuro.tiempoLanzamiento}</span></div>
           <div className="conj-detalle__stat"><span className="conj-detalle__stat-lbl">Alcance</span><span>{conjuro.alcance}</span></div>
@@ -2307,14 +2523,19 @@ function PickerModal({ titulo, lista, grupos, seleccionados, seleccionadosTodos,
 
   const renderItem = (nombre) => {
     const c = CONJUROS[nombre]
+    const trucoInfo = getTrucoNivel0Info(nombre, c)
     const sel = seleccionados.includes(nombre)
     const lleno = !sel && !noLimite && globalTodos.length >= max
     return (
       <div key={nombre} className={`conj-picker__item${sel ? ' conj-picker__item--sel' : ''}${lleno ? ' conj-picker__item--lleno' : ''}`}>
         <button className="conj-picker__item-btn" disabled={lleno} onClick={() => onToggle(nombre)}>
           <span className={`conj-picker__check${sel ? ' conj-picker__check--on' : ''}`}>{sel ? '✓' : '+'}</span>
-          <span className="conj-picker__item-nombre">{nombre}</span>
+          <span className="conj-picker__item-main">
+            <span className="conj-picker__item-nombre">{nombre}</span>
+            {trucoInfo ? <MetaTrucoCompacta info={trucoInfo} /> : null}
+          </span>
           {c && <EtiquetaEscuela escuela={c.escuela} />}
+          {trucoInfo ? <EtiquetaTruco info={trucoInfo} /> : null}
         </button>
         <button className="conj-picker__info" onClick={() => setDetalleNombre(nombre)} title="Ver descripción">ℹ</button>
       </div>
@@ -2325,15 +2546,15 @@ function PickerModal({ titulo, lista, grupos, seleccionados, seleccionadosTodos,
   let hayResultados = false
 
   if (grupos) {
-    const niveles = Object.keys(grupos).map(Number).sort((a, b) => a - b)
-    contenidoLista = niveles.map(nv => {
-      const items = grupos[nv] ?? []
+    const gruposEntries = Object.entries(grupos)
+    contenidoLista = gruposEntries.map(([grupo, items]) => {
       const filtrados = busq ? items.filter(n => n.toLowerCase().includes(busq)) : items
       if (filtrados.length === 0) return null
       hayResultados = true
+      const nivel = Number(grupo)
       return (
-        <div key={nv} className="conj-picker__grupo">
-          <div className="conj-picker__grupo-head">Nivel {nv}</div>
+        <div key={grupo} className="conj-picker__grupo">
+          <div className="conj-picker__grupo-head">{Number.isNaN(nivel) ? grupo : `Nivel ${nivel}`}</div>
           {filtrados.map(renderItem)}
         </div>
       )
@@ -2415,6 +2636,10 @@ function Hoja3({ personaje, trucosSeleccionados, onTrucosCambiar, grimorioConjur
     .sort(([a], [b]) => a.localeCompare(b, 'es'))
 
   const trucosDeLaClase = conjurosDeLaClase.filter(([, c]) => c.nivel === 0).map(([n]) => n)
+  const trucosDeDanioDeLaClase = trucosDeLaClase.filter(nombre => getTrucoNivel0Info(nombre)?.esDeDanio)
+  const trucosSinDanioDeLaClase = trucosDeLaClase.filter(nombre => !getTrucoNivel0Info(nombre)?.esDeDanio)
+  const trucosSeleccionadosDeDanio = trucosSeleccionados.filter(nombre => getTrucoNivel0Info(nombre)?.esDeDanio)
+  const trucosSeleccionadosSinDanio = trucosSeleccionados.filter(nombre => !getTrucoNivel0Info(nombre)?.esDeDanio)
 
   // Conjuros por nivel (1-9), hasta nivelMax
   const nivelMax = conj.nivelMaxConjuro ?? 0
@@ -2635,14 +2860,38 @@ function Hoja3({ personaje, trucosSeleccionados, onTrucosCambiar, grimorioConjur
             {trucosSeleccionados.length === 0 && (
               <span className="conj-lista__vacia">Ningún truco seleccionado</span>
             )}
-            {trucosSeleccionados.map(nombre => (
-              <div key={nombre} className="conj-item conj-item--truco">
-                <button className="conj-item__info" onClick={() => setDetalleNombre(nombre)}>ℹ</button>
-                <span className="conj-item__nombre">{nombre}</span>
-                {CONJUROS[nombre] && <EtiquetaEscuela escuela={CONJUROS[nombre].escuela} />}
-                <button className="conj-item__remove" onClick={() => toggleTruco(nombre)} title="Quitar">✕</button>
-              </div>
-            ))}
+            {trucosSeleccionadosDeDanio.length > 0 && <div className="conj-subgroup-title">Trucos de daño</div>}
+            {trucosSeleccionadosDeDanio.map(nombre => {
+              const info = getTrucoNivel0Info(nombre)
+              return (
+                <div key={nombre} className="conj-item conj-item--truco">
+                  <button className="conj-item__info" onClick={() => setDetalleNombre(nombre)}>ℹ</button>
+                  <span className="conj-item__main">
+                    <span className="conj-item__nombre">{nombre}</span>
+                    <MetaTrucoCompacta info={info} />
+                  </span>
+                  {CONJUROS[nombre] && <EtiquetaEscuela escuela={CONJUROS[nombre].escuela} />}
+                  <EtiquetaTruco info={info} />
+                  <button className="conj-item__remove" onClick={() => toggleTruco(nombre)} title="Quitar">✕</button>
+                </div>
+              )
+            })}
+            {trucosSeleccionadosSinDanio.length > 0 && <div className="conj-subgroup-title">Trucos sin daño</div>}
+            {trucosSeleccionadosSinDanio.map(nombre => {
+              const info = getTrucoNivel0Info(nombre)
+              return (
+                <div key={nombre} className="conj-item conj-item--truco">
+                  <button className="conj-item__info" onClick={() => setDetalleNombre(nombre)}>ℹ</button>
+                  <span className="conj-item__main">
+                    <span className="conj-item__nombre">{nombre}</span>
+                    <MetaTrucoCompacta info={info} />
+                  </span>
+                  {CONJUROS[nombre] && <EtiquetaEscuela escuela={CONJUROS[nombre].escuela} />}
+                  <EtiquetaTruco info={info} />
+                  <button className="conj-item__remove" onClick={() => toggleTruco(nombre)} title="Quitar">✕</button>
+                </div>
+              )
+            })}
           </div>
         </div>
       )}
@@ -2774,7 +3023,10 @@ function Hoja3({ personaje, trucosSeleccionados, onTrucosCambiar, grimorioConjur
       {picker?.tipo === 'truco' && (
         <PickerModal
           titulo={`Elegir trucos (máx. ${conj.trucosMax})`}
-          lista={trucosDeLaClase}
+          grupos={{
+            'Trucos de daño': trucosDeDanioDeLaClase,
+            'Trucos sin daño': trucosSinDanioDeLaClase,
+          }}
           seleccionados={trucosSeleccionados}
           max={conj.trucosMax}
           onToggle={toggleTruco}
@@ -3010,6 +3262,7 @@ export default function CharacterSheet({
   conjurosSeleccionados, onConjurosSeleccionadosCambiar,
   espaciosUsados, onEspaciosUsadosCambiar,
   armasCustom, onArmasCustomCambiar,
+  ataquesHojaConfig, onAtaquesHojaConfigCambiar,
   ataquesOcultos, onAtaquesOcultosCambiar,
   itemsOcultos, onItemsOcultosCambiar,
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
@@ -3109,6 +3362,8 @@ export default function CharacterSheet({
           onDotesLibresCambiar={onDotesLibresCambiar}
           armasCustom={armasCustom}
           onArmasCustomCambiar={onArmasCustomCambiar}
+          ataquesHojaConfig={ataquesHojaConfig}
+          onAtaquesHojaConfigCambiar={onAtaquesHojaConfigCambiar}
           ataquesOcultos={ataquesOcultos}
           onAtaquesOcultosCambiar={onAtaquesOcultosCambiar}
           itemsOcultos={itemsOcultos}

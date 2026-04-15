@@ -104,6 +104,7 @@ function App() {
   const [conjurosSeleccionados, setConjurosSeleccionados] = useState([])
   const [espaciosUsados, setEspaciosUsados] = useState({})
   const [armasCustom, setArmasCustom] = useState([])
+  const [ataquesHojaConfig, setAtaquesHojaConfig] = useState({})
   const [ataquesOcultos, setAtaquesOcultos] = useState([])
   const [itemsOcultos, setItemsOcultos] = useState([])
   const [dadosGolpeGastados, setDadosGolpeGastados] = useState(0)
@@ -132,6 +133,7 @@ function App() {
     setGrimorioConjuros([])
     setConjurosSeleccionados([])
     setEspaciosUsados({})
+    setAtaquesHojaConfig({})
     setAtaquesOcultos([])
     setItemsOcultos([])
   }, [claseSeleccionada])
@@ -167,6 +169,7 @@ function App() {
     conjurosSeleccionados,
     espaciosUsados,
     armasCustom,
+    ataquesHojaConfig,
     ataquesOcultos,
     itemsOcultos,
     dadosGolpeGastados,
@@ -174,7 +177,7 @@ function App() {
     xpNivelActual,
     pgGananciaPorNivel,
     personajeOverrides,
-  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, ataquesOcultos, itemsOcultos, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, pgGananciaPorNivel, personajeOverrides])
+  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, ataquesHojaConfig, ataquesOcultos, itemsOcultos, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, pgGananciaPorNivel, personajeOverrides])
 
   const cargarDesdeData = useCallback((data) => {
     cargandoRef.current = true
@@ -202,6 +205,7 @@ function App() {
     setConjurosSeleccionados(data.conjurosSeleccionados ?? [])
     setEspaciosUsados(data.espaciosUsados ?? {})
     setArmasCustom(data.armasCustom ?? [])
+    setAtaquesHojaConfig(data.ataquesHojaConfig ?? {})
     setAtaquesOcultos(data.ataquesOcultos ?? [])
     setItemsOcultos(data.itemsOcultos ?? [])
     setDadosGolpeGastados(data.dadosGolpeGastados ?? 0)
@@ -421,6 +425,8 @@ function App() {
             onEspaciosUsadosCambiar={setEspaciosUsados}
             armasCustom={armasCustom}
             onArmasCustomCambiar={setArmasCustom}
+            ataquesHojaConfig={ataquesHojaConfig}
+            onAtaquesHojaConfigCambiar={setAtaquesHojaConfig}
             ataquesOcultos={ataquesOcultos}
             onAtaquesOcultosCambiar={setAtaquesOcultos}
             itemsOcultos={itemsOcultos}

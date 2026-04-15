@@ -137,6 +137,7 @@ export function crearEstadoInicial(CARACTERISTICAS) {
     conjurosSeleccionados: [],
     espaciosUsados: {},
     armasCustom: [],
+    ataquesHojaConfig: {},
     ataquesOcultos: [],
     itemsOcultos: [],
     pgGananciaPorNivel: {},

@@ -3379,8 +3379,7 @@ Con un espacio de conjuro de nivel superior. El daño aumenta en 1d8 por cada ni
     alcance: '9 m',
     componentes: 'V, S',
     duracion: 'Instantáneo',
-    descripcion: `7. Violeta. Si falla la tirada: El objetivo tendrá el estado de cegado y hará una tirada de salvación de Sabiduría al principio de tu siguiente turno. Si la supera, el estado terminará. Si la falla, el estado terminará para la lluvia, copos de nieve para la nieve, etc. Este efecto y la criatura se teletransportará a otro plano de persiste durante 1 asalto. existencia (a elección de tu DM). Florecer. Haces que, al instante, una flor florezca, una 8 Especial. Dos rayos alcanzan al objetivo. Tira dos vaina de semillas se abra o el brote de una hoja germine. veces y repite los resultados de 8.
-UN DUENDE LANZA SABER ORVÍDICO PARA HACER CRECER FLORES. Efecto sensorial. Creas un efecto sensorial inofensivo, como hojas cayendo, hadas espectrales bailando, una suave brisa, el sonido de un animal o un leve olor a mofeta. El efecto debe caber en un cubo de 1,5 m de lado. Jugar con fuego. Enciendes o apagas una vela, una antorcha o una hoguera. SAETA GUÍA Evocación de nivel 1 (clérigo) Tiempo de lanzamiento: Acción Alcance: 36 m Componentes: V, S Duración: 1 asalto Lanzas un rayo de luz hacia una criatura dentro del alcance. Haz un ataque de conjuro a distancia contra el objetivo. Si acierta, el objetivo recibirá 4d6 de daño radiante y la siguiente tirada de ataque contra él antes del final de tu siguiente turno tendrá ventaja. Con un espacio de conjuro de nivel superior. El daño aumenta en 1d6 por cada nivel por encima de 1 que tenga el espacio`
+    descripcion: `7. Violeta. Si falla la tirada: El objetivo tendrá el estado de cegado y hará una tirada de salvación de Sabiduría al principio de tu siguiente turno. Si la supera, el estado terminará. Si la falla, el estado terminará para la lluvia, copos de nieve para la nieve, etc. Este efecto y la criatura se teletransportará a otro plano de persiste durante 1 asalto. existencia (a elección de tu DM). Florecer. Haces que, al instante, una flor florezca, una 8 Especial. Dos rayos alcanzan al objetivo. Tira dos vaina de semillas se abra o el brote de una hoja germine. veces y repite los resultados de 8. Efecto sensorial. Creas un efecto sensorial inofensivo, como hojas cayendo, hadas espectrales bailando, una suave brisa, el sonido de un animal o un leve olor a mofeta. El efecto debe caber en un cubo de 1,5 m de lado. Jugar con fuego. Enciendes o apagas una vela, una antorcha o una hoguera. SAETA GUÍA Evocación de nivel 1 (clérigo) Tiempo de lanzamiento: Acción Alcance: 36 m Componentes: V, S Duración: 1 asalto Lanzas un rayo de luz hacia una criatura dentro del alcance. Haz un ataque de conjuro a distancia contra el objetivo. Si acierta, el objetivo recibirá 4d6 de daño radiante y la siguiente tirada de ataque contra él antes del final de tu siguiente turno tendrá ventaja. Con un espacio de conjuro de nivel superior. El daño aumenta en 1d6 por cada nivel por encima de 1 que tenga el espacio`
   },
   'Saeta Guía': {
     nivel: 1,
@@ -3942,3 +3941,223 @@ Puedes intentar poseer a cualquier humanoide que esté a 30 m o menos de ti que 
     descripcion: `Creas una zona mágica que protege contra el engaño en una esfera de 4,5 m de radio centrada en un punto dentro del alcance. Hasta que el conjuro termine, una criatura que entre en la zona del conjuro por primera vez en un turno o comience su turno allí realizará una tirada de salvación de Carisma. Si la falla, no podrá decir una mentira voluntariamente mientras esté en el radio del conjuro. Sabrás si una criatura supera o falla esta tirada. Una criatura afectada es consciente del conjuro y puede evitar responder a preguntas a las que normalmente respondería con una mentira. Dicha criatura puede dar respuestas evasivas, pero deberá ser sincera.`
   }
 };
+
+const TRUCOS_DE_DANIO_DIRECTO_CONOCIDOS = new Set([
+  'Agarre Electrizante',
+  'Burla Dañina',
+  'Crear Llama',
+  'Descarga Sobrenatural',
+  'Descarga de Fuego',
+  'Estallido Mágico',
+  'Fragmento Mental',
+  'Llama Sagrada',
+  'Látigo de Espinas',
+  'Palabra de Resplandor',
+  'Rayo de Escarcha',
+  'Salpicadura Ácida',
+  'Tañido por los Muertos',
+  'Toque Helado',
+  'Tronar',
+  'Voluta Estelar',
+])
+
+const TRUCOS_DE_DANIO_CON_ARMA = {
+  'Impacto Certero': {
+    modoDanio: 'arma',
+    tipoDanioLabel: 'radiante o daño normal del arma',
+    resumenDanio: 'Usa el daño del arma y la aptitud mágica para atacar y dañar.',
+    resumenCorto: 'Daño del arma',
+    escalado: [
+      { nivel: 5, valor: '+1d6', detalle: '+1d6 radiante adicional' },
+      { nivel: 11, valor: '+2d6', detalle: '+2d6 radiante adicional' },
+      { nivel: 17, valor: '+3d6', detalle: '+3d6 radiante adicional' },
+    ],
+    muestraEnTablaAtaques: false,
+  },
+  'Shillelagh': {
+    modoDanio: 'arma',
+    dadosBase: 'd8',
+    tipoDanioLabel: 'fuerza o daño normal del arma',
+    resumenDanio: 'El arma pasa a usar tu aptitud mágica y cambia su dado de daño.',
+    resumenCorto: 'Arma d8',
+    escalado: [
+      { nivel: 5, valor: 'd10' },
+      { nivel: 11, valor: 'd12' },
+      { nivel: 17, valor: '2d6' },
+    ],
+    muestraEnTablaAtaques: false,
+  },
+}
+
+const TRUCOS_SIN_DANIO_CONOCIDOS = new Set([
+  'Amistad',
+  'Elementalismo',
+  'Guardia de Cuchillas',
+  'Guía',
+  'Ilusión Menor',
+  'Luces Danzantes',
+  'Luz',
+  'Mano de Mago',
+  'Mensaje',
+  'Piedad con los Moribundos',
+  'Prestidigitación',
+  'Reparar',
+  'Resistencia',
+  'Saber Druídico',
+  'Taumaturgia',
+])
+
+const TIPOS_DANIO_TRUCO = ['ácido', 'frío', 'fuego', 'fuerza', 'necrótico', 'perforante', 'psíquico', 'radiante', 'relámpago', 'trueno', 'veneno']
+
+function normalizeSpellText(text = '') {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\b(\d+)4(4|6|8|10|12)\b/g, '$1d$2')
+}
+
+function normalizeDamageDice(value = '') {
+  return String(value).trim().replace(/^(\d+)4(4|6|8|10|12)$/i, '$1d$2')
+}
+
+function inferCantripDamageType(text = '', nombre = '') {
+  if (nombre === 'Estallido Mágico') return 'variable'
+  const normalized = normalizeSpellText(text).toLowerCase()
+  const match = normalized.match(/da(?:n|ñ)o(?: adicional)?(?: del tipo elegido| del tipo que elijas| de)?\s+(acido|frio|fuego|fuerza|necrotico|perforante|psiquico|radiante|relampago|trueno|veneno)/i)
+  if (match) return restoreDamageType(match[1])
+  for (const tipo of TIPOS_DANIO_TRUCO) {
+    const plain = tipo.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    if (normalized.includes(`dano de ${plain}`) || normalized.includes(`dano ${plain}`)) return tipo
+  }
+  return null
+}
+
+function restoreDamageType(tipo = '') {
+  const map = {
+    acido: 'ácido',
+    frio: 'frío',
+    fuego: 'fuego',
+    fuerza: 'fuerza',
+    necrotico: 'necrótico',
+    perforante: 'perforante',
+    psiquico: 'psíquico',
+    radiante: 'radiante',
+    relampago: 'relámpago',
+    trueno: 'trueno',
+    veneno: 'veneno',
+  }
+  return map[tipo] ?? tipo
+}
+
+function extractDirectDamageDice(text = '') {
+  const normalized = normalizeSpellText(text)
+  const match = normalized.match(/(?:recib(?:e|ira|iran)|sufr(?:e|ira|iran)|inflige|causa)\s+(\d+d\d+|d\d+)\s+de\s+da(?:n|ñ)o/i)
+  return match ? normalizeDamageDice(match[1]) : null
+}
+
+function extractWeaponDamageDice(text = '') {
+  const normalized = normalizeSpellText(text)
+  const match = normalized.match(/dado de da(?:n|ñ)o (?:pasa a ser|cambia(?: cuando alcanzas.*)? a?)\s+un?\s*(\d+d\d+|d\d+)/i)
+  return match ? normalizeDamageDice(match[1]) : null
+}
+
+function extractCantripScaling(text = '') {
+  const normalized = normalizeSpellText(text)
+  return [...normalized.matchAll(/(\d+)\s*\((\+?\d+d\d+|\d+d\d+|d\d+)\)/gi)]
+    .map(([, nivel, valor]) => ({
+      nivel: Number(nivel),
+      valor: normalizeDamageDice(valor),
+    }))
+    .filter(entry => Number.isFinite(entry.nivel))
+}
+
+function inferCantripDamageKind(nombre, conjuro) {
+  if (!conjuro || conjuro.nivel !== 0) return 'sin_daño'
+  if (TRUCOS_DE_DANIO_DIRECTO_CONOCIDOS.has(nombre)) return 'daño_directo'
+  if (TRUCOS_DE_DANIO_CON_ARMA[nombre]) return 'daño_arma'
+  if (TRUCOS_SIN_DANIO_CONOCIDOS.has(nombre)) return 'sin_daño'
+
+  const normalized = normalizeSpellText(conjuro.descripcion ?? '').toLowerCase()
+  const tieneAtaqueOSalvacion = /ataque de conjuro|tirada de salvacion/.test(normalized)
+  const tieneDanioInmediato = /(?:recib(?:e|ira|iran)|sufr(?:e|ira|iran)|inflige|causa)\s+(?:\d+d\d+|\d+4(?:4|6|8|10|12)|d\d+)\s+de\s+da(?:n|ñ)o/.test(normalized)
+  return tieneAtaqueOSalvacion && tieneDanioInmediato ? 'daño_directo' : 'sin_daño'
+}
+
+function formatCantripScaling(escalado = []) {
+  if (!escalado.length) return null
+  return escalado.map(({ nivel, valor, detalle }) => `Nv. ${nivel}: ${detalle ?? valor}`).join(' · ')
+}
+
+function buildCantripInfo(nombre, conjuro) {
+  const knownWeapon = TRUCOS_DE_DANIO_CON_ARMA[nombre]
+  const kind = inferCantripDamageKind(nombre, conjuro)
+  const esDeDanio = kind !== 'sin_daño'
+  const modoDanio = kind === 'daño_directo' ? 'directo' : kind === 'daño_arma' ? 'arma' : null
+
+  const dadosBase = knownWeapon?.dadosBase
+    ?? (modoDanio === 'arma' ? extractWeaponDamageDice(conjuro.descripcion ?? '') : extractDirectDamageDice(conjuro.descripcion ?? ''))
+  const tipoDanio = knownWeapon?.tipoDanioLabel ?? inferCantripDamageType(conjuro.descripcion ?? '', nombre)
+  const escalado = knownWeapon?.escalado ?? extractCantripScaling(conjuro.descripcion ?? '')
+  const resumenCorto = knownWeapon?.resumenCorto
+    ?? (esDeDanio ? [dadosBase, tipoDanio].filter(Boolean).join(' ') || 'Hace daño' : 'Utilidad')
+  const resumenDanio = knownWeapon?.resumenDanio
+    ?? (esDeDanio ? [dadosBase, tipoDanio].filter(Boolean).join(' ') || 'Hace daño' : null)
+
+  return {
+    nombre,
+    esDeDanio,
+    categoria: esDeDanio ? 'daño' : 'sin_daño',
+    modoDanio,
+    muestraEnTablaAtaques: knownWeapon?.muestraEnTablaAtaques ?? (modoDanio === 'directo'),
+    dadosBase,
+    tipoDanio,
+    escalado,
+    resumenCorto,
+    resumenDanio,
+    resumenEscalado: formatCantripScaling(escalado),
+  }
+}
+
+export function getTrucoNivel0Info(nombre, conjuro = CONJUROS[nombre]) {
+  if (!conjuro || conjuro.nivel !== 0) return null
+  return buildCantripInfo(nombre, conjuro)
+}
+
+export function getTrucoDadosEnNivel(trucoInfo, nivel = 1) {
+  if (!trucoInfo?.esDeDanio) return null
+  if (!trucoInfo.escalado?.length) return trucoInfo.dadosBase ?? null
+  let actual = trucoInfo.dadosBase ?? null
+  for (const entry of trucoInfo.escalado) {
+    if (nivel >= entry.nivel) actual = entry.valor
+  }
+  return actual
+}
+
+export function getTrucoDanioEtiqueta(trucoInfo, nivel = 1) {
+  if (!trucoInfo?.esDeDanio) return null
+  const dados = getTrucoDadosEnNivel(trucoInfo, nivel)
+  if (trucoInfo.modoDanio === 'arma') {
+    if (trucoInfo.nombre === 'Impacto Certero') {
+      const extra = trucoInfo.escalado?.filter(entry => nivel >= entry.nivel).at(-1)?.detalle ?? null
+      return ['Daño del arma', extra].filter(Boolean).join(' · ')
+    }
+    return [dados, trucoInfo.tipoDanio].filter(Boolean).join(' · ')
+  }
+  return [dados, trucoInfo.tipoDanio].filter(Boolean).join(' ')
+}
+
+export const TRUCOS_NIVEL_0 = Object.entries(CONJUROS)
+  .filter(([, conjuro]) => conjuro.nivel === 0)
+  .map(([nombre, conjuro]) => ({ nombre, conjuro }))
+
+export const TRUCOS_NIVEL_0_INFO = Object.fromEntries(
+  TRUCOS_NIVEL_0.map(({ nombre, conjuro }) => [nombre, buildCantripInfo(nombre, conjuro)])
+)
+
+export const TRUCOS_DE_DANIO = Object.values(TRUCOS_NIVEL_0_INFO)
+  .filter(truco => truco.esDeDanio)
+  .map(truco => truco.nombre)
+
+export const TRUCOS_SIN_DANIO = Object.values(TRUCOS_NIVEL_0_INFO)
+  .filter(truco => !truco.esDeDanio)
+  .map(truco => truco.nombre)

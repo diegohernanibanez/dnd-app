@@ -46,6 +46,23 @@ export const HABILIDADES = {
 
 export const HABILIDADES_LISTA = Object.keys(HABILIDADES)
 
+function normalizeText(s = '') {
+  return String(s)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+}
+
+function textoDaMaestriaArmas(texto = '') {
+  const t = normalizeText(texto)
+  if (!t) return false
+  const mencionaArmadura = t.includes('armadura') || t.includes('escudo')
+  const mencionaArma = t.includes('arma') || t.includes('armas')
+  const mencionaMaestria = t.includes('maestria') || t.includes('propiedad de maestria') || t.includes('propiedades de maestria')
+  const casoMaestroArmas = t.includes('maestro de armas') || t.includes('maestro en armas')
+  return !mencionaArmadura && ((mencionaArma && mencionaMaestria) || casoMaestroArmas)
+}
+
 export const ALINEAMIENTOS_NOMBRE = {
   'legal-bueno':    'Legal Bueno',
   'neutral-bueno':  'Neutral Bueno',
@@ -134,6 +151,73 @@ export function calcularPersonaje({
   const normalizedDotesLibres = (dotesLibres ?? []).map(d =>
     typeof d === 'string' ? { doteId: d } : d
   )
+
+  const dotesObtenidas = (() => {
+    const out = []
+    for (const [lvl, doteData] of Object.entries(dotesElegidos ?? {})) {
+      if (Number(lvl) > nivel || !doteData?.doteId) continue
+      const d = getDoteById(doteData.doteId)
+      if (d) out.push(d)
+    }
+    for (const doteData of normalizedDotesLibres) {
+      const d = getDoteById(doteData?.doteId)
+      if (d) out.push(d)
+    }
+    return out
+  })()
+
+  const maestriaArmas = (() => {
+    const fuentes = []
+
+    const rasgosClase = []
+    for (let n = 1; n <= nivel; n++) {
+      const rasgos = clase?.rasgosNivel?.[n] ?? []
+      for (const r of rasgos) rasgosClase.push(r)
+    }
+
+    const subclaseActiva = clase?.subclases?.find(s => s.id === subclaseId) ?? null
+    const rasgosSubclase = []
+    if (subclaseActiva?.rasgosNivel) {
+      for (const [n, rasgos] of Object.entries(subclaseActiva.rasgosNivel)) {
+        if (Number(n) > nivel) continue
+        for (const r of rasgos) rasgosSubclase.push(r)
+      }
+    }
+
+    for (const r of [...rasgosClase, ...rasgosSubclase]) {
+      const nombre = r?.nombre ?? ''
+      const desc = r?.desc ?? ''
+      if (textoDaMaestriaArmas(nombre) || textoDaMaestriaArmas(desc)) {
+        fuentes.push({ tipo: 'rasgo', nombre: nombre || 'Rasgo sin nombre' })
+      }
+    }
+
+    for (const d of dotesObtenidas) {
+      const nombre = d?.nombre ?? ''
+      const descripcion = d?.descripcion ?? ''
+      let match = textoDaMaestriaArmas(nombre) || textoDaMaestriaArmas(descripcion)
+      if (!match && Array.isArray(d?.efectos)) {
+        match = d.efectos.some(e => textoDaMaestriaArmas(e?.desc ?? ''))
+      }
+      if (match) {
+        fuentes.push({ tipo: 'dote', nombre: nombre || d?.id || 'Dote' })
+      }
+    }
+
+    const dedup = []
+    const seen = new Set()
+    for (const f of fuentes) {
+      const key = `${f.tipo}:${f.nombre}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      dedup.push(f)
+    }
+
+    return {
+      tiene: dedup.length > 0,
+      fuentes: dedup,
+    }
+  })()
 
   // Sum stat bonuses from dotes chosen at ASI levels
   const dotesStatBonus = {}
@@ -546,6 +630,8 @@ export function calcularPersonaje({
       }
       return lista
     })(),
+
+    maestriaArmas,
 
     // Metadatos para UI de planilla
     _claseHabilidadesElegir:   clase?.competenciasHabilidades?.elegir   ?? 0,
