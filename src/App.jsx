@@ -25,6 +25,23 @@ const PASOS = [
 
 const ESTADO_VACIO = crearEstadoInicial(CARACTERISTICAS)
 
+function isPlainObject(value) {
+  return value != null && typeof value === 'object' && !Array.isArray(value)
+}
+
+function deepMerge(base, override) {
+  if (override === undefined) return base
+  if (Array.isArray(override)) return override
+  if (!isPlainObject(override)) return override
+
+  const baseObj = isPlainObject(base) ? base : {}
+  const out = { ...baseObj }
+  for (const [key, value] of Object.entries(override)) {
+    out[key] = deepMerge(baseObj[key], value)
+  }
+  return out
+}
+
 function StepIndicator({ pasoActual, pasos, onIr, claseSeleccionada }) {
   return (
     <nav className="step-indicator" aria-label="Pasos de creación">
@@ -91,6 +108,7 @@ function App() {
   const [pgMaxPersonalizado, setPgMaxPersonalizado] = useState(null)
   const [xpNivelActual, setXpNivelActual] = useState(0)
   const [pgGananciaPorNivel, setPgGananciaPorNivel] = useState({})
+  const [personajeOverrides, setPersonajeOverrides] = useState({})
 
   // Flag para evitar que los useEffect de reset se disparen al cargar un personaje
   const cargandoRef = useRef(false)
@@ -149,7 +167,8 @@ function App() {
     pgMaxPersonalizado,
     xpNivelActual,
     pgGananciaPorNivel,
-  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, pgGananciaPorNivel])
+    personajeOverrides,
+  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, pgGananciaPorNivel, personajeOverrides])
 
   const cargarDesdeData = useCallback((data) => {
     cargandoRef.current = true
@@ -181,6 +200,7 @@ function App() {
     setPgMaxPersonalizado(data.pgMaxPersonalizado ?? null)
     setXpNivelActual(data.xpNivelActual ?? 0)
     setPgGananciaPorNivel(data.pgGananciaPorNivel ?? {})
+    setPersonajeOverrides(data.personajeOverrides ?? {})
     // Resetear flag después de que React procese los setState
     requestAnimationFrame(() => { cargandoRef.current = false })
   }, [])
@@ -225,7 +245,7 @@ function App() {
   }, [serializarPersonaje])
 
   // ── Cálculo del personaje ──
-  const personaje = useMemo(() => {
+  const personajeBase = useMemo(() => {
     const p = calcularPersonaje({
       claseId:          claseSeleccionada,
       subclaseId:       subclaseSeleccionada,
@@ -250,6 +270,10 @@ function App() {
     })
     return { ...p, xpNivelActual }
   }, [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel, xpNivelActual, pgGananciaPorNivel])
+
+  const personaje = useMemo(() => {
+    return deepMerge(personajeBase, personajeOverrides ?? {})
+  }, [personajeBase, personajeOverrides])
 
 
   // Scroll arriba al cambiar de paso
@@ -394,6 +418,9 @@ function App() {
             onXpNivelActualCambiar={setXpNivelActual}
             pgGananciaPorNivel={pgGananciaPorNivel}
             onPgGananciaPorNivelCambiar={setPgGananciaPorNivel}
+            personajeBase={personajeBase}
+            personajeOverrides={personajeOverrides}
+            onPersonajeOverridesCambiar={setPersonajeOverrides}
           />
         )}
       </main>

@@ -62,6 +62,56 @@ function SheetSection({ title, children, grow }) {
   )
 }
 
+function isPlainObject(value) {
+  return value != null && typeof value === 'object' && !Array.isArray(value)
+}
+
+function buildDiff(base, edited) {
+  if (Array.isArray(base) || Array.isArray(edited)) {
+    return JSON.stringify(base) === JSON.stringify(edited) ? undefined : edited
+  }
+  if (isPlainObject(base) && isPlainObject(edited)) {
+    const keys = new Set([...Object.keys(base), ...Object.keys(edited)])
+    const out = {}
+    for (const key of keys) {
+      if (!(key in edited)) {
+        out[key] = null
+        continue
+      }
+      const d = buildDiff(base[key], edited[key])
+      if (d !== undefined) out[key] = d
+    }
+    return Object.keys(out).length ? out : undefined
+  }
+  return Object.is(base, edited) ? undefined : edited
+}
+
+function getDeepPath(obj, path) {
+  return path.reduce((o, k) => o?.[k], obj)
+}
+
+function setDeepPath(obj, path, value) {
+  if (path.length === 0) return value
+  const [head, ...tail] = path
+  return { ...(isPlainObject(obj) ? obj : {}), [head]: setDeepPath(isPlainObject(obj) ? (obj[head] ?? {}) : {}, tail, value) }
+}
+
+function removeDeepPath(obj, path) {
+  if (!isPlainObject(obj) || !path.length) return obj ?? {}
+  const [head, ...tail] = path
+  if (tail.length === 0) {
+    const { [head]: _, ...rest } = obj
+    return rest
+  }
+  if (!(head in obj)) return obj
+  const nested = removeDeepPath(obj[head], tail)
+  if (isPlainObject(nested) && Object.keys(nested).length === 0) {
+    const { [head]: _, ...rest } = obj
+    return rest
+  }
+  return { ...obj, [head]: nested }
+}
+
 function TraitEntryLine({ nivel, nombre, fuente, nota }) {
   return (
     <div className="cs-traits__entry-line">
@@ -964,6 +1014,8 @@ function Hoja1({
   const [asiModalNivel, setAsiModalNivel] = useState(null)
   const [mostrarFormAtaque, setMostrarFormAtaque] = useState(false)
   const [modalDoteLibreAbierto, setModalDoteLibreAbierto] = useState(false)
+  const [inspiracion, setInspiracion] = useState(false)
+  const [pgMetodoAbierto, setPgMetodoAbierto] = useState(false)
 
   const toggleMuerte = (tipo) => {
     const k = tipo === 'exito' ? 'exitos' : 'fallos'
@@ -1157,6 +1209,20 @@ function Hoja1({
 
           {/* Puntos de golpe — todos editables */}
           <div className="cs-header__pg-section">
+            <div className="cs-header__pg-top">
+              <span />
+              {nivelActual > 1 && (
+                <button
+                  type="button"
+                  className="cs-header__pg-method-btn"
+                  onClick={() => setPgMetodoAbierto(v => !v)}
+                  aria-expanded={pgMetodoAbierto}
+                  title="Método de PG"
+                >
+                  {pgMetodoAbierto ? '−' : '+'}
+                </button>
+              )}
+            </div>
             <div className="cs-header__pg-cells">
               <div className="cs-header__pg-cell">
                 <input
@@ -1192,12 +1258,9 @@ function Hoja1({
                 <span className="cs-header__pg-label">Máximo</span>
               </div>
             </div>
-            <span className="cs-header__section-title">Puntos de golpe</span>
-          </div>
-
-          {/* Selector de método de PG (Fijo o Tirada) — solo nivel 2+ */}
-          {nivelActual > 1 && (
-            <div className="cs-header__pg-method">
+            {/* Selector de método de PG (Fijo o Tirada) — solo nivel 2+ */}
+            {nivelActual > 1 && pgMetodoAbierto && (
+              <div className="cs-header__pg-method">
               <div className="cs-header__pg-method-head">
                 <span className="cs-header__pg-method-label">Método niv. {nivelActual}</span>
                 <div className="cs-pg-toggle" role="group" aria-label={`Método de PG nivel ${nivelActual}`}>
@@ -1253,7 +1316,9 @@ function Hoja1({
                 )}
               </div>
             </div>
-          )}
+            )}
+            <span className="cs-header__section-title">Puntos de golpe</span>
+          </div>
 
           {/* Dados de golpe — gastados y máximos */}
           <div className="cs-header__dg-section">
@@ -1336,10 +1401,16 @@ function Hoja1({
           <span className="cs-stats-bar__val">{personaje.percepcionPasiva ?? '—'}</span>
           <span className="cs-stats-bar__label">Percepción pasiva</span>
         </div>
-        <div className="cs-stats-bar__item cs-stats-bar__item--insp">
-          <span className="cs-stats-bar__val">☆</span>
+        <button
+          type="button"
+          className={`cs-stats-bar__item cs-stats-bar__item--insp${inspiracion ? ' cs-stats-bar__item--insp-on' : ''}`}
+          onClick={() => setInspiracion(v => !v)}
+          aria-pressed={inspiracion}
+          title={inspiracion ? 'Gastar inspiración heroica' : 'Ganar inspiración heroica'}
+        >
+          <span className="cs-stats-bar__val">{inspiracion ? '★' : '☆'}</span>
           <span className="cs-stats-bar__label">Inspiración heroica</span>
-        </div>
+        </button>
       </div>
 
       {/* ═══ Cuerpo principal ═══ */}
@@ -2620,6 +2691,177 @@ function Hoja3({ personaje, trucosSeleccionados, onTrucosCambiar, grimorioConjur
   )
 }
 
+// ── Editor amigable de valores derivados ─────────────────────────────
+
+function EditorAmigable({ personaje, personajeBase, personajeOverrides, onPersonajeOverridesCambiar, onClose }) {
+  const [modoAvanzado, setModoAvanzado] = useState(false)
+  const [jsonTexto, setJsonTexto] = useState('')
+  const [jsonError, setJsonError] = useState('')
+
+  const hayOverrides = Object.keys(personajeOverrides ?? {}).length > 0
+
+  const getVal = (path) => getDeepPath(personaje, path)
+  const isOverridden = (path) => getDeepPath(personajeOverrides ?? {}, path) !== undefined
+
+  const handleChange = (path, rawValue) => {
+    const parsed = rawValue === '' ? null : (isNaN(Number(rawValue)) ? rawValue : Number(rawValue))
+    const baseVal = getDeepPath(personajeBase ?? {}, path)
+    const sameAsBase = Object.is(parsed, baseVal) || (parsed == null && baseVal == null)
+    const updated = sameAsBase
+      ? (removeDeepPath(personajeOverrides ?? {}, path) ?? {})
+      : setDeepPath(personajeOverrides ?? {}, path, parsed)
+    onPersonajeOverridesCambiar?.(updated)
+  }
+
+  const handleReset = (path) => {
+    onPersonajeOverridesCambiar?.(removeDeepPath(personajeOverrides ?? {}, path) ?? {})
+  }
+
+  const openAdvanced = () => {
+    setJsonTexto(JSON.stringify(personaje, null, 2))
+    setJsonError('')
+    setModoAvanzado(true)
+  }
+
+  const guardarJson = () => {
+    try {
+      const parsed = JSON.parse(jsonTexto)
+      const diff = buildDiff(personajeBase ?? {}, parsed) ?? {}
+      onPersonajeOverridesCambiar?.(diff)
+      setJsonError('')
+      setModoAvanzado(false)
+    } catch {
+      setJsonError('JSON inválido. Revisa comas, llaves y comillas.')
+    }
+  }
+
+  const renderField = (label, path) => {
+    const overridden = isOverridden(path)
+    const val = getVal(path)
+    const baseVal = getDeepPath(personajeBase ?? {}, path)
+    return (
+      <div key={path.join('.')} className={`cs-edf${overridden ? ' cs-edf--on' : ''}`}>
+        <span className="cs-edf__label">{label}</span>
+        <div className="cs-edf__ctrl">
+          <input
+            className="cs-edf__input"
+            type="number"
+            value={val ?? ''}
+            onChange={e => handleChange(path, e.target.value)}
+          />
+          {overridden
+            ? <button className="cs-edf__reset" onClick={() => handleReset(path)} title="Restaurar valor calculado">×</button>
+            : <span className="cs-edf__filler" />
+          }
+        </div>
+        {overridden && baseVal != null && (
+          <span className="cs-edf__orig">calc: {baseVal}</span>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="sc-modal-overlay" role="dialog" aria-modal="true" aria-label="Editar valores">
+      <div className="sc-modal cs-editor-friendly">
+
+        <div className="sc-modal__header">
+          <div>
+            <h2 className="sc-modal__titulo">Editar valores</h2>
+            <p className="sc-modal__subtitulo">
+              {modoAvanzado
+                ? 'Edita el JSON directamente. Haz clic en "Aplicar" para guardar.'
+                : 'Los cambios aplican al instante. × restaura el valor calculado.'}
+            </p>
+          </div>
+          <button className="sc-modal__cerrar" onClick={onClose} aria-label="Cerrar">✕</button>
+        </div>
+
+        {modoAvanzado ? (
+          <div className="sc-modal__body" style={{ display: 'block' }}>
+            <textarea
+              className="cs-editor-json"
+              value={jsonTexto}
+              onChange={e => setJsonTexto(e.target.value)}
+              spellCheck={false}
+            />
+            {jsonError && <div className="cs-editor-json__error">{jsonError}</div>}
+          </div>
+        ) : (
+          <div className="sc-modal__body cs-edf-body">
+
+            <div className="cs-edf-section">
+              <div className="cs-edf-section__title">Combate</div>
+              <div className="cs-edf-section__grid">
+                {renderField('CA', ['ca'])}
+                {renderField('Velocidad (pies)', ['velocidad'])}
+                {renderField('Iniciativa', ['iniciativa'])}
+                {renderField('Perc. pasiva', ['percepcionPasiva'])}
+                {renderField('Bonif. comp.', ['bonificadorCompetencia'])}
+              </div>
+            </div>
+
+            {personaje.conjuros && (
+              <div className="cs-edf-section">
+                <div className="cs-edf-section__title">Conjuros</div>
+                <div className="cs-edf-section__grid">
+                  {renderField('CD salvación', ['conjuros', 'cdSalvacion'])}
+                  {renderField('Bonif. ataque', ['conjuros', 'bonAtaque'])}
+                </div>
+              </div>
+            )}
+
+            <div className="cs-edf-section">
+              <div className="cs-edf-section__title">Habilidades</div>
+              <div className="cs-edf-section__grid">
+                {HABILIDADES_LISTA.map(hab => renderField(hab, ['habilidades', hab, 'total']))}
+              </div>
+            </div>
+
+            <div className="cs-edf-section">
+              <div className="cs-edf-section__title">Tiradas de salvación</div>
+              <div className="cs-edf-section__grid">
+                {CARACTERISTICAS_ORDER.map(stat => renderField(stat, ['tiradasSalvacion', stat, 'total']))}
+              </div>
+            </div>
+
+          </div>
+        )}
+
+        <div className="sc-modal__footer cs-edf-footer">
+          <div className="cs-edf-footer__left">
+            <button
+              className="cs-tab cs-tab--tools"
+              onClick={modoAvanzado ? () => setModoAvanzado(false) : openAdvanced}
+            >
+              {modoAvanzado ? '← Vista amigable' : 'Avanzado (JSON)'}
+            </button>
+            {hayOverrides && (
+              <button
+                className="sc-modal__btn sc-modal__btn--cancelar"
+                onClick={() => onPersonajeOverridesCambiar?.({})}
+              >
+                Resetear todo
+              </button>
+            )}
+          </div>
+          <div className="cs-edf-footer__right">
+            {modoAvanzado && (
+              <button className="sc-modal__btn sc-modal__btn--confirmar" onClick={guardarJson}>
+                Aplicar JSON
+              </button>
+            )}
+            <button className="sc-modal__btn sc-modal__btn--cancelar" onClick={onClose}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
 // ── Componente principal con pestañas ────────────────────────────────
 
 export default function CharacterSheet({
@@ -2644,8 +2886,11 @@ export default function CharacterSheet({
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
   onXpNivelActualCambiar,
   pgGananciaPorNivel, onPgGananciaPorNivelCambiar,
+  personajeBase,
+  personajeOverrides, onPersonajeOverridesCambiar,
 }) {
   const [pestaña, setPestaña] = useState(1)
+  const [editorAbierto, setEditorAbierto] = useState(false)
   const tieneMagia = !!personaje.conjuros
 
   const cambiarPestaña = (n) => {
@@ -2679,7 +2924,25 @@ export default function CharacterSheet({
           <span className="cs-tab__num">3</span>
           Conjuros
         </button>
+        <div className="cs-tabs__actions">
+          <button
+            className={`cs-tab cs-tab--tools${Object.keys(personajeOverrides ?? {}).length > 0 ? ' cs-tab--tools-active' : ''}`}
+            onClick={() => setEditorAbierto(true)}
+          >
+            {Object.keys(personajeOverrides ?? {}).length > 0 ? `Editar valores (${Object.keys(personajeOverrides).length})` : 'Editar valores'}
+          </button>
+        </div>
       </div>
+
+      {editorAbierto && (
+        <EditorAmigable
+          personaje={personaje}
+          personajeBase={personajeBase}
+          personajeOverrides={personajeOverrides}
+          onPersonajeOverridesCambiar={onPersonajeOverridesCambiar}
+          onClose={() => setEditorAbierto(false)}
+        />
+      )}
 
       {pestaña === 1 && (
         <Hoja1

@@ -138,5 +138,6 @@ export function crearEstadoInicial(CARACTERISTICAS) {
     espaciosUsados: {},
     armasCustom: [],
     pgGananciaPorNivel: {},
+    personajeOverrides: {},
   }
 }

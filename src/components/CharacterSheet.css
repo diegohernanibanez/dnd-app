@@ -95,6 +95,168 @@
   background: var(--accent-bg);
 }
 
+.cs-tabs__actions {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.cs-tab--tools {
+  padding: 8px 12px;
+  font-size: 11px;
+}
+
+.cs-editor-json {
+  width: 100%;
+  min-height: 55vh;
+  resize: vertical;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-h);
+  background: var(--bg);
+}
+
+.cs-editor-json__error {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--cs-red);
+  font-weight: 700;
+}
+
+/* ── Editor amigable ── */
+.cs-editor-friendly {
+  max-width: 760px;
+  width: 95vw;
+}
+
+.cs-edf-body {
+  overflow-y: auto;
+  max-height: 65vh;
+  padding: 4px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cs-edf-section {
+  padding: 0 4px;
+}
+
+.cs-edf-section__title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-muted, #999);
+  border-bottom: 1px solid var(--border, #e0d6c2);
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.cs-edf-section__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+
+.cs-edf {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cs-edf__label {
+  font-size: 10px;
+  color: var(--text-muted, #888);
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cs-edf__ctrl {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.cs-edf__input {
+  flex: 1;
+  min-width: 0;
+  background: var(--input-bg, var(--bg));
+  border: 1.5px solid var(--border, #ccc);
+  border-radius: 5px;
+  padding: 5px 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+  text-align: center;
+  -moz-appearance: textfield;
+}
+.cs-edf__input::-webkit-outer-spin-button,
+.cs-edf__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.cs-edf--on .cs-edf__input {
+  border-color: var(--accent, #c8943a);
+  background: rgba(200, 148, 58, 0.07);
+}
+
+.cs-edf__reset {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--accent, #c8943a);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 50%;
+  padding: 0;
+  line-height: 1;
+  transition: background .15s;
+}
+.cs-edf__reset:hover {
+  color: var(--cs-red, #c0392b);
+  background: rgba(192, 57, 43, 0.1);
+}
+
+.cs-edf__filler {
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.cs-edf__orig {
+  font-size: 10px;
+  color: var(--text-muted, #aaa);
+  font-style: italic;
+}
+
+.cs-edf-footer {
+  justify-content: space-between !important;
+}
+.cs-edf-footer__left,
+.cs-edf-footer__right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.cs-tab--tools-active {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .cs-tab__num {
   display: inline-flex;
   align-items: center;
@@ -368,6 +530,35 @@
   min-width: 0;
 }
 
+.cs-header__pg-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 18px;
+}
+
+.cs-header__pg-method-btn {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.cs-header__pg-method-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .cs-header__pg-cells {
   display: flex;
   gap: 6px;
@@ -425,16 +616,13 @@
   font-family: var(--heading);
 }
 
-/* Método de PG (fijo/tirada) */
+/* Método de PG (fijo/tirada) — ahora dentro de cs-header__pg-section */
 .cs-header__pg-method {
-  flex: 1.7;
+  border-top: 1px solid var(--border);
+  padding-top: 6px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  border: 1.5px solid var(--cs-ink);
-  border-radius: 8px;
-  padding: 8px 10px 6px;
-  background: var(--bg);
+  gap: 4px;
   min-width: 0;
 }
 
@@ -551,9 +739,10 @@
   flex: 1.5;
   display: flex;
   flex-direction: column;
+  align-items: center;
   border: 1.5px solid var(--cs-ink);
   border-radius: 8px;
-  padding: 8px 10px 5px;
+  padding: 6px 10px 4px;
   background: var(--bg);
   min-width: 0;
 }
@@ -634,6 +823,7 @@
   gap: 6px;
   align-items: stretch;
   flex-shrink: 0;
+  justify-content: center;
 }
 
 /* Combat boxes (CA + death saves) */
@@ -713,6 +903,22 @@
 .cs-stats-bar__item--insp {
   border-style: dashed;
   opacity: 0.6;
+  cursor: pointer;
+  background: none;
+  font-family: inherit;
+  transition: border-color .2s, opacity .2s, box-shadow .2s;
+}
+.cs-stats-bar__item--insp:hover {
+  opacity: 0.85;
+}
+.cs-stats-bar__item--insp-on {
+  border-style: solid;
+  border-color: var(--accent, #c8943a);
+  opacity: 1;
+  box-shadow: 0 0 0 2px rgba(200, 148, 58, 0.2);
+}
+.cs-stats-bar__item--insp-on .cs-stats-bar__val {
+  color: var(--accent, #c8943a);
 }
 
 .cs-stats-bar__val {
@@ -747,7 +953,6 @@
 
 /* ── Abilities grid (2 columns of 3) ─────────────────── */
 .cs-abilities {
-  display: flex;
   gap: 10px;
 }
 
