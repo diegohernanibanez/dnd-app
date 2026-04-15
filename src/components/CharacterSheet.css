@@ -1143,6 +1143,19 @@
   gap: 0;
 }
 
+.cs-traits__top {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 6px;
+}
+
+.cs-traits__top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
 .cs-traits__group {
   border-bottom: 1.5px solid var(--border);
   padding-bottom: 8px;
@@ -1206,6 +1219,13 @@
   gap: 6px;
 }
 
+.cs-traits__line {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-h);
+  line-height: 1.35;
+}
+
 .cs-traits__name {
   font-size: 12px;
   font-weight: 600;
@@ -1228,13 +1248,38 @@
   line-height: 1.4;
 }
 
-.cs-traits__subentry {
+.cs-traits__detail {
+  margin-top: 3px;
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  color: var(--text);
-  padding: 1px 0;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.cs-traits__expand-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1.5px solid var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  flex: 0 0 auto;
+  padding: 0;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+}
+
+.cs-traits__subentry {
+  margin-top: 4px;
+  padding-left: 12px;
+  border-left: 1px dashed color-mix(in srgb, var(--border) 60%, transparent);
 }
 
 .cs-traits__subentry-level {

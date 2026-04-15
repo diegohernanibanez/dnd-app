@@ -11,7 +11,6 @@ import { CLASES } from '../data/classes'
 import { TRASFONDOS, ESPECIES } from '../data/origins'
 import { getDoteById, DOTES_GENERALES, DOTES_DON_EPICO, TODAS_LAS_DOTES, cumpleRequisitos } from '../data/dotes'
 import { CONJUROS } from '../data/spells'
-import TextoTruncado from './TextoTruncado'
 import './CharacterSheet.css'
 
 // ── Helpers ──────────────────────────────────────────────────────────
@@ -58,6 +57,34 @@ function SheetSection({ title, children, grow }) {
     <div className={`cs-sec${grow ? ' cs-sec--grow' : ''}`}>
       <div className="cs-sec__title">{title}</div>
       <div className="cs-sec__body">{children}</div>
+    </div>
+  )
+}
+
+function TraitEntryLine({ nivel, nombre, fuente, nota }) {
+  return (
+    <div className="cs-traits__entry-line">
+      <span className="cs-traits__line">Nivel {nivel} - {nombre} - {fuente}</span>
+      {nota ? <span className="cs-traits__note">{nota}</span> : null}
+    </div>
+  )
+}
+
+function TraitDetailToggle({ texto }) {
+  const [expandido, setExpandido] = useState(false)
+  if (!texto) return null
+
+  return (
+    <div className="cs-traits__detail">
+      <button
+        type="button"
+        className="cs-traits__expand-btn"
+        onClick={() => setExpandido(v => !v)}
+        aria-expanded={expandido}
+      >
+        {expandido ? '-' : '+'}
+      </button>
+      {expandido ? <div className="cs-traits__desc">{texto}</div> : null}
     </div>
   )
 }
@@ -1020,6 +1047,22 @@ function Hoja1({
   const dadosGolpeTotal = personaje.nivel ?? 1
   const gastadosActuales = dadosGolpeGastados ?? 0
   const dadosGolpeDisponibles = dadosGolpeTotal - gastadosActuales
+  const claseActual = personaje.clase
+  const nivelActual = personaje.nivel ?? 1
+  const nivelSubclase = claseActual?.nivelSubclase ?? 3
+  const subclaseDisponible = !!(claseActual?.subclases?.length && nivelActual >= nivelSubclase)
+  const subclaseActual = subclaseDisponible
+    ? claseActual.subclases.find(s => s.id === subclaseSeleccionada)
+    : null
+  const asiPendientes = [...new Set(
+    (personaje.rasgosClase ?? [])
+      .filter(r => r.esASI && !r.esDonEpico && (r.nivelObtenido ?? 0) <= nivelActual)
+      .map(r => r.nivelObtenido)
+      .filter(lvl => !(bonusASI?.[lvl] || dotesElegidos?.[lvl]))
+  )].sort((a, b) => a - b)
+  const doteTrasfondoDesc = personaje.trasfondo?.doteId
+    ? (getDoteById(personaje.trasfondo.doteId)?.desc ?? '')
+    : ''
 
   return (
     <div className="cs-hoja cs-hoja--1">
@@ -1428,71 +1471,163 @@ function Hoja1({
                 )
               })()}
 
-              {/* ── Clase ── */}
-              {personaje.rasgosClase?.length > 0 ? (() => {
-                const porNivel = {}
-                personaje.rasgosClase.forEach(r => {
-                  if (!porNivel[r.nivelObtenido]) porNivel[r.nivelObtenido] = []
-                  porNivel[r.nivelObtenido].push(r)
-                })
-                return (
-                  <div className="cs-traits__group">
-                    <div className="cs-traits__group-header">Clase — {personaje.clase?.nombre}</div>
-                    {Object.entries(porNivel).map(([n, rasgos]) => (
-                      <div key={n} className="cs-traits__level">
-                        <div className="cs-traits__level-label">Nivel {n}</div>
-                        {rasgos.map((r, i) => {
-                          const isRegularASI = r.esASI && !r.esDonEpico
-                          const isDonEpico   = r.esASI && r.esDonEpico
-                          const asiActual    = isRegularASI ? (bonusASI?.[r.nivelObtenido] ?? null) : null
-                          const doteActualNivel = isRegularASI ? (dotesElegidos?.[r.nivelObtenido] ?? null) : null
-                          const doteActualObj   = doteActualNivel ? getDoteById(doteActualNivel.doteId) : null
-                          const asiResumen   = asiActual
-                            ? Object.entries(asiActual).map(([s, a]) => `+${a} ${CARACTERISTICAS_ABBREV[s]}`).join(', ')
-                            : null
-                          const isConfigurado = !!(asiActual || doteActualObj)
-                          return (
-                            <div key={i} className="cs-traits__entry">
-                              <div className="cs-traits__entry-line">
-                                <span className="cs-traits__name">{r.nombre}</span>
-                                {isRegularASI && <span className="cs-traits__note">ASI</span>}
-                                {isDonEpico && <span className="cs-traits__note">Don Épico</span>}
-                                {r.esSubclase && <span className="cs-traits__note">Subclase</span>}
-                              </div>
-                              <TextoTruncado texto={r.desc} className="cs-traits__desc" />
-                              {isRegularASI && (
-                                <div className="cs-traits__asi-row">
-                                  {doteActualObj ? (
-                                    <span className="cs-traits__asi-summary">
-                                      {doteActualObj.nombre}
-                                      {doteActualNivel.statElegido ? ` (+1 ${CARACTERISTICAS_ABBREV[doteActualNivel.statElegido]})` : ''}
-                                    </span>
-                                  ) : asiResumen ? (
-                                    <span className="cs-traits__asi-summary">{asiResumen}</span>
-                                  ) : null}
-                                  <button
-                                    className={`cs-traits__asi-btn${isConfigurado ? ' cs-traits__asi-btn--done' : ''}`}
-                                    onClick={() => setAsiModalNivel(r.nivelObtenido)}
-                                  >
-                                    {isConfigurado ? 'Editar' : 'Configurar'}
-                                  </button>
-                                </div>
-                              )}
-                              {isDonEpico && (
-                                <div className="cs-traits__desc" style={{ fontStyle: 'italic', opacity: 0.6 }}>Próximamente.</div>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
+              <div className="cs-traits__top">
+                {(subclaseDisponible && !subclaseActual) || asiPendientes.length > 0 ? (
+                  <div className="cs-traits__top-actions">
+                    {subclaseDisponible && !subclaseActual && (
+                      <button className="cs-traits__action-btn" onClick={() => setModalSubclase(true)}>
+                        Elegir subclase
+                      </button>
+                    )}
+                    {asiPendientes.map(nivelASI => (
+                      <button key={nivelASI} className="cs-traits__action-btn" onClick={() => setAsiModalNivel(nivelASI)}>
+                        Configurar ASI Niv. {nivelASI}
+                      </button>
                     ))}
                   </div>
-                )
-              })() : personaje.clase ? (
+                ) : null}
+              </div>
+
+              {/* ── Especie ── */}
+              {(personaje.especie?.rasgosDestacados?.length > 0 || personaje.especie?.linajeSel || personaje.habilidadDiestro || personaje.habilidadSentidos) && (
+                <div className="cs-traits__group">
+                  <div className="cs-traits__group-header">Especie — {personaje.especie?.nombre}</div>
+
+                  {personaje.especie?.rasgosDestacados?.map((r, i) => {
+                    const splitIndex = r.indexOf(':')
+                    const nombreRasgo = splitIndex > -1 ? r.slice(0, splitIndex).trim() : r
+                    const descRasgo = splitIndex > -1 ? r.slice(splitIndex + 1).trim() : ''
+                    return (
+                      <div key={i} className="cs-traits__entry">
+                        <TraitEntryLine
+                          nivel={1}
+                          nombre={nombreRasgo}
+                          fuente={personaje.especie?.nombre ?? 'Especie'}
+                        />
+                        <TraitDetailToggle texto={descRasgo} />
+                      </div>
+                    )
+                  })}
+
+                  {personaje.habilidadDiestro && (
+                    <div className="cs-traits__entry">
+                      <TraitEntryLine
+                        nivel={1}
+                        nombre="Diestro"
+                        fuente={personaje.especie?.nombre ?? 'Especie'}
+                      />
+                      <TraitDetailToggle texto={`Competencia en ${personaje.habilidadDiestro}`} />
+                    </div>
+                  )}
+
+                  {personaje.habilidadSentidos && (
+                    <div className="cs-traits__entry">
+                      <TraitEntryLine
+                        nivel={1}
+                        nombre="Sentidos agudos"
+                        fuente={personaje.especie?.nombre ?? 'Especie'}
+                      />
+                      <TraitDetailToggle texto={`Competencia en ${personaje.habilidadSentidos}`} />
+                    </div>
+                  )}
+
+                  {personaje.especie?.linajeSel && (
+                    <div className="cs-traits__entry">
+                      <TraitEntryLine
+                        nivel={1}
+                        nombre={personaje.especie.linajeSel.nombre}
+                        fuente={`Linaje (${personaje.especie?.nombre ?? 'Especie'})`}
+                      />
+                      <TraitDetailToggle texto={personaje.especie.linajeSel.desc} />
+                      {personaje.especie.linajeSel.rasgos?.map((r, i) => (
+                        <div key={i} className="cs-traits__subentry">
+                          <TraitEntryLine
+                            nivel={r.nivel ?? 1}
+                            nombre={r.nombre}
+                            fuente={personaje.especie.linajeSel.nombre}
+                          />
+                          <TraitDetailToggle texto={r.desc} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* ── Trasfondo ── */}
+              {personaje.dote && (
+                <div className="cs-traits__group">
+                  <div className="cs-traits__group-header">Trasfondo — {personaje.trasfondo?.nombre}</div>
+                  <div className="cs-traits__entry">
+                    <TraitEntryLine
+                      nivel={1}
+                      nombre={personaje.dote}
+                      fuente={personaje.trasfondo?.nombre ?? 'Trasfondo'}
+                      nota="Dote"
+                    />
+                    <TraitDetailToggle texto={doteTrasfondoDesc} />
+                  </div>
+                </div>
+              )}
+
+              {/* ── Clase ── */}
+              {personaje.rasgosClase?.length > 0 ? (
+                <div className="cs-traits__group">
+                  <div className="cs-traits__group-header">Clase — {personaje.clase?.nombre}</div>
+                  {personaje.rasgosClase.map((r, i) => {
+                    const isRegularASI = r.esASI && !r.esDonEpico
+                    const isDonEpico = r.esASI && r.esDonEpico
+                    const asiActual = isRegularASI ? (bonusASI?.[r.nivelObtenido] ?? null) : null
+                    const doteActualNivel = isRegularASI ? (dotesElegidos?.[r.nivelObtenido] ?? null) : null
+                    const doteActualObj = doteActualNivel ? getDoteById(doteActualNivel.doteId) : null
+                    const asiResumen = asiActual
+                      ? Object.entries(asiActual).map(([s, a]) => `+${a} ${CARACTERISTICAS_ABBREV[s]}`).join(', ')
+                      : null
+                    const isConfigurado = !!(asiActual || doteActualObj)
+                    const nota = isRegularASI ? 'ASI' : isDonEpico ? 'Don Épico' : r.esSubclase ? 'Subclase' : ''
+
+                    return (
+                      <div key={i} className="cs-traits__entry">
+                        <TraitEntryLine
+                          nivel={r.nivelObtenido}
+                          nombre={r.nombre}
+                          fuente={personaje.clase?.nombre ?? 'Clase'}
+                          nota={nota}
+                        />
+                        <TraitDetailToggle texto={r.desc} />
+
+                        {isRegularASI && (
+                          <div className="cs-traits__asi-row">
+                            {doteActualObj ? (
+                              <span className="cs-traits__asi-summary">
+                                {doteActualObj.nombre}
+                                {doteActualNivel.statElegido ? ` (+1 ${CARACTERISTICAS_ABBREV[doteActualNivel.statElegido]})` : ''}
+                              </span>
+                            ) : asiResumen ? (
+                              <span className="cs-traits__asi-summary">{asiResumen}</span>
+                            ) : null}
+                            <button
+                              className={`cs-traits__asi-btn${isConfigurado ? ' cs-traits__asi-btn--done' : ''}`}
+                              onClick={() => setAsiModalNivel(r.nivelObtenido)}
+                            >
+                              {isConfigurado ? 'Editar' : 'Configurar'}
+                            </button>
+                          </div>
+                        )}
+
+                        {isDonEpico && (
+                          <div className="cs-traits__desc" style={{ fontStyle: 'italic', opacity: 0.6 }}>Próximamente.</div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : personaje.clase ? (
                 <div className="cs-traits__group">
                   <div className="cs-traits__group-header">Clase — {personaje.clase.nombre}</div>
                   <div className="cs-traits__entry">
-                    <div className="cs-traits__desc">{personaje.clase.dadoGolpe} · {personaje.clase.rol}</div>
+                    <TraitEntryLine nivel={1} nombre="Rasgos iniciales" fuente={personaje.clase.nombre} />
+                    <TraitDetailToggle texto={`${personaje.clase.dadoGolpe} · ${personaje.clase.rol}`} />
                   </div>
                 </div>
               ) : null}
@@ -1504,99 +1639,41 @@ function Hoja1({
                 const nivelSub = clase.nivelSubclase ?? 3
                 if ((personaje.nivel ?? 1) < nivelSub) return null
                 const scActual = clase.subclases.find(s => s.id === subclaseSeleccionada)
+
                 return (
                   <div className="cs-traits__group">
-                    <div className="cs-traits__group-header cs-traits__group-header--action">
-                      <span>Subclase{scActual ? ` — ${scActual.nombre}` : ''}</span>
-                      <button className="cs-traits__action-btn" onClick={() => setModalSubclase(true)}>
-                        {scActual ? 'Cambiar' : 'Elegir'}
-                      </button>
-                    </div>
+                    <div className="cs-traits__group-header">Subclase{scActual ? ` — ${scActual.nombre}` : ''}</div>
+
                     {!scActual && (
                       <div className="cs-traits__entry">
-                        <div className="cs-traits__desc" style={{ fontStyle: 'italic' }}>Sin elegir — disponible desde nivel {nivelSub}</div>
+                        <TraitEntryLine
+                          nivel={nivelSub}
+                          nombre="Elegir subclase"
+                          fuente={clase.nombre}
+                          nota="Pendiente"
+                        />
                       </div>
                     )}
+
                     {scActual?.rasgosNivel && Object.entries(scActual.rasgosNivel)
                       .filter(([n]) => Number(n) <= (personaje.nivel ?? 1))
                       .map(([n, rasgos]) => (
                         <div key={n} className="cs-traits__level">
-                          <div className="cs-traits__level-label">Nivel {n}</div>
                           {rasgos.map((r, i) => (
                             <div key={i} className="cs-traits__entry">
-                              <div className="cs-traits__entry-line">
-                                <span className="cs-traits__name">{r.nombre}</span>
-                              </div>
-                              <TextoTruncado texto={r.desc} className="cs-traits__desc" />
+                              <TraitEntryLine
+                                nivel={Number(n)}
+                                nombre={r.nombre}
+                                fuente={scActual.nombre}
+                              />
+                              <TraitDetailToggle texto={r.desc} />
                             </div>
                           ))}
                         </div>
-                      ))
-                    }
+                      ))}
                   </div>
                 )
               })()}
-
-              {/* ── Trasfondo ── */}
-              {personaje.dote && (
-                <div className="cs-traits__group">
-                  <div className="cs-traits__group-header">Trasfondo — {personaje.trasfondo?.nombre}</div>
-                  <div className="cs-traits__entry">
-                    <div className="cs-traits__entry-line">
-                      <span className="cs-traits__name">{personaje.dote}</span>
-                      <span className="cs-traits__note">Dote</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* ── Especie ── */}
-              {(personaje.especie?.rasgosDestacados?.length > 0 || personaje.especie?.linajeSel || personaje.habilidadDiestro || personaje.habilidadSentidos) && (
-                <div className="cs-traits__group">
-                  <div className="cs-traits__group-header">Especie — {personaje.especie?.nombre}</div>
-
-                  {personaje.especie?.rasgosDestacados?.map((r, i) => (
-                    <div key={i} className="cs-traits__entry">
-                      <TextoTruncado texto={r} className="cs-traits__desc" />
-                    </div>
-                  ))}
-
-                  {personaje.habilidadDiestro && (
-                    <div className="cs-traits__entry">
-                      <div className="cs-traits__entry-line">
-                        <span className="cs-traits__name">Diestro</span>
-                      </div>
-                      <div className="cs-traits__desc">Competencia en {personaje.habilidadDiestro}</div>
-                    </div>
-                  )}
-
-                  {personaje.habilidadSentidos && (
-                    <div className="cs-traits__entry">
-                      <div className="cs-traits__entry-line">
-                        <span className="cs-traits__name">Sentidos agudos</span>
-                      </div>
-                      <div className="cs-traits__desc">Competencia en {personaje.habilidadSentidos}</div>
-                    </div>
-                  )}
-
-                  {personaje.especie?.linajeSel && (
-                    <div className="cs-traits__entry">
-                      <div className="cs-traits__entry-line">
-                        <span className="cs-traits__name">{personaje.especie.linajeSel.nombre}</span>
-                        {personaje.especie.linajeSel.tipoDano && <span className="cs-traits__note">{personaje.especie.linajeSel.tipoDano}</span>}
-                        {personaje.especie.linajeSel.resistencia && <span className="cs-traits__note">Resist. {personaje.especie.linajeSel.resistencia}</span>}
-                      </div>
-                      <TextoTruncado texto={personaje.especie.linajeSel.desc} className="cs-traits__desc" />
-                      {personaje.especie.linajeSel.rasgos?.map((r, i) => (
-                        <div key={i} className="cs-traits__subentry">
-                          <span className="cs-traits__subentry-level">Nv.{r.nivel}</span>
-                          <span>{r.nombre}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
 
               {!personaje.clase && !personaje.dote && !personaje.especie?.rasgosDestacados?.length && (
                 <em className="cs-empty">Sin datos aún</em>
