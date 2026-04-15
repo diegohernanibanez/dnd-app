@@ -2462,6 +2462,24 @@ function MetaTrucoCompacta({ info }) {
   )
 }
 
+function parseComponentes(str) {
+  if (!str) return []
+  const result = []
+  let depth = 0, current = ''
+  for (const ch of str) {
+    if (ch === '(') depth++
+    else if (ch === ')') depth--
+    if (ch === ',' && depth === 0) {
+      result.push(current.trim())
+      current = ''
+    } else {
+      current += ch
+    }
+  }
+  if (current.trim()) result.push(current.trim())
+  return result
+}
+
 function ConjuroDetalle({ conjuro, nombre, onCerrar }) {
   if (!conjuro) return null
   const trucoInfo = getTrucoNivel0Info(nombre, conjuro)
@@ -2504,7 +2522,7 @@ function ConjuroDetalle({ conjuro, nombre, onCerrar }) {
         <div className="conj-detalle__stats">
           <div className="conj-detalle__stat"><span className="conj-detalle__stat-lbl">Tiempo</span><span>{conjuro.tiempoLanzamiento}</span></div>
           <div className="conj-detalle__stat"><span className="conj-detalle__stat-lbl">Alcance</span><span>{conjuro.alcance}</span></div>
-          <div className="conj-detalle__stat"><span className="conj-detalle__stat-lbl">Componentes</span><span>{conjuro.componentes}</span></div>
+          <div className="conj-detalle__stat conj-detalle__stat--list"><span className="conj-detalle__stat-lbl">Componentes</span><ul className="conj-detalle__comp-list">{parseComponentes(conjuro.componentes).map((c, i) => <li key={i}>{c}</li>)}</ul></div>
           <div className="conj-detalle__stat"><span className="conj-detalle__stat-lbl">Duración</span><span>{conjuro.duracion}</span></div>
         </div>
         <p className="conj-detalle__desc">{conjuro.descripcion}</p>

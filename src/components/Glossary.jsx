@@ -1,4 +1,22 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+
+function parseComponentes(str) {
+  if (!str) return []
+  const result = []
+  let depth = 0, current = ''
+  for (const ch of str) {
+    if (ch === '(') depth++
+    else if (ch === ')') depth--
+    if (ch === ',' && depth === 0) {
+      result.push(current.trim())
+      current = ''
+    } else {
+      current += ch
+    }
+  }
+  if (current.trim()) result.push(current.trim())
+  return result
+}
 import { CONJUROS } from '../data/spells'
 import { CLASES } from '../data/classes'
 import { ARMAS, PROPIEDADES_ARMA_DESC, MAESTRIAS_ARMA_DESC } from '../data/weapons'
@@ -95,7 +113,7 @@ function SeccionConjuros({ busqueda }) {
                 <div className="glossary-detail-row"><span className="glossary-detail-label">Clases</span><span className="glossary-detail-value">{c.clases.join(', ')}</span></div>
                 <div className="glossary-detail-row"><span className="glossary-detail-label">Lanzamiento</span><span className="glossary-detail-value">{c.tiempoLanzamiento}</span></div>
                 <div className="glossary-detail-row"><span className="glossary-detail-label">Alcance</span><span className="glossary-detail-value">{c.alcance}</span></div>
-                <div className="glossary-detail-row"><span className="glossary-detail-label">Componentes</span><span className="glossary-detail-value">{c.componentes}</span></div>
+                <div className="glossary-detail-row glossary-detail-row--list"><span className="glossary-detail-label">Componentes</span><ul className="glossary-comp-list">{parseComponentes(c.componentes).map((comp, i) => <li key={i}>{comp}</li>)}</ul></div>
                 <div className="glossary-detail-row"><span className="glossary-detail-label">Duración</span><span className="glossary-detail-value">{c.duracion}</span></div>
                 <div className="glossary-detail-desc">{c.descripcion}</div>
               </div>

@@ -227,6 +227,20 @@
   gap: 8px;
   padding: 3px 0;
 }
+.glossary-detail-row--list {
+  align-items: flex-start;
+}
+.glossary-comp-list {
+  margin: 0;
+  padding: 0 0 0 16px;
+  font-size: 13px;
+  list-style: none;
+  text-align: start;
+}
+.glossary-comp-list li {
+  padding: 0;
+  line-height: 1.6;
+}
 .glossary-detail-label {
   font-weight: 600;
   color: var(--text-h);
