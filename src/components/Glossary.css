@@ -269,7 +269,6 @@
   font-weight: 600;
   font-size: 12px;
   border-bottom: 1.5px solid var(--border);
-  position: sticky;
   top: 0;
 }
 .glossary-table td {

@@ -26,7 +26,7 @@
   .conj-picker__grupo-head {
     background: #2a2520;
     color: var(--cs-ink-strong);
-    border-bottom-color: rgba(201, 168, 76, .35);
+    border-bottom-color: rgba(201, 168, 76);
   }
   .conj-pool-info {
     background: rgba(201, 168, 76, .08);
@@ -3401,7 +3401,6 @@
   margin-bottom: 4px;
 }
 .conj-picker__grupo-head {
-  position: sticky;
   top: 0;
   z-index: 2;
   background: var(--cs-gold-bg, #f5ecd4);
