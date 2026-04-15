@@ -109,6 +109,8 @@ export function calcularPersonaje({
   eleccionNivel1,
   nivel = 1,
   pgGananciaPorNivel = {},
+  itemOcultos = [],
+  ataquesOcultos = [],
 }) {
   const clase     = getClaseById(claseId) ?? null
   const trasfondo = TRASFONDOS.find(t => t.id === trasfondoId) ?? null
@@ -342,6 +344,8 @@ export function calcularPersonaje({
   const pgBase = getPGMax(nivel, dadoGolpe, conMod, pgGananciaPorNivel)
   const pgBonusEspecie = (especie?.pgPorNivelBonus ?? 0) * nivel
   const pgMax = pgBase + pgBonusEspecie
+  const itemOcultosSet = new Set(itemOcultos ?? [])
+  const ataquesOcultosSet = new Set(ataquesOcultos ?? [])
 
   // ── Percepción pasiva ──
   const percepcionTotal  = habilidades['Percepción']?.total
@@ -399,22 +403,30 @@ export function calcularPersonaje({
       const items = []
       const eqClase     = claseId     ? EQUIPO_POR_CLASE[claseId]         : null
       const eqTrasfondo = trasfondoId ? EQUIPO_POR_TRASFONDO[trasfondoId] : null
+      let idx = 0
+
+      const pushItem = (texto, fuente) => {
+        const key = `${fuente}:${idx}:${texto}`
+        idx += 1
+        if (itemOcultosSet.has(key)) return
+        items.push({ key, texto, fuente })
+      }
 
       if (equipo?.opcionClase === 'A' && eqClase?.opcionA) {
-        eqClase.opcionA.forEach(i => items.push({ texto: i, fuente: clase?.nombre ?? 'Clase' }))
+        eqClase.opcionA.forEach(i => pushItem(i, clase?.nombre ?? 'Clase'))
       } else if (equipo?.opcionClase === 'B' && eqClase) {
-        items.push({ texto: `${eqClase.opcionB} po para equipamiento (clase)`, fuente: clase?.nombre ?? 'Clase' })
+        pushItem(`${eqClase.opcionB} po para equipamiento (clase)`, clase?.nombre ?? 'Clase')
       }
       if (equipo?.opcionTrasfondo === 'A' && eqTrasfondo?.opcionA) {
-        eqTrasfondo.opcionA.forEach(i => items.push({ texto: i, fuente: trasfondo?.nombre ?? 'Trasfondo' }))
+        eqTrasfondo.opcionA.forEach(i => pushItem(i, trasfondo?.nombre ?? 'Trasfondo'))
       } else if (equipo?.opcionTrasfondo === 'B' && eqTrasfondo) {
-        items.push({ texto: `${eqTrasfondo.opcionB ?? 50} po para equipamiento (trasfondo)`, fuente: trasfondo?.nombre ?? 'Trasfondo' })
+        pushItem(`${eqTrasfondo.opcionB ?? 50} po para equipamiento (trasfondo)`, trasfondo?.nombre ?? 'Trasfondo')
       }
       if (equipo?.extras?.length) {
-        equipo.extras.forEach(i => items.push({ texto: i, fuente: 'Extra' }))
+        equipo.extras.forEach(i => pushItem(i, 'Extra'))
       }
       if (equipo?.bagatela != null) {
-        items.push({ texto: BAGATELAS[equipo.bagatela], fuente: 'Bagatela' })
+        pushItem(BAGATELAS[equipo.bagatela], 'Bagatela')
       }
       return items
     })(),
@@ -439,21 +451,31 @@ export function calcularPersonaje({
     ataques: (() => {
       const eqClase     = claseId     ? EQUIPO_POR_CLASE[claseId]         : null
       const eqTrasfondo = trasfondoId ? EQUIPO_POR_TRASFONDO[trasfondoId] : null
-      const textos = []
-      if (equipo?.opcionClase === 'A' && eqClase?.opcionA)   textos.push(...eqClase.opcionA)
-      if (equipo?.opcionTrasfondo === 'A' && eqTrasfondo?.opcionA) textos.push(...eqTrasfondo.opcionA)
-      if (equipo?.extras?.length) textos.push(...equipo.extras)
+      const fuentes = []
+      let idx = 0
+      const pushFuente = (texto, fuente) => {
+        const itemKey = `${fuente}:${idx}:${texto}`
+        idx += 1
+        if (itemOcultosSet.has(itemKey)) return
+        fuentes.push({ texto, fuente, itemKey })
+      }
+      if (equipo?.opcionClase === 'A' && eqClase?.opcionA) {
+        eqClase.opcionA.forEach(t => pushFuente(t, clase?.nombre ?? 'Clase'))
+      }
+      if (equipo?.opcionTrasfondo === 'A' && eqTrasfondo?.opcionA) {
+        eqTrasfondo.opcionA.forEach(t => pushFuente(t, trasfondo?.nombre ?? 'Trasfondo'))
+      }
+      if (equipo?.extras?.length) {
+        equipo.extras.forEach(t => pushFuente(t, 'Extra'))
+      }
 
       const fueMod = mods['Fuerza']    ?? 0
       const desMod = mods['Destreza']  ?? 0
-      const vistos = new Set()
       const lista  = []
 
-      for (const texto of textos) {
-        const arma = resolverArma(texto)
+      for (const f of fuentes) {
+        const arma = resolverArma(f.texto)
         if (!arma) continue
-        if (vistos.has(arma.nombre)) continue
-        vistos.add(arma.nombre)
 
         let mod
         if (arma.caracteristica === 'finura') {
@@ -464,11 +486,19 @@ export function calcularPersonaje({
           mod = fueMod
         }
         const bonAtaque = mod + BONO
+        const key = `auto:${f.itemKey}:${arma.nombre}`
+        if (ataquesOcultosSet.has(key)) continue
         lista.push({
+          key,
+          fuente: f.fuente,
+          itemKey: f.itemKey,
           nombre:    arma.nombre,
           bonAtaque,
           daño:      `${arma.daño}${arma.daño2 ? ` (versatil: ${arma.daño2})` : ''}`,
           tipo:      arma.tipo,
+          caracteristica: arma.caracteristica,
+          propiedades: arma.propiedades ?? [],
+          maestria: arma.maestria ?? null,
         })
       }
       return lista

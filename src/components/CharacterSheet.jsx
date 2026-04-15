@@ -13,6 +13,7 @@ import { getDoteById, DOTES_GENERALES, DOTES_DON_EPICO, TODAS_LAS_DOTES, cumpleR
 import { CONJUROS } from '../data/spells'
 import './CharacterSheet.css'
 import { PG_FIJO_POR_DADO } from '../data/levelProgression'
+import { TODAS_LAS_PROPIEDADES_ARMA, PROPIEDADES_ARMA_DESC, TODAS_LAS_MAESTRIAS_ARMA, MAESTRIAS_ARMA_DESC } from '../data/weapons'
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
@@ -185,33 +186,125 @@ function EquipoInlineAdd({ onAñadir }) {
   )
 }
 
-// ── Formulario para agregar ataque personalizado ──
-function AtaqueCustomForm({ onAñadir, onCancelar }) {
-  const [nombre, setNombre] = useState('')
-  const [bonAtaque, setBonAtaque] = useState('')
-  const [daño, setDaño] = useState('')
-  const [notas, setNotas] = useState('')
+const CARACTERISTICAS_ATAQUE = ['Fuerza', 'Destreza', 'Inteligencia', 'Sabiduría', 'Carisma']
+
+function AtaqueCustomModal({ personaje, inicial, tieneMaestria, onGuardar, onCerrar }) {
+  const overlayRef = useRef(null)
+  const [nombre, setNombre] = useState(inicial?.nombre ?? '')
+  const [tipoAtaque, setTipoAtaque] = useState(inicial?.tipoAtaque ?? inicial?.tipo ?? 'cac')
+  const [caracteristica, setCaracteristica] = useState(inicial?.caracteristica ?? 'Fuerza')
+  const [usaCompetencia, setUsaCompetencia] = useState(inicial?.usaCompetencia ?? true)
+  const [bonoMagico, setBonoMagico] = useState(inicial?.bonoMagico ?? 0)
+  const [bonoExtra, setBonoExtra] = useState(inicial?.bonoExtra ?? 0)
+  const [dadoDanio, setDadoDanio] = useState(inicial?.dadoDanio ?? '1d8')
+  const [tipoDanio, setTipoDanio] = useState(inicial?.tipoDanio ?? 'cortante')
+  const [usaModDanio, setUsaModDanio] = useState(inicial?.usaModDanio ?? true)
+  const [critRango, setCritRango] = useState(inicial?.critRango ?? 20)
+  const [alcance, setAlcance] = useState(inicial?.alcance ?? '')
+  const [propiedades, setPropiedades] = useState(inicial?.propiedades ?? [])
+  const [maestria, setMaestria] = useState(inicial?.maestria ?? '')
+  const [usarMaestria, setUsarMaestria] = useState(inicial?.usarMaestria ?? false)
+  const [notas, setNotas] = useState(inicial?.notas ?? '')
+
+  const mod = personaje.modificadores?.[caracteristica] ?? 0
+  const bonoCompetencia = usaCompetencia ? (personaje.bonificadorCompetencia ?? 0) : 0
+  const bonAtaque = mod + bonoCompetencia + Number(bonoMagico || 0) + Number(bonoExtra || 0)
+  const danoTotal = `${dadoDanio || '1'}${usaModDanio ? ` ${mod >= 0 ? '+' : '-'} ${Math.abs(mod)}` : ''} ${tipoDanio}`.trim()
+
+  const toggleProp = (prop) => {
+    setPropiedades(prev => prev.includes(prop) ? prev.filter(p => p !== prop) : [...prev, prop])
+  }
 
   const confirmar = () => {
     if (!nombre.trim()) return
-    onAñadir({
-      nombre: nombre.trim(),
-      bonAtaque: bonAtaque.trim(),
-      daño: daño.trim(),
-      notas: notas.trim(),
+    onGuardar({
+      id: inicial?.id ?? `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
       custom: true,
+      nombre: nombre.trim(),
+      tipoAtaque,
+      tipo: tipoAtaque,
+      caracteristica,
+      usaCompetencia,
+      bonoMagico: Number(bonoMagico || 0),
+      bonoExtra: Number(bonoExtra || 0),
+      dadoDanio: (dadoDanio || '1').trim(),
+      tipoDanio: (tipoDanio || '').trim(),
+      usaModDanio,
+      critRango: Math.max(2, Math.min(20, Number(critRango || 20))),
+      alcance: alcance.trim(),
+      propiedades,
+      maestria: maestria || null,
+      usarMaestria: !!(usarMaestria && tieneMaestria && maestria),
+      bonAtaque,
+      daño: danoTotal,
+      notas: notas.trim(),
     })
-    setNombre(''); setBonAtaque(''); setDaño(''); setNotas('')
   }
 
   return (
-    <div className="cs-atk-form">
-      <input className="cs-atk-form__field" placeholder="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} />
-      <input className="cs-atk-form__field cs-atk-form__field--sm" placeholder="+0" value={bonAtaque} onChange={e => setBonAtaque(e.target.value)} />
-      <input className="cs-atk-form__field" placeholder="1d8 cortante" value={daño} onChange={e => setDaño(e.target.value)} />
-      <input className="cs-atk-form__field" placeholder="Notas" value={notas} onChange={e => setNotas(e.target.value)} onKeyDown={e => e.key === 'Enter' && confirmar()} />
-      <button className="cs-atk-form__ok" onClick={confirmar} title="Añadir">✓</button>
-      <button className="cs-atk-form__cancel" onClick={onCancelar} title="Cancelar">✕</button>
+    <div className="sc-modal-overlay" ref={overlayRef} onClick={e => e.target === overlayRef.current && onCerrar()} role="dialog" aria-modal="true" aria-label="Configurar ataque">
+      <div className="sc-modal" style={{ maxWidth: 860, width: '96vw' }}>
+        <div className="sc-modal__header">
+          <div>
+            <h2 className="sc-modal__titulo">Configurar ataque</h2>
+            <p className="sc-modal__subtitulo">Arma, truco o ataque personalizado</p>
+          </div>
+          <button className="sc-modal__cerrar" onClick={onCerrar} aria-label="Cerrar">✕</button>
+        </div>
+
+        <div className="sc-modal__body cs-atk-modal-grid">
+          <input className="cs-field__input" placeholder="Nombre" value={nombre} onChange={e => setNombre(e.target.value)} />
+          <select className="cs-field__input" value={tipoAtaque} onChange={e => setTipoAtaque(e.target.value)}>
+            <option value="cac">Cuerpo a cuerpo</option>
+            <option value="dist">A distancia</option>
+          </select>
+          <select className="cs-field__input" value={caracteristica} onChange={e => setCaracteristica(e.target.value)}>
+            {CARACTERISTICAS_ATAQUE.map(c => <option key={c} value={c}>{CARACTERISTICAS_ABBREV[c]} ({c})</option>)}
+          </select>
+          <label className="cs-atk-check"><input type="checkbox" checked={usaCompetencia} onChange={e => setUsaCompetencia(e.target.checked)} /> Competente</label>
+
+          <input className="cs-field__input" type="number" placeholder="Bono mágico" value={bonoMagico} onChange={e => setBonoMagico(e.target.value)} />
+          <input className="cs-field__input" type="number" placeholder="Bono extra" value={bonoExtra} onChange={e => setBonoExtra(e.target.value)} />
+          <input className="cs-field__input" placeholder="Dado daño (ej: 1d8)" value={dadoDanio} onChange={e => setDadoDanio(e.target.value)} />
+          <input className="cs-field__input" placeholder="Tipo daño" value={tipoDanio} onChange={e => setTipoDanio(e.target.value)} />
+
+          <label className="cs-atk-check"><input type="checkbox" checked={usaModDanio} onChange={e => setUsaModDanio(e.target.checked)} /> Sumar mod al daño</label>
+          <input className="cs-field__input" type="number" min={2} max={20} placeholder="Crit" value={critRango} onChange={e => setCritRango(e.target.value)} />
+          <input className="cs-field__input" placeholder="Alcance (ej: 6/18 m)" value={alcance} onChange={e => setAlcance(e.target.value)} />
+          <input className="cs-field__input" placeholder="Notas" value={notas} onChange={e => setNotas(e.target.value)} />
+
+          <div className="cs-atk-props">
+            <div className="cs-atk-props__title">Propiedades</div>
+            <div className="cs-atk-props__list">
+              {TODAS_LAS_PROPIEDADES_ARMA.map(p => (
+                <label key={p} title={PROPIEDADES_ARMA_DESC[p]} className="cs-atk-check cs-atk-check--pill">
+                  <input type="checkbox" checked={propiedades.includes(p)} onChange={() => toggleProp(p)} /> {p}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="cs-atk-props">
+            <div className="cs-atk-props__title">Maestría</div>
+            <select className="cs-field__input" value={maestria} onChange={e => setMaestria(e.target.value)}>
+              <option value="">— Sin maestría —</option>
+              {TODAS_LAS_MAESTRIAS_ARMA.map(m => <option key={m} value={m}>{m}</option>)}
+            </select>
+            <label className="cs-atk-check" title={!tieneMaestria ? 'Necesitas un rasgo de maestría con armas' : ''}>
+              <input type="checkbox" checked={usarMaestria} disabled={!tieneMaestria || !maestria} onChange={e => setUsarMaestria(e.target.checked)} />
+              Aplicar maestría
+            </label>
+            {maestria && <small className="cs-atk-help">{MAESTRIAS_ARMA_DESC[maestria]}</small>}
+          </div>
+
+          <div className="cs-atk-preview">Ataque: <strong>{bonAtaque >= 0 ? `+${bonAtaque}` : bonAtaque}</strong> · Daño: <strong>{danoTotal}</strong></div>
+        </div>
+
+        <div className="sc-modal__footer">
+          <button className="sc-modal__btn sc-modal__btn--cancelar" onClick={onCerrar}>Cancelar</button>
+          <button className="sc-modal__btn sc-modal__btn--confirmar" onClick={confirmar}>Guardar ataque</button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -1005,6 +1098,8 @@ function Hoja1({
   dotesElegidos, onDotesElegidosCambiar,
   dotesLibres, onDotesLibresCambiar,
   armasCustom, onArmasCustomCambiar,
+  ataquesOcultos, onAtaquesOcultosCambiar,
+  itemsOcultos, onItemsOcultosCambiar,
   trucosSeleccionados,
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
   onXpNivelActualCambiar,
@@ -1012,7 +1107,7 @@ function Hoja1({
 }) {
   const [modalSubclase, setModalSubclase] = useState(false)
   const [asiModalNivel, setAsiModalNivel] = useState(null)
-  const [mostrarFormAtaque, setMostrarFormAtaque] = useState(false)
+  const [ataqueModal, setAtaqueModal] = useState(null)
   const [modalDoteLibreAbierto, setModalDoteLibreAbierto] = useState(false)
   const [inspiracion, setInspiracion] = useState(false)
   const [pgMetodoAbierto, setPgMetodoAbierto] = useState(false)
@@ -1124,6 +1219,7 @@ function Hoja1({
   const doteTrasfondoDesc = personaje.trasfondo?.doteId
     ? (getDoteById(personaje.trasfondo.doteId)?.desc ?? '')
     : ''
+  const tieneMaestriaArmas = (personaje.rasgosClase ?? []).some(r => /maestr/i.test(r?.nombre ?? ''))
 
   return (
     <div className="cs-hoja cs-hoja--1">
@@ -1443,23 +1539,44 @@ function Hoja1({
               </div>
 
               {/* Armas automáticas (del equipo) */}
-              {personaje.ataques?.map((atk, i) => (
-                <div key={`a-${i}`} className="cs-attacks__row cs-attacks__row--data">
-                  <span className="cs-attacks__cell">{atk.nombre}</span>
-                  <span className="cs-attacks__cell cs-attacks__cell--bon">{atk.bonAtaque >= 0 ? `+${atk.bonAtaque}` : atk.bonAtaque}</span>
-                  <span className="cs-attacks__cell">{atk.daño}</span>
-                  <span className="cs-attacks__cell">{atk.notas ?? ''}</span>
-                </div>
-              ))}
+              {personaje.ataques?.map((atk, i) => {
+                const notasAuto = [
+                  atk.tipo === 'dist' ? 'A distancia' : 'Cuerpo a cuerpo',
+                  atk.propiedades?.length ? `Propiedades: ${atk.propiedades.join(', ')}` : null,
+                  (tieneMaestriaArmas && atk.maestria) ? `Maestría: ${atk.maestria}` : null,
+                  atk.fuente ? `Fuente: ${atk.fuente}` : null,
+                ].filter(Boolean).join(' · ')
+                return (
+                  <div key={atk.key ?? `a-${i}`} className="cs-attacks__row cs-attacks__row--data">
+                    <span className="cs-attacks__cell">{atk.nombre}</span>
+                    <span className="cs-attacks__cell cs-attacks__cell--bon">{atk.bonAtaque >= 0 ? `+${atk.bonAtaque}` : atk.bonAtaque}</span>
+                    <span className="cs-attacks__cell">{atk.daño}</span>
+                    <span className="cs-attacks__cell cs-attacks__cell--notas">
+                      {notasAuto}
+                      <button
+                        className="cs-attacks__del"
+                        title="Quitar arma de esta hoja"
+                        onClick={() => {
+                          if (!atk.key) return
+                          if (!(ataquesOcultos ?? []).includes(atk.key)) {
+                            onAtaquesOcultosCambiar?.([...(ataquesOcultos ?? []), atk.key])
+                          }
+                        }}
+                      >✕</button>
+                    </span>
+                  </div>
+                )
+              })}
 
               {/* Armas/ataques personalizados */}
               {(armasCustom ?? []).map((atk, i) => (
-                <div key={`c-${i}`} className="cs-attacks__row cs-attacks__row--data cs-attacks__row--custom">
+                <div key={atk.id ?? `c-${i}`} className="cs-attacks__row cs-attacks__row--data cs-attacks__row--custom">
                   <span className="cs-attacks__cell">{atk.nombre}</span>
-                  <span className="cs-attacks__cell cs-attacks__cell--bon">{atk.bonAtaque}</span>
+                  <span className="cs-attacks__cell cs-attacks__cell--bon">{atk.bonAtaque >= 0 ? `+${atk.bonAtaque}` : atk.bonAtaque}</span>
                   <span className="cs-attacks__cell">{atk.daño}</span>
                   <span className="cs-attacks__cell cs-attacks__cell--notas">
-                    {atk.notas}
+                    {[atk.tipoAtaque === 'dist' ? 'A distancia' : 'Cuerpo a cuerpo', atk.alcance ? `Alcance ${atk.alcance}` : null, atk.propiedades?.length ? `Propiedades: ${atk.propiedades.join(', ')}` : null, (atk.usarMaestria && atk.maestria) ? `Maestría: ${atk.maestria}` : null, atk.notas || null].filter(Boolean).join(' · ')}
+                    <button className="cs-attacks__del" title="Editar" onClick={() => setAtaqueModal({ modo: 'editar', idx: i })}>✎</button>
                     <button
                       className="cs-attacks__del"
                       title="Quitar"
@@ -1502,20 +1619,26 @@ function Hoja1({
               )}
             </div>
 
-            {/* Botón para añadir ataque personalizado */}
-            {mostrarFormAtaque ? (
-              <AtaqueCustomForm
-                onAñadir={(atk) => {
-                  onArmasCustomCambiar(prev => [...prev, atk])
-                  setMostrarFormAtaque(false)
+            {ataqueModal && (
+              <AtaqueCustomModal
+                personaje={personaje}
+                inicial={ataqueModal.modo === 'editar' ? armasCustom?.[ataqueModal.idx] : null}
+                tieneMaestria={tieneMaestriaArmas}
+                onCerrar={() => setAtaqueModal(null)}
+                onGuardar={(atk) => {
+                  if (ataqueModal.modo === 'editar') {
+                    onArmasCustomCambiar(prev => prev.map((a, idx) => idx === ataqueModal.idx ? atk : a))
+                  } else {
+                    onArmasCustomCambiar(prev => [...(prev ?? []), atk])
+                  }
+                  setAtaqueModal(null)
                 }}
-                onCancelar={() => setMostrarFormAtaque(false)}
               />
-            ) : (
-              <button className="cs-attacks__add-btn" onClick={() => setMostrarFormAtaque(true)}>
-                + Añadir ataque
-              </button>
             )}
+
+            <button className="cs-attacks__add-btn" onClick={() => setAtaqueModal({ modo: 'nuevo' })}>
+              + Añadir ataque
+            </button>
 
             {personaje.conjuros && (
               <div className="cs-spell-stats">
@@ -1898,7 +2021,7 @@ function Hoja1({
                 {personaje.equipoResuelto.map((item, i) => {
                   const esExtra = item.fuente === 'Extra'
                   return (
-                    <li key={i} className="cs-equipo__item">
+                    <li key={item.key ?? i} className="cs-equipo__item">
                       <span className={`cs-equipo__tag cs-equipo__tag--${
                         item.fuente === personaje.clase?.nombre ? 'clase'
                         : item.fuente === personaje.trasfondo?.nombre ? 'trasfondo'
@@ -1906,20 +2029,24 @@ function Hoja1({
                         : 'extra'
                       }`}>{item.fuente}</span>
                       <span className="cs-equipo__texto">{item.texto}</span>
-                      {esExtra && (
-                        <button
-                          className="cs-equipo__del"
-                          title="Quitar"
-                          onClick={() => {
+                      <button
+                        className="cs-equipo__del"
+                        title="Quitar"
+                        onClick={() => {
+                          if (esExtra) {
                             const idx = (equipoState.extras ?? []).indexOf(item.texto)
                             if (idx === -1) return
                             onEquipoCambiar(prev => ({
                               ...prev,
                               extras: prev.extras.filter((_, j) => j !== idx),
                             }))
-                          }}
-                        >✕</button>
-                      )}
+                            return
+                          }
+                          if (item.key && !(itemsOcultos ?? []).includes(item.key)) {
+                            onItemsOcultosCambiar?.([...(itemsOcultos ?? []), item.key])
+                          }
+                        }}
+                      >✕</button>
                     </li>
                   )
                 })}
@@ -2883,6 +3010,8 @@ export default function CharacterSheet({
   conjurosSeleccionados, onConjurosSeleccionadosCambiar,
   espaciosUsados, onEspaciosUsadosCambiar,
   armasCustom, onArmasCustomCambiar,
+  ataquesOcultos, onAtaquesOcultosCambiar,
+  itemsOcultos, onItemsOcultosCambiar,
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
   onXpNivelActualCambiar,
   pgGananciaPorNivel, onPgGananciaPorNivelCambiar,
@@ -2980,6 +3109,10 @@ export default function CharacterSheet({
           onDotesLibresCambiar={onDotesLibresCambiar}
           armasCustom={armasCustom}
           onArmasCustomCambiar={onArmasCustomCambiar}
+          ataquesOcultos={ataquesOcultos}
+          onAtaquesOcultosCambiar={onAtaquesOcultosCambiar}
+          itemsOcultos={itemsOcultos}
+          onItemsOcultosCambiar={onItemsOcultosCambiar}
           trucosSeleccionados={trucosSeleccionados}
           dadosGolpeGastados={dadosGolpeGastados}
           onDadosGolpeGastadosCambiar={onDadosGolpeGastadosCambiar}

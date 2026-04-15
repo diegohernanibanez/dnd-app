@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { CONJUROS } from '../data/spells'
 import { CLASES } from '../data/classes'
-import { ARMAS } from '../data/weapons'
+import { ARMAS, PROPIEDADES_ARMA_DESC, MAESTRIAS_ARMA_DESC } from '../data/weapons'
 import { DOTES_ORIGEN, DOTES_GENERALES, DOTES_ESTILO_COMBATE, DOTES_DON_EPICO, CATEGORIAS_DOTE } from '../data/dotes'
 import { TRASFONDOS, ESPECIES } from '../data/origins'
 import { PACKS } from '../data/equipment'
@@ -211,6 +211,9 @@ function SeccionArmas({ busqueda }) {
     return armasArr.filter(a => a.nombre.toLowerCase().includes(q))
   }, [armasArr, busqueda])
 
+  const propiedadesArma = useMemo(() => Object.entries(PROPIEDADES_ARMA_DESC), [])
+  const maestriasArma = useMemo(() => Object.entries(MAESTRIAS_ARMA_DESC), [])
+
   return (
     <>
       <div className="glossary-count">{filtradas.length} armas</div>
@@ -234,6 +237,30 @@ function SeccionArmas({ busqueda }) {
           ))}
         </tbody>
       </table>
+
+      <div className="glossary-detail-section glossary-weapons-terms">
+        <h4>Propiedades de arma</h4>
+        <ul className="glossary-terms-list">
+          {propiedadesArma.map(([id, desc]) => (
+            <li key={id} className="glossary-terms-item">
+              <span className="glossary-terms-name">{id}</span>
+              <span className="glossary-terms-desc">{desc}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="glossary-detail-section glossary-weapons-terms">
+        <h4>Propiedades de maestría</h4>
+        <ul className="glossary-terms-list">
+          {maestriasArma.map(([id, desc]) => (
+            <li key={id} className="glossary-terms-item">
+              <span className="glossary-terms-name">{id}</span>
+              <span className="glossary-terms-desc">{desc}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
   )
 }

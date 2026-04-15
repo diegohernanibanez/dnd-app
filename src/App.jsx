@@ -104,6 +104,8 @@ function App() {
   const [conjurosSeleccionados, setConjurosSeleccionados] = useState([])
   const [espaciosUsados, setEspaciosUsados] = useState({})
   const [armasCustom, setArmasCustom] = useState([])
+  const [ataquesOcultos, setAtaquesOcultos] = useState([])
+  const [itemsOcultos, setItemsOcultos] = useState([])
   const [dadosGolpeGastados, setDadosGolpeGastados] = useState(0)
   const [pgMaxPersonalizado, setPgMaxPersonalizado] = useState(null)
   const [xpNivelActual, setXpNivelActual] = useState(0)
@@ -130,6 +132,8 @@ function App() {
     setGrimorioConjuros([])
     setConjurosSeleccionados([])
     setEspaciosUsados({})
+    setAtaquesOcultos([])
+    setItemsOcultos([])
   }, [claseSeleccionada])
 
   useEffect(() => {
@@ -163,12 +167,14 @@ function App() {
     conjurosSeleccionados,
     espaciosUsados,
     armasCustom,
+    ataquesOcultos,
+    itemsOcultos,
     dadosGolpeGastados,
     pgMaxPersonalizado,
     xpNivelActual,
     pgGananciaPorNivel,
     personajeOverrides,
-  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, pgGananciaPorNivel, personajeOverrides])
+  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, ataquesOcultos, itemsOcultos, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, pgGananciaPorNivel, personajeOverrides])
 
   const cargarDesdeData = useCallback((data) => {
     cargandoRef.current = true
@@ -196,6 +202,8 @@ function App() {
     setConjurosSeleccionados(data.conjurosSeleccionados ?? [])
     setEspaciosUsados(data.espaciosUsados ?? {})
     setArmasCustom(data.armasCustom ?? [])
+    setAtaquesOcultos(data.ataquesOcultos ?? [])
+    setItemsOcultos(data.itemsOcultos ?? [])
     setDadosGolpeGastados(data.dadosGolpeGastados ?? 0)
     setPgMaxPersonalizado(data.pgMaxPersonalizado ?? null)
     setXpNivelActual(data.xpNivelActual ?? 0)
@@ -267,9 +275,11 @@ function App() {
       eleccionNivel1,
       nivel,
       pgGananciaPorNivel,
+      ataquesOcultos,
+      itemOcultos: itemsOcultos,
     })
     return { ...p, xpNivelActual }
-  }, [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel, xpNivelActual, pgGananciaPorNivel])
+  }, [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel, xpNivelActual, pgGananciaPorNivel, ataquesOcultos, itemsOcultos])
 
   const personaje = useMemo(() => {
     return deepMerge(personajeBase, personajeOverrides ?? {})
@@ -411,6 +421,10 @@ function App() {
             onEspaciosUsadosCambiar={setEspaciosUsados}
             armasCustom={armasCustom}
             onArmasCustomCambiar={setArmasCustom}
+            ataquesOcultos={ataquesOcultos}
+            onAtaquesOcultosCambiar={setAtaquesOcultos}
+            itemsOcultos={itemsOcultos}
+            onItemsOcultosCambiar={setItemsOcultos}
             dadosGolpeGastados={dadosGolpeGastados}
             onDadosGolpeGastadosCambiar={setDadosGolpeGastados}
             pgMaxPersonalizado={pgMaxPersonalizado}

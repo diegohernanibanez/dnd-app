@@ -1360,7 +1360,7 @@
 /* ── Ataques ─────────────────────────────────────────── */
 .cs-attacks__head {
   display: grid;
-  grid-template-columns: 1.5fr 80px 1fr 0.8fr;
+  grid-template-columns: 1.4fr 80px 1fr 1.4fr;
   gap: 6px;
   padding: 4px 6px;
   font-size: 9px;
@@ -1373,7 +1373,7 @@
 
 .cs-attacks__row {
   display: grid;
-  grid-template-columns: 1.5fr 80px 1fr 0.8fr;
+  grid-template-columns: 1.4fr 80px 1fr 1.4fr;
   gap: 6px;
   padding: 5px 6px;
   border-bottom: 1px solid var(--border);
@@ -1381,7 +1381,7 @@
 }
 
 .cs-attacks__cell {
-  height: 18px;
+  min-height: 18px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -2663,9 +2663,13 @@
   font-style: italic !important;
 }
 .cs-attacks__cell--notas {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: start;
   gap: 4px;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .cs-attacks__del {
   background: none;
@@ -2725,6 +2729,69 @@
 .cs-atk-form__ok:hover { color: var(--dnd-gold); filter: brightness(1.1); }
 .cs-atk-form__cancel { color: var(--text-muted); }
 .cs-atk-form__cancel:hover { color: var(--error); }
+
+.cs-atk-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.cs-atk-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-h);
+}
+
+.cs-atk-props {
+  grid-column: 1 / -1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.cs-atk-props__title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  opacity: .75;
+  margin-bottom: 6px;
+}
+
+.cs-atk-props__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cs-atk-check--pill {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.cs-atk-help {
+  display: block;
+  margin-top: 6px;
+  opacity: .8;
+  font-size: 11px;
+}
+
+.cs-atk-preview {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .cs-atk-modal-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 
 /* ══════════════════════════════════════════════════════════════════════
    Editable fields — Estilos para la planilla editable

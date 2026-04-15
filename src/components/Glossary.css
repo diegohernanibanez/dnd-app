@@ -281,6 +281,43 @@
   background: var(--social-bg);
 }
 
+.glossary-weapons-terms {
+  padding: 12px 20px;
+}
+
+.glossary-terms-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.glossary-terms-item {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--social-bg);
+}
+
+.glossary-terms-name {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-h);
+  margin-bottom: 3px;
+}
+
+.glossary-terms-desc {
+  display: block;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text);
+}
+
 /* Alignment grid */
 .glossary-align-grid {
   display: grid;
