@@ -282,4 +282,73 @@ export const EQUIPO_POR_TRASFONDO = {
 
 
 // ── Packs de equipo estándar (Cap. 5) ────────────────────────────────
-
+
+export const MONEDAS_KEYS = ['PC', 'PP', 'PE', 'PO', 'PA']
+
+const MONEDA_LABEL_TO_KEY = {
+  pc: 'PC',
+  pp: 'PP',
+  pe: 'PE',
+  po: 'PO',
+  pa: 'PA',
+}
+
+export function crearMonedasVacias() {
+  return { PC: 0, PP: 0, PE: 0, PO: 0, PA: 0 }
+}
+
+export function sumarMonedas(base = crearMonedasVacias(), extra = crearMonedasVacias()) {
+  const out = { ...crearMonedasVacias(), ...base }
+  for (const key of MONEDAS_KEYS) out[key] = (out[key] ?? 0) + (extra[key] ?? 0)
+  return out
+}
+
+export function restarMonedas(base = crearMonedasVacias(), resta = crearMonedasVacias()) {
+  const out = { ...crearMonedasVacias(), ...base }
+  for (const key of MONEDAS_KEYS) out[key] = (out[key] ?? 0) - (resta[key] ?? 0)
+  return out
+}
+
+export function extraerMonedasDeTexto(texto = '') {
+  const out = crearMonedasVacias()
+  for (const match of String(texto).matchAll(/(\d+)\s*(pc|pp|pe|po|pa)\b/gi)) {
+    const cantidad = Number(match[1])
+    const key = MONEDA_LABEL_TO_KEY[match[2].toLowerCase()]
+    if (!Number.isNaN(cantidad) && key) out[key] += cantidad
+  }
+  return out
+}
+
+export function textoEsSoloMonedas(texto = '') {
+  const sinMonedas = String(texto)
+    .replace(/\d+\s*(pc|pp|pe|po|pa)\b/gi, '')
+    .replace(/[,+/()\-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return sinMonedas.length === 0
+}
+
+export function getMonedasInicialesDesdeEquipo({ claseId, trasfondoId, equipo } = {}) {
+  const monedas = crearMonedasVacias()
+  const eqClase = claseId ? EQUIPO_POR_CLASE[claseId] : null
+  const eqTrasfondo = trasfondoId ? EQUIPO_POR_TRASFONDO[trasfondoId] : null
+
+  if (equipo?.opcionClase === 'A' && eqClase?.opcionA) {
+    for (const item of eqClase.opcionA) {
+      if (textoEsSoloMonedas(item)) Object.assign(monedas, sumarMonedas(monedas, extraerMonedasDeTexto(item)))
+    }
+  } else if (equipo?.opcionClase === 'B' && eqClase?.opcionB) {
+    monedas.PO += Number(eqClase.opcionB) || 0
+  }
+
+  if (equipo?.opcionTrasfondo === 'A' && eqTrasfondo?.opcionA) {
+    for (const item of eqTrasfondo.opcionA) {
+      if (textoEsSoloMonedas(item)) Object.assign(monedas, sumarMonedas(monedas, extraerMonedasDeTexto(item)))
+    }
+  } else if (equipo?.opcionTrasfondo === 'B' && eqTrasfondo?.opcionB) {
+    monedas.PO += Number(eqTrasfondo.opcionB) || 0
+  }
+
+  return monedas
+}
+

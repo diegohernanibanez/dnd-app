@@ -11,6 +11,7 @@ import Glossary from './components/Glossary'
 import { CARACTERISTICAS } from './data/abilityScores'
 import { calcularPersonaje } from './data/character'
 import { CLASES } from './data/classes'
+import { crearMonedasVacias, getMonedasInicialesDesdeEquipo, restarMonedas, sumarMonedas } from './data/equipment'
 import { guardarPersonaje, cargarPersonaje, crearEstadoInicial } from './data/storage'
 import './App.css'
 
@@ -91,7 +92,7 @@ function App() {
     personalidad: { rasgos: '', ideal: '', vinculo: '', defecto: '' },
     trasfondoId: null,
   })
-  const [equipo, setEquipo] = useState({ opcionClase: null, opcionTrasfondo: null, oroDisponible: 0, extras: [], bagatela: null })
+  const [equipo, setEquipo] = useState({ opcionClase: null, opcionTrasfondo: null, oroDisponible: 0, extras: [], bagatela: null, monedasAuto: crearMonedasVacias() })
 
   // ── Estado extra (hoja de personaje) ──
   const [hoja2, setHoja2] = useState(ESTADO_VACIO.hoja2)
@@ -140,8 +141,30 @@ function App() {
 
   useEffect(() => {
     if (cargandoRef.current) return
-    setEquipo({ opcionClase: null, opcionTrasfondo: null, oroDisponible: 0, extras: [], bagatela: null })
+    setEquipo(prev => ({
+      opcionClase: null,
+      opcionTrasfondo: null,
+      oroDisponible: 0,
+      extras: [],
+      bagatela: null,
+      monedasAuto: prev?.monedasAuto ?? crearMonedasVacias(),
+    }))
   }, [claseSeleccionada])
+
+  useEffect(() => {
+    const monedasAutoActuales = equipo?.monedasAuto ?? crearMonedasVacias()
+    const monedasAutoSiguientes = getMonedasInicialesDesdeEquipo({
+      claseId: claseSeleccionada,
+      trasfondoId: origen.trasfondo,
+      equipo,
+    })
+
+    const sinCambios = JSON.stringify(monedasAutoActuales) === JSON.stringify(monedasAutoSiguientes)
+    if (sinCambios) return
+
+    setMonedas(prev => sumarMonedas(restarMonedas(prev ?? crearMonedasVacias(), monedasAutoActuales), monedasAutoSiguientes))
+    setEquipo(prev => ({ ...prev, monedasAuto: monedasAutoSiguientes }))
+  }, [claseSeleccionada, origen.trasfondo, equipo])
 
   // ── Serialización ──
   const serializarPersonaje = useCallback(() => ({

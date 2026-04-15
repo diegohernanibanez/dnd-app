@@ -119,7 +119,7 @@ export function crearEstadoInicial(CARACTERISTICAS) {
       personalidad: { rasgos: '', ideal: '', vinculo: '', defecto: '' },
       trasfondoId: null,
     },
-    equipo: { opcionClase: null, opcionTrasfondo: null, oroDisponible: 0, extras: [], bagatela: null },
+    equipo: { opcionClase: null, opcionTrasfondo: null, oroDisponible: 0, extras: [], bagatela: null, monedasAuto: { PC: 0, PP: 0, PE: 0, PO: 0, PA: 0 } },
     hoja2: {
       historia: '',
       aliados: '',

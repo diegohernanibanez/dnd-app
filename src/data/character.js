@@ -1,7 +1,7 @@
 // Fuente: Manual del Jugador D&D 2024 - Motor de cálculo del personaje
 // Referencia: Caps. 1, 2, 3, 4 — pp. 34-35 (hoja de personaje)
 
-import { EQUIPO_POR_CLASE, EQUIPO_POR_TRASFONDO } from './equipment'
+import { EQUIPO_POR_CLASE, EQUIPO_POR_TRASFONDO, getMonedasInicialesDesdeEquipo, textoEsSoloMonedas } from './equipment'
 import { BAGATELAS } from './bagatelas'
 import { resolverArma } from './weapons'
 import { getClaseById } from './classes'
@@ -481,6 +481,7 @@ export function calcularPersonaje({
     habilidadSentidos:      habilidadSentidos ?? null,
     habilidadesHabilidoso:  habilidadesHabilidoso ?? [],
     equipo:            equipo ?? { opcionClase: null, opcionTrasfondo: null, oroDisponible: 0, extras: [] },
+    monedasEquipoInicial: getMonedasInicialesDesdeEquipo({ claseId, trasfondoId, equipo }),
 
     // Equipo resuelto (lista de ítems para mostrar en la planilla)
     equipoResuelto: (() => {
@@ -490,6 +491,7 @@ export function calcularPersonaje({
       let idx = 0
 
       const pushItem = (texto, fuente) => {
+        if (textoEsSoloMonedas(texto)) return
         const key = `${fuente}:${idx}:${texto}`
         idx += 1
         if (itemOcultosSet.has(key)) return
@@ -498,13 +500,9 @@ export function calcularPersonaje({
 
       if (equipo?.opcionClase === 'A' && eqClase?.opcionA) {
         eqClase.opcionA.forEach(i => pushItem(i, clase?.nombre ?? 'Clase'))
-      } else if (equipo?.opcionClase === 'B' && eqClase) {
-        pushItem(`${eqClase.opcionB} po para equipamiento (clase)`, clase?.nombre ?? 'Clase')
       }
       if (equipo?.opcionTrasfondo === 'A' && eqTrasfondo?.opcionA) {
         eqTrasfondo.opcionA.forEach(i => pushItem(i, trasfondo?.nombre ?? 'Trasfondo'))
-      } else if (equipo?.opcionTrasfondo === 'B' && eqTrasfondo) {
-        pushItem(`${eqTrasfondo.opcionB ?? 50} po para equipamiento (trasfondo)`, trasfondo?.nombre ?? 'Trasfondo')
       }
       if (equipo?.extras?.length) {
         equipo.extras.forEach(i => pushItem(i, 'Extra'))
