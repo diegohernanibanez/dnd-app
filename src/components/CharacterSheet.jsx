@@ -1412,17 +1412,16 @@ function Hoja1({
           <div className="cs-header__pg-section">
             <div className="cs-header__pg-top">
               <span />
-              {nivelActual > 1 && (
-                <button
-                  type="button"
-                  className="cs-header__pg-method-btn"
-                  onClick={() => setPgMetodoAbierto(v => !v)}
-                  aria-expanded={pgMetodoAbierto}
-                  title="Método de PG"
-                >
-                  {pgMetodoAbierto ? '−' : '+'}
-                </button>
-              )}
+              <button
+                type="button"
+                className="cs-header__pg-method-btn"
+                onClick={() => nivelActual > 1 && setPgMetodoAbierto(v => !v)}
+                aria-expanded={nivelActual > 1 ? pgMetodoAbierto : false}
+                title={nivelActual > 1 ? 'Método de PG' : 'Disponible desde nivel 2'}
+                disabled={nivelActual <= 1}
+              >
+                {pgMetodoAbierto ? '−' : '+'}
+              </button>
             </div>
             <div className="cs-header__pg-cells">
               <div className="cs-header__pg-cell">
