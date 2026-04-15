@@ -197,7 +197,7 @@
   cursor: not-allowed;
 }
 
-/* ── Cabecera — estilo planilla D&D ──────────────────── */
+/* ── Cabecera — Hoja de personaje D&D ──────────────────── */
 .cs-header {
   display: flex;
   flex-direction: column;
@@ -207,14 +207,11 @@
   margin-bottom: 10px;
 }
 
+/* Fila 1 — Nombre */
 .cs-header__row1 {
   display: flex;
   gap: 14px;
   align-items: stretch;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
 }
 
 .cs-header__nombre {
@@ -238,18 +235,284 @@
   font-family: var(--heading);
 }
 
-/* Combat boxes in header */
-.cs-header__combat {
-  display: flex;
+/* Fila 2 — Identidad (trasfondo, especie, clase, subclase, nivel, XP, alineamiento) */
+.cs-header__row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.2fr 50px 70px 1fr;
   gap: 6px;
-  flex-shrink: 0;
 
-  @media (max-width: 768px) {
-    flex-wrap: wrap;
-    justify-content: center;
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
+.cs-header__meta-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--border);
+}
+
+.cs-header__meta-item--subclase {
+  /* Subclase item may have a button */
+}
+
+.cs-header__meta-item--narrow {
+  /* controlled by grid */
+}
+
+.cs-header__meta-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-h);
+  text-align: center;
+}
+
+.cs-header__meta-val--muted {
+  font-size: 11px;
+  opacity: 0.45;
+  font-style: italic;
+}
+
+.cs-header__meta-label {
+  font-size: 8.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-family: var(--heading);
+  color: var(--cs-gold, #c9a84c);
+  opacity: 0.85;
+}
+
+/* Subclase button in header */
+.cs-header__subclase-btn {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--heading);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1.5px solid;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.3;
+}
+
+.cs-header__subclase-btn--elegida {
+  color: var(--cs-ink-strong);
+  border-color: var(--cs-ink);
+  background: var(--cs-red-bg);
+}
+
+.cs-header__subclase-btn--pendiente {
+  color: var(--cs-red);
+  border-color: var(--cs-red);
+  background: var(--cs-red-bg);
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-header__subclase-btn--pendiente {
+    animation: none;
+  }
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-color: var(--cs-red); }
+  50% { border-color: transparent; }
+}
+
+/* Fila 3 — Puntos de golpe + Dados de golpe */
+.cs-header__row3 {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.cs-header__section-title {
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-family: var(--heading);
+  color: var(--cs-gold, #c9a84c);
+  opacity: 0.85;
+  text-align: center;
+  margin-top: 3px;
+}
+
+/* Puntos de golpe */
+.cs-header__pg-section {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  border: 1.5px solid var(--cs-ink);
+  border-radius: 8px;
+  padding: 8px 10px 5px;
+  background: var(--bg);
+  min-width: 0;
+}
+
+.cs-header__pg-cells {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  justify-content: space-around;
+}
+
+.cs-header__pg-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.cs-header__pg-cell--main {
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding: 0 8px;
+}
+
+.cs-header__pg-input {
+  width: 100%;
+  max-width: 60px;
+  font-size: 18px;
+  font-weight: 800;
+  font-family: var(--mono);
+  color: var(--cs-ink-strong);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  text-align: center;
+  padding: 2px 0;
+  outline: none;
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button { -webkit-appearance: none; }
+  &:hover, &:focus { border-bottom-color: var(--accent); }
+}
+
+.cs-header__pg-input--main {
+  font-size: 26px;
+  max-width: 80px;
+  border-bottom-width: 2.5px;
+  border-bottom-color: var(--cs-ink);
+}
+
+.cs-header__pg-label {
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+  font-weight: 600;
+  font-family: var(--heading);
+}
+
+/* Dados de golpe */
+.cs-header__dg-section {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  border: 1.5px solid var(--cs-ink);
+  border-radius: 8px;
+  padding: 8px 10px 5px;
+  background: var(--bg);
+  min-width: 0;
+}
+
+.cs-header__dg-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.cs-header__dg-info {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.cs-header__dg-tipo {
+  font-size: 20px;
+  font-weight: 800;
+  font-family: var(--mono);
+  color: var(--cs-ink-strong);
+  line-height: 1;
+}
+
+.cs-header__dg-total {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  opacity: 0.6;
+}
+
+.cs-header__dg-tracker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+.cs-header__dg-bubbles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  justify-content: center;
+}
+
+.cs-dg-bubble {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--cs-ink);
+  background: var(--cs-red-bg);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover { border-color: var(--accent); }
+}
+
+.cs-dg-bubble--gastado {
+  background: var(--border);
+  border-color: var(--border);
+  opacity: 0.4;
+}
+
+.cs-header__dg-count {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--mono);
+  color: var(--cs-ink-strong);
+  opacity: 0.75;
+}
+
+/* Combat extra (CA + death saves) */
+.cs-header__combat-extra {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+  flex-shrink: 0;
+}
+
+/* Combat boxes (CA + death saves) */
 .cs-header__cbox {
   display: flex;
   flex-direction: column;
@@ -261,12 +524,7 @@
   border-radius: 6px;
   background: var(--bg);
   text-align: center;
-  min-width: 70px;
-}
-
-.cs-header__cbox--wide {
-  min-width: 130px;
-  padding: 4px 8px;
+  min-width: 60px;
 }
 
 .cs-header__cbox-val {
@@ -275,13 +533,6 @@
   font-family: var(--mono);
   color: var(--cs-ink-strong);
   line-height: 1;
-}
-
-.cs-header__cbox-sub {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text);
-  opacity: 0.6;
 }
 
 .cs-header__cbox-label {
@@ -295,48 +546,7 @@
   white-space: nowrap;
 }
 
-/* HP cells inside header */
-.cs-header__hp-row {
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-}
-
-.cs-header__hp-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-}
-
-.cs-header__hp-cell--main {
-  border-left: 1px solid var(--border);
-  border-right: 1px solid var(--border);
-  padding: 0 8px;
-}
-
-.cs-header__hp-num {
-  font-size: 16px;
-  font-weight: 700;
-  font-family: var(--mono);
-  color: var(--cs-ink-strong);
-  line-height: 1;
-}
-
-.cs-header__hp-num--big {
-  font-size: 22px;
-  font-weight: 800;
-}
-
-.cs-header__hp-sub {
-  font-size: 7px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  opacity: 0.55;
-  font-weight: 600;
-}
-
-/* Death saves in header */
+/* Death saves */
 .cs-header__death {
   display: flex;
   flex-direction: column;
@@ -352,43 +562,6 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   opacity: 0.7;
-}
-
-/* Row 2 — meta info */
-.cs-header__row2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr 60px 60px 1fr 1fr;
-  gap: 6px;
-}
-
-.cs-header__meta-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding-bottom: 4px;
-  border-bottom: 2px solid var(--border);
-}
-
-.cs-header__meta-item--narrow {
-  /* ya controlado por grid */
-}
-
-.cs-header__meta-val {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-h);
-  text-align: center;
-}
-
-.cs-header__meta-label {
-  font-size: 8.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  font-family: var(--heading);
-  color: var(--cs-gold, #c9a84c);
-  opacity: 0.85;
 }
 
 /* ── Stats bar ───────────────────────────────────────── */
