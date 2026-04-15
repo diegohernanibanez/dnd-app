@@ -942,7 +942,7 @@ Sobrecrecimiento. Elige un punto dentro del alcance. Todas las plantas en una es
     alcance: 'Toque',
     componentes: 'V, S',
     duracion: 'Instantáneo',
-    descripcion: `Una criatura a la que toques recupera una cantidad de puntos de golpe igual a 2d8 más tu modificador por | aptitud mágica. ] Con un espacio de conjuro de nivel superior. La curación aumenta en 2d8 por cada nivel por encima de 1 que tenga el espacio`
+    descripcion: `Una criatura a la que toques recupera una cantidad de puntos de golpe igual a 2d8 más tu modificador por aptitud mágica. Con un espacio de conjuro de nivel superior. La curación aumenta en 2d8 por cada nivel por encima de 1 que tenga el espacio`
   },
   'Curar Heridas en Masa': {
     nivel: 5,
@@ -2922,8 +2922,7 @@ Apareces en un punto de tu elección a 1,5 m o menos del árbol de destino gasta
     alcance: '9 m',
     componentes: 'V',
     duracion: 'Instantáneo',
-    descripcion: `a |
-Hasta cinco criaturas de tu elección que permanezcan dentro del alcance del conjuro durante todo su lanzamiento obtienen los beneficios de un descanso corto y también recuperan 2d8 puntos de golpe. Las criaturas no pueden volver a beneficiarse de este conjuro hasta que finalicen un descanso largo. Con un espacio de conjuro de nivel superior. La curación aumenta en 1d8 por cada nivel por encima de 2 que tenga el espacio`
+    descripcion: `Hasta cinco criaturas de tu elección que permanezcan dentro del alcance del conjuro durante todo su lanzamiento obtienen los beneficios de un descanso corto y también recuperan 2d8 puntos de golpe. Las criaturas no pueden volver a beneficiarse de este conjuro hasta que finalicen un descanso largo. Con un espacio de conjuro de nivel superior. La curación aumenta en 1d8 por cada nivel por encima de 2 que tenga el espacio`
   },
   'Polimorfar': {
     nivel: 4,
@@ -3918,7 +3917,7 @@ Puedes intentar poseer a cualquier humanoide que esté a 30 m o menos de ti que 
     alcance: 'Toque',
     componentes: 'V, S, M (un par de anillos de platino que',
     duracion: '1 hora',
-    descripcion: `Tocas a otra criatura voluntaria y creas una conexión mística entre ella y tú hasta que el conjuro termine. Mientras el objetivo esté a 18 m o menos de ti, obtiene un bonificador de +1 a la CA y a las tiradas de salvación, así como resistencia a todo el daño. Sin embargo, cada vez que reciba daño, tú sufrirás la misma cantidad de daño. El conjuro termina si tus puntos de golpe se reducen a O o si el objetivo y tú os separáis más de 18 m. También termina si se lanza otra vez sobre cualquiera de las dos criaturas conectadas`
+    descripcion: `Tocas a otra criatura voluntaria y creas una conexión mística entre ella y tú hasta que el conjuro termine. Mientras el objetivo esté a 18 m o menos de ti, obtiene un bonificador de +1 a la CA y a las tiradas de salvación, así como resistencia a todo el daño. Sin embargo, cada vez que reciba daño, tú sufrirás la misma cantidad de daño. El conjuro termina si tus puntos de golpe se reducen a 0 o si el objetivo y tú os separáis más de 18 m. También termina si se lanza otra vez sobre cualquiera de las dos criaturas conectadas`
   },
   'Zancada Prodigiosa': {
     nivel: 1,

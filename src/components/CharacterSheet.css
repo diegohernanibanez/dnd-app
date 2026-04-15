@@ -3140,6 +3140,7 @@
   flex-direction: column;
   gap: 4px;
   min-height: 36px;
+  text-align-last: start;
 }
 .conj-lista__vacia {
   font-size: 12px;
@@ -3163,7 +3164,6 @@
   display: flex;
   flex: 1;
   min-width: 0;
-  flex-direction: column;
   gap: 2px;
 }
 .conj-item__info {
