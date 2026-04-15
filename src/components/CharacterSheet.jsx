@@ -929,6 +929,7 @@ function Hoja1({
   armasCustom, onArmasCustomCambiar,
   trucosSeleccionados,
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
+  onXpNivelActualCambiar,
 }) {
   const [modalSubclase, setModalSubclase] = useState(false)
   const [asiModalNivel, setAsiModalNivel] = useState(null)
@@ -1087,7 +1088,7 @@ function Hoja1({
             <span className="cs-header__meta-label">Nivel</span>
           </div>
           <div className="cs-header__meta-item cs-header__meta-item--narrow">
-            <span className="cs-header__meta-val">{(personaje.xpNivelActual ?? 0).toLocaleString('es')}</span>
+            <input className="cs-header__meta-input" type="number" min={0} value={personaje.xpNivelActual ?? 0} onChange={e => onXpNivelActualCambiar(Math.max(0, Number(e.target.value) || 0))} />
             <span className="cs-header__meta-label">Exp.</span>
           </div>
           <div className="cs-header__meta-item">
@@ -2495,6 +2496,7 @@ export default function CharacterSheet({
   espaciosUsados, onEspaciosUsadosCambiar,
   armasCustom, onArmasCustomCambiar,
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
+  onXpNivelActualCambiar,
 }) {
   const [pestaña, setPestaña] = useState(1)
   const tieneMagia = !!personaje.conjuros
@@ -2571,6 +2573,7 @@ export default function CharacterSheet({
           trucosSeleccionados={trucosSeleccionados}
           dadosGolpeGastados={dadosGolpeGastados}
           onDadosGolpeGastadosCambiar={onDadosGolpeGastadosCambiar}
+          onXpNivelActualCambiar={onXpNivelActualCambiar}
         />
       )}
       {pestaña === 2 && (

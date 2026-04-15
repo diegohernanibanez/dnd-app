@@ -89,6 +89,7 @@ function App() {
   const [armasCustom, setArmasCustom] = useState([])
   const [dadosGolpeGastados, setDadosGolpeGastados] = useState(0)
   const [pgMaxPersonalizado, setPgMaxPersonalizado] = useState(null)
+  const [xpNivelActual, setXpNivelActual] = useState(0)
 
   // Flag para evitar que los useEffect de reset se disparen al cargar un personaje
   const cargandoRef = useRef(false)
@@ -145,7 +146,8 @@ function App() {
     armasCustom,
     dadosGolpeGastados,
     pgMaxPersonalizado,
-  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, dadosGolpeGastados, pgMaxPersonalizado])
+    xpNivelActual,
+  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual])
 
   const cargarDesdeData = useCallback((data) => {
     cargandoRef.current = true
@@ -175,6 +177,7 @@ function App() {
     setArmasCustom(data.armasCustom ?? [])
     setDadosGolpeGastados(data.dadosGolpeGastados ?? 0)
     setPgMaxPersonalizado(data.pgMaxPersonalizado ?? null)
+    setXpNivelActual(data.xpNivelActual ?? 0)
     // Resetear flag después de que React procese los setState
     requestAnimationFrame(() => { cargandoRef.current = false })
   }, [])
@@ -219,27 +222,30 @@ function App() {
   }, [serializarPersonaje])
 
   // ── Cálculo del personaje ──
-  const personaje = useMemo(() => calcularPersonaje({
-    claseId:          claseSeleccionada,
-    subclaseId:       subclaseSeleccionada,
-    trasfondoId:      origen.trasfondo,
-    especieId:        origen.especie,
-    linajeId:         origen.linaje,
-    habilidadDiestro: origen.habilidadDiestro,
-    habilidadSentidos: origen.habilidadSentidos,
-    habilidadesHabilidoso: origen.habilidadesHabilidoso,
-    puntuacionesBase: puntuaciones,
-    bonusTrasfondo,
-    bonusASI,
-    dotesElegidos,
-    dotesLibres,
-    habilidadesClase,
-    idiomas:          origen.idiomas,
-    descripcion,
-    equipo,
-    eleccionNivel1,
-    nivel,
-  }), [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel])
+  const personaje = useMemo(() => {
+    const p = calcularPersonaje({
+      claseId:          claseSeleccionada,
+      subclaseId:       subclaseSeleccionada,
+      trasfondoId:      origen.trasfondo,
+      especieId:        origen.especie,
+      linajeId:         origen.linaje,
+      habilidadDiestro: origen.habilidadDiestro,
+      habilidadSentidos: origen.habilidadSentidos,
+      habilidadesHabilidoso: origen.habilidadesHabilidoso,
+      puntuacionesBase: puntuaciones,
+      bonusTrasfondo,
+      bonusASI,
+      dotesElegidos,
+      dotesLibres,
+      habilidadesClase,
+      idiomas:          origen.idiomas,
+      descripcion,
+      equipo,
+      eleccionNivel1,
+      nivel,
+    })
+    return { ...p, xpNivelActual }
+  }, [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel, xpNivelActual])
 
   // Sincronizar pgActuales cuando cambia pgMax
   useEffect(() => {
@@ -387,6 +393,7 @@ function App() {
             onDadosGolpeGastadosCambiar={setDadosGolpeGastados}
             pgMaxPersonalizado={pgMaxPersonalizado}
             onPgMaxPersonalizadoCambiar={setPgMaxPersonalizado}
+            onXpNivelActualCambiar={setXpNivelActual}
           />
         )}
       </main>
