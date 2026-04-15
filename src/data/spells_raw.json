@@ -898,7 +898,7 @@
     ],
     "tiempoLanzamiento": "Acción",
     "alcance": "Lanzador",
-    "componentes": "V, S, M (un arma cuerpo a cuerpo o a distancia",
+    "componentes": "V, S, M  (un arma cuerpo a cuerpo o a distancia que valga al menos 1 pc)",
     "duracion": "Instantáneo",
     "descripcion": "Blandes el arma utilizada para lanzar el conjuro e invocas versiones espectrales parecidas (o munición para el tipo de arma correspondiente) que salen disparadas hacia adelante y luego desaparecen. Todas las criaturas de tu elección que puedas ver en un cono de 18 m hacen una tirada de salvación de Destreza; sufrirán 5d8 de daño de fuerza si la fallan o la mitad del daño si la superan. Con un espacio de conjuro de nivel superior. El daño aumenta en 1d8 por cada nivel por encima de 3 que tenga el espacio"
   },
@@ -952,7 +952,7 @@
     ],
     "tiempoLanzamiento": "Acción",
     "alcance": "45 m",
-    "componentes": "V, S, M (un arma cuerpo a cuerpo o a distancia",
+    "componentes": "V, S, M  (un arma cuerpo a cuerpo o a distancia que valga al menos 1 pc)",
     "duracion": "Instantáneo",
     "descripcion": "Blandes el arma utilizada para lanzar el conjuro y eliges un punto dentro del alcance. Cientos de duplicados espectrales del arma (o munición para el tipo de arma correspondiente) caen en una lluvia y luego desaparecen. Todas las criaturas de tu elección que puedas ver dentro de un cilindro de 12 m de radio y 6 m de altura centrado en ese punto hacen una tirada de salvación de Destreza. Sufrirán 8d8 de daño de fuerza si la fallan o la mitad del daño si la superan"
   },
