@@ -267,10 +267,13 @@
 }
 
 .cs-header__meta-val {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--text-h);
   text-align: center;
+  padding: 3px 2px;
+  border-bottom: 1px solid var(--border);
+  width: 100%;
 }
 
 .cs-header__meta-val--muted {

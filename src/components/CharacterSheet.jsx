@@ -1087,8 +1087,8 @@ function Hoja1({
             <span className="cs-header__meta-label">Nivel</span>
           </div>
           <div className="cs-header__meta-item cs-header__meta-item--narrow">
-            <span className="cs-header__meta-val">{personaje.xpNivelActual ?? 0}</span>
-            <span className="cs-header__meta-label">Experiencia</span>
+            <span className="cs-header__meta-val">{(personaje.xpNivelActual ?? 0).toLocaleString('es')}</span>
+            <span className="cs-header__meta-label">Exp.</span>
           </div>
           <div className="cs-header__meta-item">
             <select className="cs-header__meta-select" value={personaje.alineamiento ? (ALINEAMIENTOS.find(a => a.nombre === personaje.alineamiento)?.id ?? '') : ''} onChange={e => onAlineamientoCambiar(e.target.value || null)}>
