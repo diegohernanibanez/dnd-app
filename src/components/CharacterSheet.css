@@ -3575,6 +3575,20 @@
   gap: 4px;
   align-items: baseline;
 }
+.conj-detalle__stat--list {
+  align-items: flex-start;
+}
+.conj-detalle__comp-list {
+  margin: 0;
+  padding: 0 0 0 14px;
+  list-style: none;
+  text-align: start;
+  font-size: 12.5px;
+}
+.conj-detalle__comp-list li {
+  padding: 0;
+  line-height: 1.5;
+}
 .conj-detalle__stat-lbl {
   font-weight: 700;
   color: var(--text-muted);
