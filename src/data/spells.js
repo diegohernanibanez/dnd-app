@@ -622,7 +622,7 @@ Presidio cercado. El objetivo está atrapado en un semiplano protegido contra la
     alcance: '27 m',
     componentes: 'V, S, M (tres cáscaras de nuez)',
     duracion: 'Concentración, hasta 1 minuto',
-    descripcion: `Todas las criaturas situadas en una esfera de 3 m de radio centrada en un punto que elijas dentro del alcance deberán superar una tirada de salvación de Sabiduría o no podrán usar acciones adicionales ni reacciones y deberán tirar 1d10 al principio de cada uno de sus turnos para determinar su comportamiento ese turno. Para ello, consulta la tabla que se muestra a continuación. 1d10 Comportamiento del turno 1 Elobjetivo no usa ning`
+    descripcion: `Todas las criaturas situadas en una esfera de 3 m de radio centrada en un punto que elijas dentro del alcance deberán superar una tirada de salvación de Sabiduría o no podrán usar acciones adicionales ni reacciones y deberán tirar 1d10 al principio de cada uno de sus turnos para determinar su comportamiento ese turno. Para ello, consulta la tabla que se muestra a continuación.\n\n1d10 | Comportamiento del turno\n1 | El objetivo no usa ninguna acción y emplea todo su movimiento para desplazarse. Para determinar la dirección, tira 1d4: con un 1, se moverá al norte; con un 2, al este; con un 3, al sur; con un 4, al oeste.\n2-6 | El objetivo no se mueve ni realiza acciones.\n7-8 | El objetivo no se mueve y emplea la acción de atacar para hacer un ataque cuerpo a cuerpo contra una criatura aleatoria dentro de su alcance. Si no hay ninguna dentro de su alcance, el objetivo no hace ninguna acción.\n9-10 | El objetivo elige su comportamiento.\n\nAl final de cada uno de sus turnos, un objetivo afectado repite la tirada de salvación y, si tiene éxito, se librará del conjuro. Con un espacio de conjuro de nivel superior. El radio de la esfera aumenta en 1,5 m por cada nivel por encima de 4 que tenga el espacio.`
   },
   'Conjurar Animales': {
     nivel: 3,
@@ -809,8 +809,7 @@ Redirigir caudal. Haces que un caudal de agua en la zona se mueva en la direcci�
     alcance: 'Lanzador',
     componentes: 'V, S, M (incienso para quemar)',
     duracion: 'Concentración, hasta 8 horas',
-    descripcion: `Hasta que termine el conjuro, asumes el control del clima a7,5 km o menos de ti. Debes estar al aire libre para lanzar este conjuro y terminará antes de tiempo si entras en una zona cubierta. Cuando lanzas el conjuro, cambias las condiciones climatológicas actuales, que determinará tu DM. Puedes cambiar las precipitaciones, la temperatura y el viento. Se tardan 1d4 x 10 minutos en que las nuevas condiciones surtan efecto. En cuanto lo hagan, puedes volver a cambiarlas. Cuando el conjuro termine, el clima volverá poco a poco a su estado normal. Cuando cambies las condiciones meteorológicas, busca un estado en las tablas siguientes y modifica su nivel en uno, arriba o abajo. Si cambias el viento, también puedes alterar su dirección. PRECIPITACIONES Nivel Estado 1 Despejado Nubes escasas Cielo cubierto o niebla de superficie Lluvia, granizo o nieve aa wn Lluvia torrencial, tormenta de granizo o ventisca
-CORCEL FANTASMA TEMPERATURA VIENTO Nivel Estado Nivel Estado 1 Ola de calor 1 Calmo 2 Caliente 2 Viento moderado 3 Templado 3 Viento fuerte 4 Fresco 4 Galerna S Frío 5 Tempestad 6 Frío extremo`
+    descripcion: `Hasta que termine el conjuro, asumes el control del clima a 7,5 km o menos de ti. Debes estar al aire libre para lanzar este conjuro y terminará antes de tiempo si entras en una zona cubierta. Cuando lanzas el conjuro, cambias las condiciones climatológicas actuales, que determinará tu DM. Puedes cambiar las precipitaciones, la temperatura y el viento. Se tardan 1d4 x 10 minutos en que las nuevas condiciones surtan efecto. En cuanto lo hagan, puedes volver a cambiarlas. Cuando el conjuro termine, el clima volverá poco a poco a su estado normal. Cuando cambies las condiciones meteorológicas, busca un estado en las tablas siguientes y modifica su nivel en uno, arriba o abajo. Si cambias el viento, también puedes alterar su dirección.\n\nPRECIPITACIONES\nNivel | Estado\n1 | Despejado\n2 | Nubes escasas\n3 | Cielo cubierto o niebla de superficie\n4 | Lluvia, granizo o nieve\n5 | Lluvia torrencial, tormenta de granizo o ventisca\n\nTEMPERATURA\nNivel | Estado\n1 | Ola de calor\n2 | Caliente\n3 | Templado\n4 | Fresco\n5 | Frío\n6 | Frío extremo\n\nVIENTO\nNivel | Estado\n1 | Calmo\n2 | Viento moderado\n3 | Viento fuerte\n4 | Galerna\n5 | Tempestad`
   },
   'Corcel Fantasma': {
     nivel: 3,
@@ -3358,7 +3357,7 @@ Con un espacio de conjuro de nivel superior. El daño aumenta en 1d8 por cada ni
     alcance: 'Lanzador',
     componentes: 'V, S',
     duracion: 'Instantáneo',
-    descripcion: `Ocho rayos de luz surgen de tu mano en un cono de 18 m. Todas las criaturas situadas en el cono hacen una tirada de salvación de Destreza. Por cada objetivo, tira 18 para determinar qué rayo de color le afecta y consulta la tabla ROCIADA PRISMÁTICA. “Rayos prismáticos”. RAYOS PRISMÁTICOS ROCIADA VENENOSA 1d8 Rayo`
+    descripcion: `Ocho rayos de luz surgen de tu mano en un cono de 18 m. Todas las criaturas situadas en el cono hacen una tirada de salvación de Destreza. Por cada objetivo, tira 1d8 para determinar qué rayo de color le afecta y consulta la tabla “Rayos prismáticos”.\n\nRAYOS PRISMÁTICOS\n1d8 | Rayo\n1 | Rojo. Si falla la tirada: 12d6 de daño de fuego. Si supera la tirada: la mitad de daño.\n2 | Naranja. Si falla la tirada: 12d6 de daño de ácido. Si supera la tirada: la mitad de daño.\n3 | Amarillo. Si falla la tirada: 12d6 de daño de relámpago. Si supera la tirada: la mitad de daño.\n4 | Verde. Si falla la tirada: 12d6 de daño de veneno. Si supera la tirada: la mitad de daño.\n5 | Azul. Si falla la tirada: 12d6 de daño de frío. Si supera la tirada: la mitad de daño.\n6 | Añil. Si falla la tirada: el objetivo tendrá el estado de cegado y deberá superar una tirada de salvación de Constitución al final de cada uno de sus turnos. Si la supera tres veces, el estado terminará. Si la falla tres veces, tendrá el estado de petrificado hasta que lo libere un efecto como el del conjuro restablecimiento mayor. Los éxitos y los fallos no tienen por qué ser consecutivos; lleva la cuenta de ambos hasta que el objetivo tenga tres de un mismo tipo.\n7 | Violeta. Si falla la tirada: el objetivo tendrá el estado de cegado y hará una tirada de salvación de Sabiduría al principio de tu siguiente turno. Si la supera, el estado terminará. Si la falla, el estado terminará y la criatura se teletransportará a otro plano de existencia (a elección de tu DM).\n8 | Especial. Dos rayos alcanzan al objetivo. Tira dos veces más en esta tabla, sin contar los resultados de 8.`
   },
   'Ráfaga de Viento': {
     nivel: 2,
@@ -3938,6 +3937,86 @@ Puedes intentar poseer a cualquier humanoide que esté a 30 m o menos de ti que 
     componentes: 'V, S',
     duracion: '10 minutos',
     descripcion: `Creas una zona mágica que protege contra el engaño en una esfera de 4,5 m de radio centrada en un punto dentro del alcance. Hasta que el conjuro termine, una criatura que entre en la zona del conjuro por primera vez en un turno o comience su turno allí realizará una tirada de salvación de Carisma. Si la falla, no podrá decir una mentira voluntariamente mientras esté en el radio del conjuro. Sabrás si una criatura supera o falla esta tirada. Una criatura afectada es consciente del conjuro y puede evitar responder a preguntas a las que normalmente respondería con una mentira. Dicha criatura puede dar respuestas evasivas, pero deberá ser sincera.`
+  },
+  'Caída de Pluma': {
+    nivel: 1,
+    escuela: 'Transmutación',
+    clases: ['bardo', 'hechicero', 'mago'],
+    tiempoLanzamiento: 'Reacción, que llevas a cabo cuando tú u una criatura que puedas ver a 18 m o menos de ti caigáis',
+    alcance: '18 m',
+    componentes: 'V, M (una pluma pequeña o un poco de plumón)',
+    duracion: '1 minuto',
+    descripcion: `Elige hasta cinco criaturas dentro del alcance que estén cayendo. La velocidad de descenso de cada objetivo se reduce a 18 m por asalto hasta que el conjuro termine. Si una criatura aterriza antes de que el conjuro termine, no sufrirá daño de la caída y el conjuro terminará para esa criatura.`
+  },
+  'Castigo Abrasador': {
+    nivel: 1,
+    escuela: 'Evocación',
+    clases: ['paladin'],
+    tiempoLanzamiento: 'Acción adicional, que realizas de inmediato tras acertar a un objetivo con un arma cuerpo a cuerpo o un ataque sin armas',
+    alcance: 'Lanzador',
+    componentes: 'V',
+    duracion: '1 minuto',
+    descripcion: `Al golpear al objetivo, sufre 1d6 de daño de fuego adicional del ataque. Al principio de cada uno de sus turnos hasta que el conjuro termine, el objetivo sufrirá 1d6 de daño de fuego y luego hará una tirada de salvación de Constitución. Si la falla, el conjuro seguirá activo. Si la supera, el conjuro terminará. Con un espacio de conjuro de nivel superior. Todo el daño aumenta en 1d6 por cada nivel por encima de 1 que tenga el espacio.`
+  },
+  'Castigo Abrumador': {
+    nivel: 4,
+    escuela: 'Encantamiento',
+    clases: ['paladin'],
+    tiempoLanzamiento: 'Acción adicional, que realizas de inmediato tras acertar a una criatura con un arma cuerpo a cuerpo o un ataque sin armas',
+    alcance: 'Lanzador',
+    componentes: 'V',
+    duracion: 'Instantáneo',
+    descripcion: `El objetivo recibirá 4d6 de daño psíquico adicional del ataque y deberá superar una tirada de salvación de Sabiduría o tendrá el estado de aturdido hasta el final de tu siguiente turno. Con un espacio de conjuro de nivel superior. El daño adicional aumenta en 1d6 por cada nivel por encima de 4 que tenga el espacio.`
+  },
+  'Castigo Atronador': {
+    nivel: 1,
+    escuela: 'Evocación',
+    clases: ['paladin'],
+    tiempoLanzamiento: 'Acción adicional, que realizas de inmediato tras acertar a un objetivo con un arma cuerpo a cuerpo o un ataque sin armas',
+    alcance: 'Lanzador',
+    componentes: 'V',
+    duracion: 'Instantáneo',
+    descripcion: `Tu golpe resuena con un trueno audible a 90 m de ti y el objetivo sufre 2d6 de daño de trueno adicional del ataque. Además, si el objetivo es una criatura, deberá superar una tirada de salvación de Fuerza o la empujarás 3 m respecto a ti y tendrá el estado de derribada. Con un espacio de conjuro de nivel superior. El daño aumenta en 1d6 por cada nivel por encima de 1 que tenga el espacio.`
+  },
+  'Castigo Brillante': {
+    nivel: 2,
+    escuela: 'Transmutación',
+    clases: ['paladin'],
+    tiempoLanzamiento: 'Acción adicional, que realizas de inmediato tras acertar a una criatura con un arma cuerpo a cuerpo o un ataque sin armas',
+    alcance: 'Lanzador',
+    componentes: 'V',
+    duracion: 'Concentración, hasta 1 minuto',
+    descripcion: `El objetivo del golpe recibe 2d6 de daño radiante adicional del ataque. Hasta que el conjuro termine, el objetivo emitirá luz brillante en un radio de 1,5 m, las tiradas de ataque contra él tendrán ventaja y no podrá beneficiarse del estado de invisible. Con un espacio de conjuro de nivel superior. El daño aumenta en 1d6 por cada nivel por encima de 2 que tenga el espacio.`
+  },
+  'Castigo Furioso': {
+    nivel: 1,
+    escuela: 'Nigromancia',
+    clases: ['paladin'],
+    tiempoLanzamiento: 'Acción adicional, que realizas de inmediato tras acertar a una criatura con un arma cuerpo a cuerpo o un ataque sin armas',
+    alcance: 'Lanzador',
+    componentes: 'V',
+    duracion: '1 minuto',
+    descripcion: `El objetivo sufrirá 1d6 de daño necrótico adicional del ataque y deberá superar una tirada de salvación de Sabiduría o tendrá el estado de asustado hasta que el conjuro termine. Al final de cada uno de sus turnos, el objetivo asustado repite la tirada de salvación y, si tiene éxito, se librará del conjuro. Con un espacio de conjuro de nivel superior. El daño aumenta en 1d6 por cada nivel por encima de 1 que tenga el espacio.`
+  },
+  'Localizar Objeto': {
+    nivel: 2,
+    escuela: 'Adivinación',
+    clases: ['bardo', 'clerigo', 'druida', 'explorador', 'mago', 'paladin'],
+    tiempoLanzamiento: 'Acción',
+    alcance: 'Lanzador',
+    componentes: 'V, S, M (una ramita con forma de horquilla)',
+    duracion: 'Concentración, hasta 10 minutos',
+    descripcion: `Describe o nombra un objeto que conozcas. Presientes la dirección en la que se encuentra dicho objeto si está a 300 m o menos de ti. Si el objeto se está moviendo, conoces la dirección de su movimiento. El conjuro puede localizar un objeto específico que conozcas si lo has visto de cerca (a 9 m o menos) al menos una vez. Como alternativa, el conjuro puede localizar un objeto más cercano de un tipo particular, como un cierto tipo de ropa, joyas, muebles, herramientas o armas. El conjuro no puede localizar un objeto si hay cualquier grosor de plomo que bloquee una línea directa entre el objeto y tú.`
+  },
+  'Rociada de Color': {
+    nivel: 1,
+    escuela: 'Ilusionismo',
+    clases: ['bardo', 'hechicero', 'mago'],
+    tiempoLanzamiento: 'Acción',
+    alcance: 'Lanzador',
+    componentes: 'V, S, M (una pizca de arena de colores)',
+    duracion: 'Instantáneo',
+    descripcion: `Emites una ráfaga de luces brillantes y parpadeantes de múltiples colores. Todas las criaturas situadas en un cono de 4,5 m que se origina en ti deberán superar una tirada de salvación de Constitución o tendrán el estado de cegadas hasta el final de tu siguiente turno.`
   }
 };
 
