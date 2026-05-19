@@ -5,7 +5,7 @@ const SPECIAL_LABELS = [
   'Mejora de truco.',
 ]
 
-const SENTENCE_STARTERS = /^(El |La |Los |Las |Un |Una |Unos |Unas |Si |Cuando |Durante |Al |En |Con |Por |Para |A |De |Cada |Este |Esta |Estos |Estas |Tú |Tu |Su |Sus |Puedes |Puede |Debes |Hasta |También |Además |Sin |No |Mientras |Como |Tras |Sobre |Bajo |Entre |Ante |Dicha|Dicho|Todas|Todos|Cualquier|Cualquiera)/i
+const SENTENCE_STARTERS = /^(El |La |Los |Las |Un |Una |Unos |Unas |Si |Cuando |Durante |Al |En |Con |Por |Para |A |De |Cada |Este |Esta |Estos |Estas |Tú |Tu |Su |Sus |Puedes |Puede |Debes |Hasta |También |Además |Sin |No |Mientras |Como |Tras |Sobre |Bajo |Entre |Ante |Dicha|Dicho|Todas|Todos|Cualquier|Cualquiera|Tocas |Emites |Desatas |Lanzas |Creas |Modificas |Alteras |Activas |Preparas |Elige |Eliges |Imita |Nada |Dos |Tres |Cae |Caen |Llegaréis )/i
 
 function isSubheading(text) {
   const t = text.trim()
