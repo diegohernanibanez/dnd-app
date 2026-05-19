@@ -960,57 +960,55 @@
   opacity: 0.6;
 }
 
-/* ── Body layout (3 columns: abilities | combat | content) ─────────────── */
+/* ── Body layout: combat bar top, abilities + content below ─────────────── */
 .cs-body {
   display: grid;
-  grid-template-columns: 390px 190px 1fr;
-  gap: 14px;
+  grid-template-columns: 390px 1fr;
+  grid-template-rows: auto auto;
+  gap: 14px 16px;
   align-items: start;
 
-  @media (max-width: 1060px) {
-    grid-template-columns: 390px 190px;
-    .cs-content { grid-column: 1 / -1; }
-  }
+  .cs-combat   { grid-column: 1 / -1; grid-row: 1; }
+  .cs-abilities { grid-column: 1;      grid-row: 2; }
+  .cs-content  { grid-column: 2;      grid-row: 2; }
 
-  @media (max-width: 700px) {
+  @media (max-width: 860px) {
     grid-template-columns: 1fr;
-    .cs-content { grid-column: auto; }
+
+    .cs-abilities { grid-column: 1; }
+    .cs-content   { grid-column: 1; grid-row: 3; }
   }
 }
 
-/* ── Combat column ─────────────────────────────────── */
+/* ── Combat bar (horizontal, full width) ───────────────── */
 .cs-combat {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 8px;
-  width: 190px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 10px;
-  align-self: start;
+  align-items: stretch;
+  width: 100%;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--border);
 
-  @media (max-width: 700px) {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    position: static;
+  @media (max-width: 560px) {
+    gap: 6px;
+    padding-bottom: 10px;
   }
 }
 
 /* CA octagon — outer wrap = "border" layer, inner = background */
 .cs-combat__ca-wrap {
+  flex: 0 0 auto;
   align-self: center;
-  width: 110px;
-  margin: 2px auto 4px;
+  width: 100px;
   background: var(--cs-ink);
   clip-path: polygon(14% 0%, 86% 0%, 100% 14%, 100% 86%, 86% 100%, 14% 100%, 0% 86%, 0% 14%);
   padding: 3px;
   transition: background 0.2s;
 
-  @media (max-width: 700px) {
-    flex: 0 0 auto;
-    width: 90px;
-    margin: 0;
+  @media (max-width: 560px) {
+    width: 84px;
   }
 }
 
@@ -1045,13 +1043,11 @@
 }
 
 .cs-combat__row2 {
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
-
-  @media (max-width: 700px) {
-    flex: 1 1 150px;
-  }
+  min-width: 150px;
 }
 
 .cs-combat__stat {
@@ -1111,13 +1107,11 @@
 }
 
 .cs-combat__grid4 {
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5px;
-
-  @media (max-width: 700px) {
-    flex: 1 1 150px;
-  }
+  min-width: 150px;
 }
 
 .cs-combat__mini {
@@ -1158,32 +1152,27 @@
 }
 
 .cs-combat__pg {
+  flex: 1 1 180px;
   border: 1.5px solid var(--cs-ink);
   border-radius: 8px;
   padding: 8px 8px 5px;
   background: var(--bg);
   display: flex;
   flex-direction: column;
-
-  @media (max-width: 700px) {
-    flex: 2 1 200px;
-  }
 }
 
 .cs-combat__dg {
+  flex: 1 1 120px;
   border: 1.5px solid var(--border);
   border-radius: 8px;
   padding: 6px 8px 5px;
   background: var(--bg);
   display: flex;
   flex-direction: column;
-
-  @media (max-width: 700px) {
-    flex: 1 1 140px;
-  }
 }
 
 .cs-combat__muerte {
+  flex: 1 1 150px;
   border: 1.5px solid var(--border);
   border-radius: 8px;
   padding: 6px 8px 5px;
@@ -1192,10 +1181,6 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-
-  @media (max-width: 700px) {
-    flex: 1 1 140px;
-  }
 }
 
 /* ── Abilities grid (2 columns of 3) ─────────────────── */
@@ -1203,16 +1188,14 @@
   display: flex;
   gap: 10px;
   align-items: start;
-  width: 390px;
   min-width: 0;
 
-  @media (max-width: 700px) {
+  @media (max-width: 560px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    width: 100%;
   }
 
-  @media (max-width: 420px) {
+  @media (max-width: 360px) {
     grid-template-columns: 1fr;
   }
 }
@@ -1221,13 +1204,8 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 190px;
-  flex-shrink: 0;
-
-  @media (max-width: 700px) {
-    width: 100%;
-    min-width: 0;
-  }
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 /* ── Ability group — score + save + skills ─────────── */
