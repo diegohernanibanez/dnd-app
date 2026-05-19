@@ -65,6 +65,7 @@
   padding: 0;
   margin-bottom: 20px;
   border-bottom: 3px double var(--border);
+  flex-wrap: wrap;
 }
 
 .cs-tab {
@@ -85,8 +86,15 @@
   margin-bottom: -3px;
   transition: color 0.15s, border-color 0.15s;
   border-radius: 0;
+  white-space: nowrap;
 
   &:hover { color: var(--accent); background: var(--accent-bg); }
+
+  @media (max-width: 560px) {
+    padding: 8px 12px;
+    font-size: 11px;
+    gap: 5px;
+  }
 }
 
 .cs-tab--active {
@@ -513,15 +521,15 @@
 }
 
 .cs-header__section-title {
-  font-size: 7px;
+  font-size: 8.5px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 700;
   font-family: var(--heading);
   color: var(--cs-gold, #c9a84c);
-  opacity: 0.85;
+  opacity: 0.9;
   text-align: center;
-  margin-top: 3px;
+  margin-top: 4px;
 }
 
 /* Puntos de golpe */
@@ -619,11 +627,12 @@
 }
 
 .cs-header__pg-label {
-  font-size: 7px;
+  font-size: 8px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  opacity: 0.55;
-  font-weight: 600;
+  color: var(--cs-gold);
+  opacity: 0.9;
+  font-weight: 700;
   font-family: var(--heading);
 }
 
@@ -861,14 +870,15 @@
 }
 
 .cs-header__cbox-label {
-  font-size: 7px;
+  font-size: 8.5px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   font-weight: 700;
   font-family: var(--heading);
-  color: var(--text);
-  opacity: 0.6;
+  color: var(--cs-gold);
+  opacity: 0.9;
   white-space: nowrap;
+  text-align: center;
 }
 
 /* Death saves */
@@ -950,21 +960,261 @@
   opacity: 0.6;
 }
 
-/* ── Body layout (abilities + content) ─────────────── */
+/* ── Body layout (3 columns: abilities | combat | content) ─────────────── */
 .cs-body {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 390px 190px 1fr;
   gap: 14px;
   align-items: start;
 
-  @media (max-width: 800px) {
+  @media (max-width: 1060px) {
+    grid-template-columns: 390px 190px;
+    .cs-content { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 700px) {
     grid-template-columns: 1fr;
+    .cs-content { grid-column: auto; }
+  }
+}
+
+/* ── Combat column ─────────────────────────────────── */
+.cs-combat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 190px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 10px;
+  align-self: start;
+
+  @media (max-width: 700px) {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: static;
+  }
+}
+
+/* CA octagon — outer wrap = "border" layer, inner = background */
+.cs-combat__ca-wrap {
+  align-self: center;
+  width: 110px;
+  margin: 2px auto 4px;
+  background: var(--cs-ink);
+  clip-path: polygon(14% 0%, 86% 0%, 100% 14%, 100% 86%, 86% 100%, 14% 100%, 0% 86%, 0% 14%);
+  padding: 3px;
+  transition: background 0.2s;
+
+  @media (max-width: 700px) {
+    flex: 0 0 auto;
+    width: 90px;
+    margin: 0;
+  }
+}
+
+.cs-combat__ca-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px 8px 10px;
+  background: var(--bg);
+  text-align: center;
+  clip-path: polygon(14% 0%, 86% 0%, 100% 14%, 100% 86%, 86% 100%, 14% 100%, 0% 86%, 0% 14%);
+}
+
+.cs-combat__ca-val {
+  font-size: 36px;
+  font-weight: 900;
+  font-family: var(--mono);
+  color: var(--cs-ink-strong);
+  line-height: 1;
+}
+
+.cs-combat__ca-label {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-family: var(--heading);
+  color: var(--cs-gold);
+  opacity: 0.95;
+  text-align: center;
+}
+
+.cs-combat__row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+
+  @media (max-width: 700px) {
+    flex: 1 1 150px;
+  }
+}
+
+.cs-combat__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  border: 1.5px solid var(--cs-ink);
+  border-radius: 6px;
+  background: var(--bg);
+  text-align: center;
+  cursor: default;
+}
+
+.cs-combat__stat-val {
+  font-size: 17px;
+  font-weight: 800;
+  font-family: var(--mono);
+  color: var(--cs-ink-strong);
+  line-height: 1;
+}
+
+.cs-combat__stat-label {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-family: var(--heading);
+  color: var(--cs-gold);
+  opacity: 0.85;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.cs-combat__insp {
+  border-style: dashed;
+  opacity: 0.6;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color .2s, opacity .2s, box-shadow .2s, background .2s;
+  background: none;
+  border-color: var(--cs-ink);
+
+  &:hover { opacity: 0.85; border-style: solid; }
+}
+
+.cs-combat__insp--on {
+  border-style: solid;
+  border-color: var(--accent);
+  opacity: 1;
+  background: rgba(200, 148, 58, 0.07);
+  box-shadow: 0 0 0 2px rgba(200, 148, 58, 0.2);
+
+  .cs-combat__stat-val { color: var(--accent); font-size: 19px; }
+  .cs-combat__stat-label { color: var(--accent); opacity: 1; }
+}
+
+.cs-combat__grid4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+
+  @media (max-width: 700px) {
+    flex: 1 1 150px;
+  }
+}
+
+.cs-combat__mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 5px 3px;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg);
+  text-align: center;
+}
+
+.cs-combat__mini-val {
+  font-size: 15px;
+  font-weight: 800;
+  font-family: var(--mono);
+  color: var(--cs-ink-strong);
+  line-height: 1;
+}
+
+.cs-combat__mini-val--sm {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cs-combat__mini-label {
+  font-size: 7.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  font-family: var(--heading);
+  color: var(--text);
+  opacity: 0.6;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.cs-combat__pg {
+  border: 1.5px solid var(--cs-ink);
+  border-radius: 8px;
+  padding: 8px 8px 5px;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 700px) {
+    flex: 2 1 200px;
+  }
+}
+
+.cs-combat__dg {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 8px 5px;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 700px) {
+    flex: 1 1 140px;
+  }
+}
+
+.cs-combat__muerte {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 8px 5px;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  @media (max-width: 700px) {
+    flex: 1 1 140px;
   }
 }
 
 /* ── Abilities grid (2 columns of 3) ─────────────────── */
 .cs-abilities {
+  display: flex;
   gap: 10px;
+  align-items: start;
+  width: 390px;
+  min-width: 0;
+
+  @media (max-width: 700px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  @media (max-width: 420px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .cs-abilities__col {
@@ -972,9 +1222,11 @@
   flex-direction: column;
   gap: 10px;
   width: 190px;
+  flex-shrink: 0;
 
-  @media (max-width: 500px) {
-    width: 160px;
+  @media (max-width: 700px) {
+    width: 100%;
+    min-width: 0;
   }
 }
 
@@ -984,17 +1236,18 @@
   border-radius: 8px;
   overflow: hidden;
   background: var(--bg);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 
 .ca-group__header {
   background: var(--cs-ink);
   color: var(--bg);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   font-family: var(--heading);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  padding: 3px 8px;
+  letter-spacing: 0.12em;
+  padding: 4px 8px;
   text-align: center;
 }
 
@@ -1248,12 +1501,12 @@
 .cs-sec__title {
   background: var(--cs-ink);
   color: var(--bg);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   font-family: var(--heading);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  padding: 5px 10px;
+  letter-spacing: 0.12em;
+  padding: 6px 10px;
   text-align: center;
 }
 
@@ -1266,7 +1519,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 2.5px 0;
+  padding: 3px 0;
+  min-height: 24px;
   font-size: 12px;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
   &:last-child { border-bottom: none; }
@@ -1348,24 +1602,28 @@
 .cs-muerte__label { font-size: 11px; min-width: 42px; opacity: 0.7; }
 
 .cs-muerte__circle {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  border: 1.5px solid var(--border);
+  border: 2px solid var(--border);
   background: var(--bg);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-  &:hover { border-color: var(--accent-border); }
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  flex-shrink: 0;
+  &:hover { border-color: var(--accent-border); transform: scale(1.1); }
+  &:active { transform: scale(0.95); }
 }
 
 .cs-muerte__circle--exito.cs-muerte__circle--on {
   background: var(--dnd-gold);
   border-color: var(--dnd-gold);
+  box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.2);
 }
 
 .cs-muerte__circle--fallo.cs-muerte__circle--on {
   background: var(--cs-red);
   border-color: var(--cs-red);
+  box-shadow: 0 0 0 2px rgba(139, 32, 32, 0.2);
 }
 
 /* ── Ataques ─────────────────────────────────────────── */
