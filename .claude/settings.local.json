@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls \"C:\\\\Users\\\\diego\\\\OneDrive\\\\Documentos\\\\dnd\\\\dnd-app\\\\public\\\\Conjuros\" | sort)",
+      "Bash(node -e \"const s = require\\('./src/data/spells.js'\\); console.log\\('Total spells:', Object.keys\\(s.CONJUROS\\).length\\); console.log\\('Spell names:', Object.keys\\(s.CONJUROS\\).join\\('\\\\n'\\)\\)\")",
+      "Bash(node -e ' *)"
+    ]
+  }
+}
