@@ -1187,8 +1187,8 @@
 /* ── Abilities grid (2 columns of 3) ─────────────────── */
 .cs-abilities {
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  align-items: start;
   width: fit-content;
   max-width: 100%;
 
@@ -1197,6 +1197,16 @@
     padding-right: 14px;
     border-right: 2px solid var(--border);
   }
+
+  @media (max-width: 420px) {
+    width: 100%;
+  }
+}
+
+.cs-abilities__cols {
+  display: flex;
+  gap: 10px;
+  align-items: start;
 
   @media (max-width: 420px) {
     width: 100%;
@@ -1377,25 +1387,17 @@
   flex: 1;
 }
 
-/* ── Footer row ─────────────────────────────────────── */
-.cs-footer-row {
-  display: grid;
-  grid-template-columns: 1fr minmax(160px, 220px);
-  gap: 10px;
-  margin-top: 10px;
-  align-items: stretch;
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* ── Monedas footer strip ────────────────────────────── */
 .cs-monedas-section {
   border: 1.5px solid var(--cs-ink);
   border-radius: 6px;
   overflow: hidden;
   background: var(--bg);
   min-width: 0;
+}
+
+.cs-monedas-footer {
+  margin-top: 10px;
 }
 
 /* ── Personality row ──────────────────────────────────── */
@@ -1500,12 +1502,6 @@
   text-overflow: ellipsis;
 }
 
-.cs-footer-row .cs-sec__title {
-  white-space: normal;
-  font-size: 8.5px;
-  letter-spacing: 0.06em;
-  padding: 5px 6px;
-}
 
 .cs-sec__body {
   padding: 8px 10px;
