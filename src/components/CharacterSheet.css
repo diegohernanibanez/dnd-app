@@ -1192,6 +1192,12 @@
   width: fit-content;
   max-width: 100%;
 
+  @media (min-width: 861px) {
+    align-self: stretch;
+    padding-right: 14px;
+    border-right: 2px solid var(--border);
+  }
+
   @media (max-width: 420px) {
     width: 100%;
   }
