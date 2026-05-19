@@ -982,34 +982,36 @@
 
 /* ── Combat bar (horizontal, full width) ───────────────── */
 .cs-combat {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 90px repeat(5, minmax(0, 1fr));
   gap: 8px;
   align-items: stretch;
   width: 100%;
   padding-bottom: 14px;
   border-bottom: 2px solid var(--border);
 
-  @media (max-width: 560px) {
+  /* tablet: 3-col grid, 2 rows */
+  @media (max-width: 860px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 6px;
+  }
+
+  /* mobile: 2-col grid, 3 rows */
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     padding-bottom: 10px;
   }
 }
 
 /* CA octagon — outer wrap = "border" layer, inner = background */
 .cs-combat__ca-wrap {
-  flex: 0 0 auto;
+  justify-self: center;
   align-self: center;
   width: 100px;
   background: var(--cs-ink);
   clip-path: polygon(14% 0%, 86% 0%, 100% 14%, 100% 86%, 86% 100%, 14% 100%, 0% 86%, 0% 14%);
   padding: 3px;
   transition: background 0.2s;
-
-  @media (max-width: 560px) {
-    width: 84px;
-  }
 }
 
 .cs-combat__ca-box {
@@ -1043,11 +1045,9 @@
 }
 
 .cs-combat__row2 {
-  flex: 0 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 6px;
-  min-width: 150px;
 }
 
 .cs-combat__stat {
@@ -1107,11 +1107,9 @@
 }
 
 .cs-combat__grid4 {
-  flex: 0 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5px;
-  min-width: 150px;
 }
 
 .cs-combat__mini {
@@ -1152,7 +1150,7 @@
 }
 
 .cs-combat__pg {
-  flex: 1 1 180px;
+  min-width: 0;
   border: 1.5px solid var(--cs-ink);
   border-radius: 8px;
   padding: 8px 8px 5px;
@@ -1162,7 +1160,7 @@
 }
 
 .cs-combat__dg {
-  flex: 1 1 120px;
+  min-width: 0;
   border: 1.5px solid var(--border);
   border-radius: 8px;
   padding: 6px 8px 5px;
@@ -1172,7 +1170,7 @@
 }
 
 .cs-combat__muerte {
-  flex: 1 1 150px;
+  min-width: 0;
   border: 1.5px solid var(--border);
   border-radius: 8px;
   padding: 6px 8px 5px;
@@ -1188,15 +1186,11 @@
   display: flex;
   gap: 10px;
   align-items: start;
-  min-width: 0;
+  width: fit-content;
+  max-width: 100%;
 
-  @media (max-width: 560px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media (max-width: 360px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 420px) {
+    width: 100%;
   }
 }
 
@@ -1204,8 +1198,14 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex: 1 1 0;
-  min-width: 0;
+  width: 190px;
+  flex-shrink: 0;
+
+  @media (max-width: 420px) {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+  }
 }
 
 /* ── Ability group — score + save + skills ─────────── */
