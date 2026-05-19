@@ -151,7 +151,7 @@ function parseSegments(text) {
     if (!line) { i++; continue }
 
     // ALL-CAPS table title (no |) followed by | lines
-    const isAllCaps = /^[A-ZÁÉÍÓÚÑÜ\s\d]+$/.test(line) && line.length > 2
+    const isAllCaps = /^[¿¡A-ZÁÉÍÓÚÑÜ\s\d?!]+$/.test(line) && line.length > 2
     const nextLine = lines[i + 1] ? lines[i + 1].trim() : ''
     if (isAllCaps && nextLine.includes('|')) {
       const title = line
