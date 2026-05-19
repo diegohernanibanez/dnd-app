@@ -131,3 +131,50 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* ── SpellDescription component ── */
+.spell-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.spell-desc__para {
+  margin: 0;
+  line-height: 1.6;
+}
+.spell-desc__list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.spell-desc__list li {
+  line-height: 1.5;
+}
+.spell-desc__table-wrap {
+  overflow-x: auto;
+}
+.spell-desc__table-title {
+  margin: 0 0 4px;
+  font-weight: 600;
+  font-size: 0.85em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.spell-desc__table {
+  border-collapse: collapse;
+  font-size: 0.9em;
+  width: 100%;
+}
+.spell-desc__table th,
+.spell-desc__table td {
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  text-align: left;
+}
+.spell-desc__table th {
+  background: var(--accent-bg);
+  font-weight: 600;
+}

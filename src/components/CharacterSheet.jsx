@@ -11,6 +11,7 @@ import { CLASES } from '../data/classes'
 import { TRASFONDOS, ESPECIES } from '../data/origins'
 import { getDoteById, DOTES_GENERALES, DOTES_DON_EPICO, TODAS_LAS_DOTES, cumpleRequisitos } from '../data/dotes'
 import { CONJUROS, getTrucoDanioEtiqueta, getTrucoNivel0Info } from '../data/spells'
+import SpellDescription from './SpellDescription'
 import './CharacterSheet.css'
 import { PG_FIJO_POR_DADO } from '../data/levelProgression'
 import { TODAS_LAS_PROPIEDADES_ARMA, PROPIEDADES_ARMA_DESC, TODAS_LAS_MAESTRIAS_ARMA, MAESTRIAS_ARMA_DESC } from '../data/weapons'
@@ -2525,7 +2526,7 @@ function ConjuroDetalle({ conjuro, nombre, onCerrar }) {
           <div className="conj-detalle__stat conj-detalle__stat--list"><span className="conj-detalle__stat-lbl">Componentes</span><ul className="conj-detalle__comp-list">{parseComponentes(conjuro.componentes).map((c, i) => <li key={i}>{c}</li>)}</ul></div>
           <div className="conj-detalle__stat"><span className="conj-detalle__stat-lbl">Duración</span><span>{conjuro.duracion}</span></div>
         </div>
-        <p className="conj-detalle__desc">{conjuro.descripcion}</p>
+        <SpellDescription text={conjuro.descripcion} className="conj-detalle__desc spell-desc" />
       </div>
     </div>
   )

@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+import SpellDescription from './SpellDescription'
 
 function parseComponentes(str) {
   if (!str) return []
@@ -115,7 +116,7 @@ function SeccionConjuros({ busqueda }) {
                 <div className="glossary-detail-row"><span className="glossary-detail-label">Alcance</span><span className="glossary-detail-value">{c.alcance}</span></div>
                 <div className="glossary-detail-row glossary-detail-row--list"><span className="glossary-detail-label">Componentes</span><ul className="glossary-comp-list">{parseComponentes(c.componentes).map((comp, i) => <li key={i}>{comp}</li>)}</ul></div>
                 <div className="glossary-detail-row"><span className="glossary-detail-label">Duración</span><span className="glossary-detail-value">{c.duracion}</span></div>
-                <div className="glossary-detail-desc">{c.descripcion}</div>
+                <SpellDescription text={c.descripcion} className="glossary-detail-desc spell-desc" />
               </div>
             )}
           </li>
