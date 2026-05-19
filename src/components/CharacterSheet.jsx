@@ -1406,11 +1406,78 @@ function Hoja1({
           </div>
         </div>
 
-        {/* Fila 3: Puntos de golpe (editables) + Dados de golpe */}
-        <div className="cs-header__row3">
+      </header>
 
-          {/* Puntos de golpe — todos editables */}
-          <div className="cs-header__pg-section">
+      {/* ═══ Cuerpo principal ═══ */}
+      <div className="cs-body">
+
+        {/* ── Izquierda: Características agrupadas (2 cols) ── */}
+        <div className="cs-abilities">
+          {/* Columna izq: FUE, DES, CON */}
+          <div className="cs-abilities__col">
+            {renderAbilityGroup('Fuerza')}
+            {renderAbilityGroup('Destreza')}
+            {renderAbilityGroup('Constitución')}
+          </div>
+          {/* Columna der: INT, SAB, CAR */}
+          <div className="cs-abilities__col">
+            {renderAbilityGroup('Inteligencia')}
+            {renderAbilityGroup('Sabiduría')}
+            {renderAbilityGroup('Carisma')}
+          </div>
+        </div>
+
+        {/* ── Centro: Stats de combate ── */}
+        <div className="cs-combat">
+
+          {/* CA — muy prominente */}
+          <div className="cs-combat__ca-wrap">
+            <div className="cs-combat__ca-box">
+              <span className="cs-combat__ca-val">{personaje.ca ?? '—'}</span>
+              <span className="cs-combat__ca-label">Clase de Armadura</span>
+            </div>
+          </div>
+
+          {/* Bonif. competencia + Inspiración */}
+          <div className="cs-combat__row2">
+            <div className="cs-combat__stat">
+              <span className="cs-combat__stat-val">{fmtM(personaje.bonificadorCompetencia)}</span>
+              <span className="cs-combat__stat-label">Bonif. competencia</span>
+            </div>
+            <button
+              type="button"
+              className={`cs-combat__stat cs-combat__insp${inspiracion ? ' cs-combat__insp--on' : ''}`}
+              onClick={() => setInspiracion(v => !v)}
+              aria-pressed={inspiracion}
+              title={inspiracion ? 'Gastar inspiración heroica' : 'Ganar inspiración heroica'}
+            >
+              <span className="cs-combat__stat-val">{inspiracion ? '★' : '☆'}</span>
+              <span className="cs-combat__stat-label">Inspiración</span>
+            </button>
+          </div>
+
+          {/* 4 mini stats: Init | Speed | PP | Tamaño */}
+          <div className="cs-combat__grid4">
+            <div className="cs-combat__mini">
+              <span className="cs-combat__mini-val">{fmtM(personaje.iniciativa)}</span>
+              <span className="cs-combat__mini-label">Iniciativa</span>
+            </div>
+            <div className="cs-combat__mini">
+              <span className="cs-combat__mini-val">{personaje.velocidad ?? '—'}</span>
+              <span className="cs-combat__mini-label">Velocidad</span>
+            </div>
+            <div className="cs-combat__mini">
+              <span className="cs-combat__mini-val">{personaje.percepcionPasiva ?? '—'}</span>
+              <span className="cs-combat__mini-label">Perc. pasiva</span>
+            </div>
+            <div className="cs-combat__mini">
+              <span className="cs-combat__mini-val cs-combat__mini-val--sm">{personaje.especie?.tamano ?? '—'}</span>
+              <span className="cs-combat__mini-label">Tamaño</span>
+            </div>
+          </div>
+
+          {/* Puntos de golpe */}
+          <div className="cs-combat__pg">
             <div className="cs-header__pg-top">
               <span />
               <button
@@ -1459,70 +1526,67 @@ function Hoja1({
                 <span className="cs-header__pg-label">Máximo</span>
               </div>
             </div>
-            {/* Selector de método de PG (Fijo o Tirada) — solo nivel 2+ */}
             {nivelActual > 1 && pgMetodoAbierto && (
               <div className="cs-header__pg-method">
-              <div className="cs-header__pg-method-head">
-                <span className="cs-header__pg-method-label">Método niv. {nivelActual}</span>
-                <div className="cs-pg-toggle" role="group" aria-label={`Método de PG nivel ${nivelActual}`}>
-                  <span className={`cs-pg-toggle__text ${metodoPgNivel === 'fijo' ? 'is-active' : ''}`}>Fijo</span>
-                  <label className="cs-pg-toggle__switch">
-                    <input
-                      type="checkbox"
-                      checked={metodoPgNivel === 'tirada'}
-                      onChange={(e) => {
+                <div className="cs-header__pg-method-head">
+                  <span className="cs-header__pg-method-label">Método niv. {nivelActual}</span>
+                  <div className="cs-pg-toggle" role="group" aria-label={`Método de PG nivel ${nivelActual}`}>
+                    <span className={`cs-pg-toggle__text ${metodoPgNivel === 'fijo' ? 'is-active' : ''}`}>Fijo</span>
+                    <label className="cs-pg-toggle__switch">
+                      <input
+                        type="checkbox"
+                        checked={metodoPgNivel === 'tirada'}
+                        onChange={(e) => {
+                          if (!onPgGananciaPorNivelCambiar) return
+                          if (e.target.checked) {
+                            const caras = parseInt(String(dadoGolpeTipo).replace('d', ''), 10) || 8
+                            const tirada = Math.floor(Math.random() * caras) + 1
+                            const ganancia = Math.max(1, tirada + conModActual)
+                            onPgGananciaPorNivelCambiar({ ...pgGananciaPorNivel, [nivelActual]: ganancia })
+                          } else {
+                            const nuevoMapa = { ...(pgGananciaPorNivel ?? {}) }
+                            delete nuevoMapa[nivelActual]
+                            onPgGananciaPorNivelCambiar(nuevoMapa)
+                          }
+                        }}
+                      />
+                      <span className="cs-pg-toggle__slider" />
+                    </label>
+                    <span className={`cs-pg-toggle__text ${metodoPgNivel === 'tirada' ? 'is-active' : ''}`}>Tirada</span>
+                  </div>
+                </div>
+                <div className="cs-header__pg-method-info">
+                  {metodoPgNivel === 'fijo' ? (
+                    <span>Fijo: <strong>{fijoBaseNivel} PG</strong></span>
+                  ) : (
+                    <span>
+                      Tirada: <strong>{gananciaTiradaNivel} PG</strong>
+                      {dadoTiradoMostrado != null ? ` (dado ${dadoGolpeTipo}: ${dadoTiradoMostrado}${conModActual >= 0 ? ` + ${conModActual}` : ` - ${Math.abs(conModActual)}`})` : ''}
+                    </span>
+                  )}
+                  {metodoPgNivel === 'tirada' && (
+                    <button
+                      type="button"
+                      className="cs-header__pg-reroll"
+                      onClick={() => {
                         if (!onPgGananciaPorNivelCambiar) return
-                        if (e.target.checked) {
-                          const caras = parseInt(String(dadoGolpeTipo).replace('d', ''), 10) || 8
-                          const tirada = Math.floor(Math.random() * caras) + 1
-                          const ganancia = Math.max(1, tirada + conModActual)
-                          onPgGananciaPorNivelCambiar({ ...pgGananciaPorNivel, [nivelActual]: ganancia })
-                        } else {
-                          const nuevoMapa = { ...(pgGananciaPorNivel ?? {}) }
-                          delete nuevoMapa[nivelActual]
-                          onPgGananciaPorNivelCambiar(nuevoMapa)
-                        }
+                        const caras = parseInt(String(dadoGolpeTipo).replace('d', ''), 10) || 8
+                        const tirada = Math.floor(Math.random() * caras) + 1
+                        const ganancia = Math.max(1, tirada + conModActual)
+                        onPgGananciaPorNivelCambiar({ ...pgGananciaPorNivel, [nivelActual]: ganancia })
                       }}
-                    />
-                    <span className="cs-pg-toggle__slider" />
-                  </label>
-                  <span className={`cs-pg-toggle__text ${metodoPgNivel === 'tirada' ? 'is-active' : ''}`}>Tirada</span>
+                    >
+                      Volver a tirar
+                    </button>
+                  )}
                 </div>
               </div>
-
-              <div className="cs-header__pg-method-info">
-                {metodoPgNivel === 'fijo' ? (
-                  <span>Fijo: <strong>{fijoBaseNivel} PG</strong></span>
-                ) : (
-                  <span>
-                    Tirada: <strong>{gananciaTiradaNivel} PG</strong>
-                    {dadoTiradoMostrado != null ? ` (dado ${dadoGolpeTipo}: ${dadoTiradoMostrado}${conModActual >= 0 ? ` + ${conModActual}` : ` - ${Math.abs(conModActual)}`})` : ''}
-                  </span>
-                )}
-
-                {metodoPgNivel === 'tirada' && (
-                  <button
-                    type="button"
-                    className="cs-header__pg-reroll"
-                    onClick={() => {
-                      if (!onPgGananciaPorNivelCambiar) return
-                      const caras = parseInt(String(dadoGolpeTipo).replace('d', ''), 10) || 8
-                      const tirada = Math.floor(Math.random() * caras) + 1
-                      const ganancia = Math.max(1, tirada + conModActual)
-                      onPgGananciaPorNivelCambiar({ ...pgGananciaPorNivel, [nivelActual]: ganancia })
-                    }}
-                  >
-                    Volver a tirar
-                  </button>
-                )}
-              </div>
-            </div>
             )}
             <span className="cs-header__section-title">Puntos de golpe</span>
           </div>
 
-          {/* Dados de golpe — gastados y máximos */}
-          <div className="cs-header__dg-section">
+          {/* Dados de golpe */}
+          <div className="cs-combat__dg">
             <div className="cs-header__dg-content">
               <div className="cs-header__dg-info">
                 <span className="cs-header__dg-tipo">{dadoGolpeTipo}</span>
@@ -1553,84 +1617,29 @@ function Hoja1({
             <span className="cs-header__section-title">Dados de golpe</span>
           </div>
 
-          {/* Clase de armadura + Salvaciones contra muerte */}
-          <div className="cs-header__combat-extra">
-            <div className="cs-header__cbox">
-              <span className="cs-header__cbox-val">{personaje.ca ?? '—'}</span>
-              <span className="cs-header__cbox-label">CA</span>
-            </div>
-            <div className="cs-header__cbox">
-              <div className="cs-header__death">
-                <div className="cs-header__death-row">
-                  <span>Éxitos</span>
-                  {[0, 1, 2].map(i => (
-                    <button key={i}
-                      className={`cs-muerte__circle cs-muerte__circle--exito ${muerte.exitos > i ? 'cs-muerte__circle--on' : ''}`}
-                      onClick={() => toggleMuerte('exito')} />
-                  ))}
-                </div>
-                <div className="cs-header__death-row">
-                  <span>Fallos</span>
-                  {[0, 1, 2].map(i => (
-                    <button key={i}
-                      className={`cs-muerte__circle cs-muerte__circle--fallo ${muerte.fallos > i ? 'cs-muerte__circle--on' : ''}`}
-                      onClick={() => toggleMuerte('fallo')} />
-                  ))}
-                </div>
+          {/* Salvaciones contra muerte */}
+          <div className="cs-combat__muerte">
+            <div className="cs-header__death">
+              <div className="cs-header__death-row">
+                <span>Éxitos</span>
+                {[0, 1, 2].map(i => (
+                  <button key={i}
+                    className={`cs-muerte__circle cs-muerte__circle--exito ${muerte.exitos > i ? 'cs-muerte__circle--on' : ''}`}
+                    onClick={() => toggleMuerte('exito')} />
+                ))}
               </div>
-              <span className="cs-header__cbox-label">Muerte</span>
+              <div className="cs-header__death-row">
+                <span>Fallos</span>
+                {[0, 1, 2].map(i => (
+                  <button key={i}
+                    className={`cs-muerte__circle cs-muerte__circle--fallo ${muerte.fallos > i ? 'cs-muerte__circle--on' : ''}`}
+                    onClick={() => toggleMuerte('fallo')} />
+                ))}
+              </div>
             </div>
+            <span className="cs-header__cbox-label">Salvaciones contra muerte</span>
           </div>
-        </div>
-      </header>
 
-      {/* ═══ Barra de stats rápidos ═══ */}
-      <div className="cs-stats-bar">
-        <div className="cs-stats-bar__item">
-          <span className="cs-stats-bar__val">{fmtM(personaje.bonificadorCompetencia)}</span>
-          <span className="cs-stats-bar__label">Bonif. competencia</span>
-        </div>
-        <div className="cs-stats-bar__item">
-          <span className="cs-stats-bar__val">{fmtM(personaje.iniciativa)}</span>
-          <span className="cs-stats-bar__label">Iniciativa</span>
-        </div>
-        <div className="cs-stats-bar__item">
-          <span className="cs-stats-bar__val">{personaje.velocidad ?? '—'}</span>
-          <span className="cs-stats-bar__label">Velocidad</span>
-        </div>
-        <div className="cs-stats-bar__item">
-          <span className="cs-stats-bar__val">{personaje.percepcionPasiva ?? '—'}</span>
-          <span className="cs-stats-bar__label">Percepción pasiva</span>
-        </div>
-        <button
-          type="button"
-          className={`cs-stats-bar__item cs-stats-bar__item--insp${inspiracion ? ' cs-stats-bar__item--insp-on' : ''}`}
-          onClick={() => setInspiracion(v => !v)}
-          aria-pressed={inspiracion}
-          title={inspiracion ? 'Gastar inspiración heroica' : 'Ganar inspiración heroica'}
-        >
-          <span className="cs-stats-bar__val">{inspiracion ? '★' : '☆'}</span>
-          <span className="cs-stats-bar__label">Inspiración heroica</span>
-        </button>
-      </div>
-
-      {/* ═══ Cuerpo principal ═══ */}
-      <div className="cs-body">
-
-        {/* ── Izquierda: Características agrupadas (2 cols) ── */}
-        <div className="cs-abilities">
-          {/* Columna izq: FUE, DES, CON */}
-          <div className="cs-abilities__col">
-            {renderAbilityGroup('Fuerza')}
-            {renderAbilityGroup('Destreza')}
-            {renderAbilityGroup('Constitución')}
-          </div>
-          {/* Columna der: INT, SAB, CAR */}
-          <div className="cs-abilities__col">
-            {renderAbilityGroup('Inteligencia')}
-            {renderAbilityGroup('Sabiduría')}
-            {renderAbilityGroup('Carisma')}
-          </div>
         </div>
 
         {/* ── Derecha: Ataques, Rasgos, Equipo ── */}
