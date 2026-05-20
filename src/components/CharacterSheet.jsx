@@ -1203,6 +1203,7 @@ function Hoja1({
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
   onXpNivelActualCambiar,
   pgGananciaPorNivel, onPgGananciaPorNivelCambiar,
+  modoEdicion, onPersonajeOverridesCambiar, personajeOverrides,
 }) {
   const [modalSubclase, setModalSubclase] = useState(false)
   const [asiModalNivel, setAsiModalNivel] = useState(null)
@@ -1429,7 +1430,13 @@ function Hoja1({
           {/* CA — muy prominente */}
           <div className="cs-combat__ca-wrap">
             <div className="cs-combat__ca-box">
-              <span className="cs-combat__ca-val">{personaje.ca ?? '—'}</span>
+              <input
+                className="cs-combat__ca-val cs-stat-input"
+                type="number"
+                value={personajeOverrides?.ca ?? personaje.ca ?? ''}
+                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, ca: +e.target.value }))}
+                readOnly={!modoEdicion}
+              />
               <span className="cs-combat__ca-label">Clase de Armadura</span>
             </div>
           </div>
@@ -1437,7 +1444,13 @@ function Hoja1({
           {/* Bonif. competencia + Inspiración */}
           <div className="cs-combat__row2">
             <div className="cs-combat__stat">
-              <span className="cs-combat__stat-val">{fmtM(personaje.bonificadorCompetencia)}</span>
+              <input
+                className="cs-combat__stat-val cs-stat-input"
+                type="number"
+                value={personajeOverrides?.bonificadorCompetencia ?? personaje.bonificadorCompetencia ?? ''}
+                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, bonificadorCompetencia: +e.target.value }))}
+                readOnly={!modoEdicion}
+              />
               <span className="cs-combat__stat-label">Bonif. competencia</span>
             </div>
             <button
@@ -1455,15 +1468,33 @@ function Hoja1({
           {/* 4 mini stats: Init | Speed | PP | Tamaño */}
           <div className="cs-combat__grid4">
             <div className="cs-combat__mini">
-              <span className="cs-combat__mini-val">{fmtM(personaje.iniciativa)}</span>
+              <input
+                className="cs-combat__mini-val cs-stat-input"
+                type="number"
+                value={personajeOverrides?.iniciativa ?? personaje.iniciativa ?? ''}
+                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, iniciativa: +e.target.value }))}
+                readOnly={!modoEdicion}
+              />
               <span className="cs-combat__mini-label">Iniciativa</span>
             </div>
             <div className="cs-combat__mini">
-              <span className="cs-combat__mini-val">{personaje.velocidad ?? '—'}</span>
+              <input
+                className="cs-combat__mini-val cs-stat-input"
+                type="number"
+                value={personajeOverrides?.velocidad ?? personaje.velocidad ?? ''}
+                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, velocidad: +e.target.value }))}
+                readOnly={!modoEdicion}
+              />
               <span className="cs-combat__mini-label">Velocidad</span>
             </div>
             <div className="cs-combat__mini">
-              <span className="cs-combat__mini-val">{personaje.percepcionPasiva ?? '—'}</span>
+              <input
+                className="cs-combat__mini-val cs-stat-input"
+                type="number"
+                value={personajeOverrides?.percepcionPasiva ?? personaje.percepcionPasiva ?? ''}
+                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, percepcionPasiva: +e.target.value }))}
+                readOnly={!modoEdicion}
+              />
               <span className="cs-combat__mini-label">Perc. pasiva</span>
             </div>
             <div className="cs-combat__mini">
@@ -3295,7 +3326,7 @@ export default function CharacterSheet({
   personajeOverrides, onPersonajeOverridesCambiar,
 }) {
   const [pestaña, setPestaña] = useState(1)
-  const [editorAbierto, setEditorAbierto] = useState(false)
+  const [modoEdicion, setModoEdicion] = useState(false)
   const tieneMagia = !!personaje.conjuros
 
   const cambiarPestaña = (n) => {
@@ -3331,27 +3362,31 @@ export default function CharacterSheet({
         </button>
         <div className="cs-tabs__actions">
           <button
-            className={`cs-tab cs-tab--tools${Object.keys(personajeOverrides ?? {}).length > 0 ? ' cs-tab--tools-active' : ''}`}
-            onClick={() => setEditorAbierto(true)}
+            className={`cs-tab cs-tab--lock${modoEdicion ? ' cs-tab--lock-open' : ''}`}
+            onClick={() => setModoEdicion(prev => !prev)}
+            title={modoEdicion ? 'Bloquear hoja (modo vista)' : 'Desbloquear para editar'}
           >
-            {Object.keys(personajeOverrides ?? {}).length > 0 ? `Editar valores (${Object.keys(personajeOverrides).length})` : 'Editar valores'}
+            {modoEdicion ? (
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
+                <path d="M18 8h-1V6A5 5 0 0 0 7 6h2a3 3 0 0 1 6 0v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm-6 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
+                <path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM8 8V6a4 4 0 0 1 8 0v2H8zm4 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+              </svg>
+            )}
+            <span className="cs-tab__lock-label">{modoEdicion ? 'Editando' : 'Editar'}</span>
           </button>
         </div>
       </div>
 
-      {editorAbierto && (
-        <EditorAmigable
-          personaje={personaje}
-          personajeBase={personajeBase}
-          personajeOverrides={personajeOverrides}
-          onPersonajeOverridesCambiar={onPersonajeOverridesCambiar}
-          onClose={() => setEditorAbierto(false)}
-        />
-      )}
-
+      <div className={`cs-hoja${modoEdicion ? ' cs-hoja--editando' : ' cs-hoja--bloqueada'}`}>
       {pestaña === 1 && (
         <Hoja1
           personaje={personaje}
+          modoEdicion={modoEdicion}
+          onPersonajeOverridesCambiar={onPersonajeOverridesCambiar}
+          personajeOverrides={personajeOverrides}
           subclaseSeleccionada={subclaseSeleccionada}
           onSubclaseSeleccionar={onSubclaseSeleccionar}
           onNombreCambiar={onNombreCambiar}
@@ -3405,6 +3440,7 @@ export default function CharacterSheet({
           hoja2={hoja2}
           onHoja2Cambiar={onHoja2Cambiar}
           onAparienciaCambiar={onAparienciaCambiar}
+          modoEdicion={modoEdicion}
         />
       )}
       {pestaña === 3 && (
@@ -3418,8 +3454,10 @@ export default function CharacterSheet({
           onConjurosCambiar={onConjurosSeleccionadosCambiar}
           espaciosUsados={espaciosUsados ?? {}}
           onEspaciosUsadosCambiar={onEspaciosUsadosCambiar}
+          modoEdicion={modoEdicion}
         />
       )}
+      </div>{/* cs-hoja */}
     </div>
   )
 }

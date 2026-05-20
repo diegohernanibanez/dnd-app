@@ -114,6 +114,32 @@
   font-size: 11px;
 }
 
+/* ── Botón candado ─────────────────────────────────── */
+.cs-tab--lock {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color 0.15s, border-color 0.15s;
+}
+.cs-tab--lock:hover {
+  color: var(--text);
+  border-color: var(--border);
+}
+.cs-tab--lock-open {
+  color: var(--cs-gold);
+  border-color: var(--cs-gold);
+}
+.cs-tab--lock-open:hover {
+  color: var(--cs-gold);
+}
+.cs-tab__lock-label {
+  font-size: 11px;
+}
+
 .cs-editor-json {
   width: 100%;
   min-height: 55vh;
@@ -3917,4 +3943,71 @@
   font-weight: 600;
   margin-left: auto;
   flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════
+   Modo edición / Modo bloqueado
+   ══════════════════════════════════════════════════════ */
+
+/* ── Inputs de stat inline (CA, velocidad, iniciativa, etc.) ── */
+.cs-stat-input {
+  text-align: center;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.cs-stat-input::-webkit-inner-spin-button,
+.cs-stat-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+/* En modo edición: outline dorado al enfocar */
+.cs-hoja--editando .cs-stat-input:focus {
+  outline: 2px solid var(--cs-gold);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--cs-gold) 10%, transparent);
+}
+
+/* ── Modo bloqueado: todos los inputs/textareas como texto ── */
+.cs-hoja--bloqueada input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.cs-hoja--bloqueada textarea,
+.cs-hoja--bloqueada select {
+  pointer-events: none;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  resize: none;
+  cursor: default;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+}
+
+/* Ocultar botones de acción en modo vista */
+.cs-hoja--bloqueada .cs-attacks__add-btn,
+.cs-hoja--bloqueada .cs-header__pg-top button,
+.cs-hoja--bloqueada .EquipoInlineAdd,
+.cs-hoja--bloqueada .cs-equipo-add,
+.cs-hoja--bloqueada .cs-mini-traits__del,
+.cs-hoja--bloqueada .cs-dotes-libres-add,
+.cs-hoja--bloqueada .pg-top button {
+  display: none !important;
+}
+
+/* Bloquear toggles de competencias y salvaciones */
+.cs-hoja--bloqueada .cs-dot,
+.cs-hoja--bloqueada .cs-combat__insp {
+  pointer-events: none;
+}
+
+/* Señal visual sutil en campos editables cuando está desbloqueado */
+.cs-hoja--editando input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(.cs-stat-input):not([readOnly]):hover,
+.cs-hoja--editando textarea:not([readOnly]):hover {
+  background: color-mix(in srgb, var(--cs-gold) 5%, transparent) !important;
+  border-radius: 3px;
 }
