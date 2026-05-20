@@ -1,4 +1,8 @@
-// Servicio de almacenamiento — guarda JSON en localStorage del navegador
+// Servicio de almacenamiento
+// Primario: localStorage (inmediato, funciona offline)
+// Secundario: Supabase (sincronización en background)
+
+import { supabase } from './supabase.js'
 
 const STORAGE_PREFIX = 'dnd_personaje_'
 const INDEX_KEY = 'dnd_personajes_index'
@@ -34,12 +38,13 @@ export function cargarPersonaje(id) {
   }
 }
 
-export function guardarPersonaje(data) {
+export async function guardarPersonaje(data) {
   const id = data.id || generateId()
   const ahora = new Date().toISOString()
   const personaje = { ...data, id, fechaModificacion: ahora }
   if (!personaje.fechaCreacion) personaje.fechaCreacion = ahora
 
+  // 1. localStorage primero (inmediato)
   localStorage.setItem(`${STORAGE_PREFIX}${id}`, JSON.stringify(personaje))
 
   const index = getIndex()
@@ -56,12 +61,92 @@ export function guardarPersonaje(data) {
   else index.push(meta)
   saveIndex(index)
 
+  // 2. Supabase en background (no bloquea el guardado local)
+  if (supabase) {
+    supabase
+      .from('personajes')
+      .upsert({
+        id,
+        nombre: meta.nombre,
+        clase: meta.clase,
+        nivel: meta.nivel,
+        datos: personaje,
+        fecha_creacion: personaje.fechaCreacion,
+      })
+      .then(({ error }) => {
+        if (error) console.warn('[Supabase] Error al guardar:', error.message)
+      })
+  }
+
   return id
 }
 
 export function eliminarPersonaje(id) {
   localStorage.removeItem(`${STORAGE_PREFIX}${id}`)
   saveIndex(getIndex().filter(p => p.id !== id))
+
+  if (supabase) {
+    supabase
+      .from('personajes')
+      .delete()
+      .eq('id', id)
+      .then(({ error }) => {
+        if (error) console.warn('[Supabase] Error al eliminar:', error.message)
+      })
+  }
+}
+
+// ── Sincronización desde Supabase al cargar la app ───────────────────
+// Trae personajes remotos que no estén en localStorage
+export async function sincronizarDesdeSupabase() {
+  if (!supabase) return
+
+  try {
+    const { data, error } = await supabase
+      .from('personajes')
+      .select('id, nombre, clase, nivel, datos, fecha_creacion, fecha_modificacion')
+      .order('fecha_modificacion', { ascending: false })
+
+    if (error) {
+      console.warn('[Supabase] Error al sincronizar:', error.message)
+      return
+    }
+
+    if (!data?.length) return
+
+    const index = getIndex()
+    let changed = false
+
+    for (const row of data) {
+      const localRaw = localStorage.getItem(`${STORAGE_PREFIX}${row.id}`)
+      const localData = localRaw ? JSON.parse(localRaw) : null
+
+      // Si no existe localmente, o la versión remota es más nueva → guardar local
+      const remoteMs = new Date(row.fecha_modificacion).getTime()
+      const localMs = localData ? new Date(localData.fechaModificacion || 0).getTime() : 0
+
+      if (!localData || remoteMs > localMs) {
+        localStorage.setItem(`${STORAGE_PREFIX}${row.id}`, JSON.stringify(row.datos))
+        changed = true
+
+        const meta = {
+          id: row.id,
+          nombre: row.nombre,
+          clase: row.clase,
+          nivel: row.nivel,
+          fechaCreacion: row.fecha_creacion,
+          fechaModificacion: row.fecha_modificacion,
+        }
+        const pos = index.findIndex(p => p.id === row.id)
+        if (pos >= 0) index[pos] = meta
+        else index.push(meta)
+      }
+    }
+
+    if (changed) saveIndex(index)
+  } catch (e) {
+    console.warn('[Supabase] Error inesperado en sincronización:', e)
+  }
 }
 
 // ── Exportar / Importar JSON ─────────────────────────────────────────
