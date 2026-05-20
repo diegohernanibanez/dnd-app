@@ -12,7 +12,7 @@ import { CARACTERISTICAS } from './data/abilityScores'
 import { calcularPersonaje } from './data/character'
 import { CLASES } from './data/classes'
 import { crearMonedasVacias, getMonedasInicialesDesdeEquipo, restarMonedas, sumarMonedas } from './data/equipment'
-import { guardarPersonaje, cargarPersonaje, crearEstadoInicial } from './data/storage'
+import { guardarPersonaje, cargarPersonaje, crearEstadoInicial, sincronizarDesdeSupabase } from './data/storage'
 import './App.css'
 
 const PASOS = [
@@ -113,6 +113,9 @@ function App() {
   const [xpNivelActual, setXpNivelActual] = useState(0)
   const [pgGananciaPorNivel, setPgGananciaPorNivel] = useState({})
   const [personajeOverrides, setPersonajeOverrides] = useState({})
+
+  // Sincronizar con Supabase al iniciar la app
+  useEffect(() => { sincronizarDesdeSupabase() }, [])
 
   // Flag para evitar que los useEffect de reset se disparen al cargar un personaje
   const cargandoRef = useRef(false)
