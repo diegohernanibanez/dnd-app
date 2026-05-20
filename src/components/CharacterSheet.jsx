@@ -1413,42 +1413,14 @@ function Hoja1({
 
         {/* ── Izquierda: Características agrupadas (2 cols) ── */}
         <div className="cs-abilities">
-          <div className="cs-abilities__cols">
-            {/* Columna izq: FUE, DES, CON */}
-            <div className="cs-abilities__col">
-              {renderAbilityGroup('Fuerza')}
-              {renderAbilityGroup('Destreza')}
-              {renderAbilityGroup('Constitución')}
-            </div>
-            {/* Columna der: INT, SAB, CAR */}
-            <div className="cs-abilities__col">
-              {renderAbilityGroup('Inteligencia')}
-              {renderAbilityGroup('Sabiduría')}
-              {renderAbilityGroup('Carisma')}
-            </div>
+          <div className="cs-abilities__col">
+            {renderAbilityGroup('Fuerza')}
+            {renderAbilityGroup('Destreza')}
+            {renderAbilityGroup('Constitución')}
+            {renderAbilityGroup('Inteligencia')}
+            {renderAbilityGroup('Sabiduría')}
+            {renderAbilityGroup('Carisma')}
           </div>
-          {/* Entrenamiento y competencias — en sidebar junto a los atributos */}
-          <SheetSection title="Entrenamiento y competencias con equipo" grow>
-            <div className="cs-prof-text">
-              {personaje.competenciasArmaduras?.length > 0 && (
-                <p><strong>Armaduras:</strong> {personaje.competenciasArmaduras.join(', ')}</p>
-              )}
-              {personaje.competenciasArmas?.length > 0 && (
-                <p><strong>Armas:</strong> {personaje.competenciasArmas.join(', ')}</p>
-              )}
-              {personaje.competenciasHerramientas?.length > 0 && (
-                <p><strong>Herramientas:</strong> {personaje.competenciasHerramientas.join(', ')}</p>
-              )}
-              {personaje.idiomas?.length > 0 && (
-                <p><strong>Idiomas:</strong> {personaje.idiomas.join(', ')}</p>
-              )}
-              {!personaje.competenciasArmaduras?.length &&
-               !personaje.competenciasHerramientas?.length &&
-               !personaje.idiomas?.length && (
-                <em className="cs-empty">Sin datos</em>
-              )}
-            </div>
-          </SheetSection>
         </div>
 
         {/* ── Centro: Stats de combate ── */}
@@ -2220,6 +2192,29 @@ function Hoja1({
               </div>
             </SheetSection>
           </div>
+
+          {/* Entrenamiento y competencias */}
+          <SheetSection title="Entrenamiento y competencias con equipo" grow>
+            <div className="cs-prof-text">
+              {personaje.competenciasArmaduras?.length > 0 && (
+                <p><strong>Armaduras:</strong> {personaje.competenciasArmaduras.join(', ')}</p>
+              )}
+              {personaje.competenciasArmas?.length > 0 && (
+                <p><strong>Armas:</strong> {personaje.competenciasArmas.join(', ')}</p>
+              )}
+              {personaje.competenciasHerramientas?.length > 0 && (
+                <p><strong>Herramientas:</strong> {personaje.competenciasHerramientas.join(', ')}</p>
+              )}
+              {personaje.idiomas?.length > 0 && (
+                <p><strong>Idiomas:</strong> {personaje.idiomas.join(', ')}</p>
+              )}
+              {!personaje.competenciasArmaduras?.length &&
+               !personaje.competenciasHerramientas?.length &&
+               !personaje.idiomas?.length && (
+                <em className="cs-empty">Sin datos</em>
+              )}
+            </div>
+          </SheetSection>
 
           {/* Equipo */}
           <SheetSection title="Equipo">
