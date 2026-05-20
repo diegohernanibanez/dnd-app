@@ -1,29 +1,26 @@
 // Servicio de almacenamiento
-// Primario: localStorage (inmediato, funciona offline)
-// Secundario: Supabase (sincronización en background)
+// Primario:   localStorage (inmediato, funciona offline)
+// Secundario: Supabase    (sincronización en background, tablas normalizadas)
 
 import { supabase } from './supabase.js'
 
 const STORAGE_PREFIX = 'dnd_personaje_'
-const INDEX_KEY = 'dnd_personajes_index'
+const INDEX_KEY      = 'dnd_personajes_index'
 
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8)
 }
 
 function getIndex() {
-  try {
-    return JSON.parse(localStorage.getItem(INDEX_KEY)) || []
-  } catch {
-    return []
-  }
+  try { return JSON.parse(localStorage.getItem(INDEX_KEY)) || [] }
+  catch { return [] }
 }
 
 function saveIndex(index) {
   localStorage.setItem(INDEX_KEY, JSON.stringify(index))
 }
 
-// ── CRUD ─────────────────────────────────────────────────────────────
+// ── CRUD ──────────────────────────────────────────────────────────────────
 
 export function listarPersonajes() {
   return getIndex()
@@ -33,48 +30,38 @@ export function cargarPersonaje(id) {
   try {
     const raw = localStorage.getItem(`${STORAGE_PREFIX}${id}`)
     return raw ? JSON.parse(raw) : null
-  } catch {
-    return null
-  }
+  } catch { return null }
 }
 
 export async function guardarPersonaje(data) {
-  const id = data.id || generateId()
+  const id    = data.id || generateId()
   const ahora = new Date().toISOString()
   const personaje = { ...data, id, fechaModificacion: ahora }
   if (!personaje.fechaCreacion) personaje.fechaCreacion = ahora
 
-  // 1. localStorage primero (inmediato)
+  // 1. localStorage primero (sin latencia)
   localStorage.setItem(`${STORAGE_PREFIX}${id}`, JSON.stringify(personaje))
 
   const index = getIndex()
-  const meta = {
+  const meta  = {
     id,
-    nombre: data.descripcion?.nombre || 'Sin nombre',
-    clase: data.claseSeleccionada || null,
-    nivel: data.nivel || 1,
-    fechaCreacion: personaje.fechaCreacion,
+    nombre:            data.descripcion?.nombre || 'Sin nombre',
+    clase:             data.claseSeleccionada   || null,
+    nivel:             data.nivel               || 1,
+    fechaCreacion:     personaje.fechaCreacion,
     fechaModificacion: ahora,
   }
   const pos = index.findIndex(p => p.id === id)
   if (pos >= 0) index[pos] = meta
-  else index.push(meta)
+  else           index.push(meta)
   saveIndex(index)
 
-  // 2. Supabase en background (no bloquea el guardado local)
+  // 2. Supabase en background (tablas normalizadas via RPC)
   if (supabase) {
     supabase
-      .from('personajes')
-      .upsert({
-        id,
-        nombre: meta.nombre,
-        clase: meta.clase,
-        nivel: meta.nivel,
-        datos: personaje,
-        fecha_creacion: personaje.fechaCreacion,
-      })
+      .rpc('upsert_personaje', { p_datos: personaje })
       .then(({ error }) => {
-        if (error) console.warn('[Supabase] Error al guardar:', error.message)
+        if (error) console.warn('[Supabase] Error al guardar personaje:', error.message)
       })
   }
 
@@ -86,60 +73,70 @@ export function eliminarPersonaje(id) {
   saveIndex(getIndex().filter(p => p.id !== id))
 
   if (supabase) {
+    // CASCADE en FK elimina todas las tablas relacionadas automáticamente
     supabase
       .from('personajes')
       .delete()
       .eq('id', id)
       .then(({ error }) => {
-        if (error) console.warn('[Supabase] Error al eliminar:', error.message)
+        if (error) console.warn('[Supabase] Error al eliminar personaje:', error.message)
       })
   }
 }
 
-// ── Sincronización desde Supabase al cargar la app ───────────────────
-// Trae personajes remotos que no estén en localStorage
+// ── Sincronización desde Supabase ─────────────────────────────────────────
+// Trae personajes remotos que no estén en localStorage (o sean más nuevos)
 export async function sincronizarDesdeSupabase() {
   if (!supabase) return
 
   try {
-    const { data, error } = await supabase
+    // Paso 1: listar personajes con timestamps
+    const { data: lista, error: listError } = await supabase
       .from('personajes')
-      .select('id, nombre, clase, nivel, datos, fecha_creacion, fecha_modificacion')
+      .select('id, nombre, clase_id, nivel, fecha_creacion, fecha_modificacion')
       .order('fecha_modificacion', { ascending: false })
 
-    if (error) {
-      console.warn('[Supabase] Error al sincronizar:', error.message)
+    if (listError) {
+      console.warn('[Supabase] Error al listar personajes:', listError.message)
       return
     }
+    if (!lista?.length) return
 
-    if (!data?.length) return
+    const index   = getIndex()
+    let   changed = false
 
-    const index = getIndex()
-    let changed = false
-
-    for (const row of data) {
-      const localRaw = localStorage.getItem(`${STORAGE_PREFIX}${row.id}`)
+    for (const row of lista) {
+      const localRaw  = localStorage.getItem(`${STORAGE_PREFIX}${row.id}`)
       const localData = localRaw ? JSON.parse(localRaw) : null
 
-      // Si no existe localmente, o la versión remota es más nueva → guardar local
       const remoteMs = new Date(row.fecha_modificacion).getTime()
-      const localMs = localData ? new Date(localData.fechaModificacion || 0).getTime() : 0
+      const localMs  = localData ? new Date(localData.fechaModificacion || 0).getTime() : 0
 
       if (!localData || remoteMs > localMs) {
-        localStorage.setItem(`${STORAGE_PREFIX}${row.id}`, JSON.stringify(row.datos))
+        // Paso 2: cargar el estado completo del personaje via RPC
+        const { data: estado, error: cargaError } = await supabase
+          .rpc('cargar_personaje_completo', { p_id: row.id })
+
+        if (cargaError) {
+          console.warn(`[Supabase] Error al cargar personaje ${row.id}:`, cargaError.message)
+          continue
+        }
+        if (!estado) continue
+
+        localStorage.setItem(`${STORAGE_PREFIX}${row.id}`, JSON.stringify(estado))
         changed = true
 
         const meta = {
-          id: row.id,
-          nombre: row.nombre,
-          clase: row.clase,
-          nivel: row.nivel,
-          fechaCreacion: row.fecha_creacion,
+          id:                row.id,
+          nombre:            row.nombre,
+          clase:             row.clase_id,
+          nivel:             row.nivel,
+          fechaCreacion:     row.fecha_creacion,
           fechaModificacion: row.fecha_modificacion,
         }
         const pos = index.findIndex(p => p.id === row.id)
         if (pos >= 0) index[pos] = meta
-        else index.push(meta)
+        else           index.push(meta)
       }
     }
 
@@ -149,15 +146,15 @@ export async function sincronizarDesdeSupabase() {
   }
 }
 
-// ── Exportar / Importar JSON ─────────────────────────────────────────
+// ── Exportar / Importar JSON ───────────────────────────────────────────────
 
 export function exportarPersonaje(data) {
-  const nombre = data.descripcion?.nombre || 'personaje'
+  const nombre        = data.descripcion?.nombre || 'personaje'
   const nombreArchivo = `${nombre.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ ]/g, '_')}.json`
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
+  const url  = URL.createObjectURL(blob)
+  const a    = document.createElement('a')
+  a.href     = url
   a.download = nombreArchivo
   a.click()
   URL.revokeObjectURL(url)
@@ -165,8 +162,8 @@ export function exportarPersonaje(data) {
 
 export function importarPersonaje(file) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
+    const reader   = new FileReader()
+    reader.onload  = (e) => {
       try {
         const data = JSON.parse(e.target.result)
         if (!data || typeof data !== 'object') {
@@ -184,48 +181,63 @@ export function importarPersonaje(file) {
   })
 }
 
-// ── Estado inicial vacío ─────────────────────────────────────────────
+// ── Estado inicial vacío ───────────────────────────────────────────────────
 
 export function crearEstadoInicial(CARACTERISTICAS) {
   return {
-    id: null,
-    nivel: 1,
-    claseSeleccionada: null,
-    eleccionNivel1: null,
+    id:                   null,
+    nivel:                1,
+    claseSeleccionada:    null,
+    eleccionNivel1:       null,
     subclaseSeleccionada: null,
-    origen: { trasfondo: null, especie: null, idiomas: ['Común'], linaje: null, habilidadDiestro: null, habilidadSentidos: null, habilidadesHabilidoso: [] },
-    puntuaciones: Object.fromEntries(CARACTERISTICAS.map(c => [c, null])),
-    bonusTrasfondo: { modo: null, stats: {} },
+    origen: {
+      trasfondo:             null,
+      especie:               null,
+      idiomas:               ['Común'],
+      linaje:                null,
+      habilidadDiestro:      null,
+      habilidadSentidos:     null,
+      habilidadesHabilidoso: [],
+    },
+    puntuaciones:     Object.fromEntries(CARACTERISTICAS.map(c => [c, null])),
+    bonusTrasfondo:   { modo: null, stats: {} },
     habilidadesClase: [],
     descripcion: {
-      nombre: '',
+      nombre:       '',
       alineamiento: null,
-      apariencia: {},
+      apariencia:   {},
       personalidad: { rasgos: '', ideal: '', vinculo: '', defecto: '' },
-      trasfondoId: null,
+      trasfondoId:  null,
     },
-    equipo: { opcionClase: null, opcionTrasfondo: null, oroDisponible: 0, extras: [], bagatela: null, monedasAuto: { PC: 0, PP: 0, PE: 0, PO: 0, PA: 0 } },
+    equipo: {
+      opcionClase:     null,
+      opcionTrasfondo: null,
+      oroDisponible:   0,
+      extras:          [],
+      bagatela:        null,
+      monedasAuto:     { PC: 0, PP: 0, PE: 0, PO: 0, PA: 0 },
+    },
     hoja2: {
-      historia: '',
-      aliados: '',
-      orgNombre: '',
+      historia:          '',
+      aliados:           '',
+      orgNombre:         '',
       rasgosAdicionales: '',
-      tesoro: '',
-      descApariencia: '',
+      tesoro:            '',
+      descApariencia:    '',
     },
-    monedas: { PC: 0, PP: 0, PE: 0, PO: 0, PA: 0 },
-    pgActuales: 0,
-    pgTemporales: 0,
-    muerte: { exitos: 0, fallos: 0 },
-    trucosSeleccionados: [],
-    grimorioConjuros: [],
+    monedas:               { PC: 0, PP: 0, PE: 0, PO: 0, PA: 0 },
+    pgActuales:            0,
+    pgTemporales:          0,
+    muerte:                { exitos: 0, fallos: 0 },
+    trucosSeleccionados:   [],
+    grimorioConjuros:      [],
     conjurosSeleccionados: [],
-    espaciosUsados: {},
-    armasCustom: [],
-    ataquesHojaConfig: {},
-    ataquesOcultos: [],
-    itemsOcultos: [],
-    pgGananciaPorNivel: {},
-    personajeOverrides: {},
+    espaciosUsados:        {},
+    armasCustom:           [],
+    ataquesHojaConfig:     {},
+    ataquesOcultos:        [],
+    itemsOcultos:          [],
+    pgGananciaPorNivel:    {},
+    personajeOverrides:    {},
   }
 }
