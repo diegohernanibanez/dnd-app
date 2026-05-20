@@ -1413,14 +1413,10 @@ function Hoja1({
 
         {/* ── Izquierda: Características agrupadas (2 cols) ── */}
         <div className="cs-abilities">
-          {/* Columna izq: FUE, DES, CON */}
           <div className="cs-abilities__col">
             {renderAbilityGroup('Fuerza')}
             {renderAbilityGroup('Destreza')}
             {renderAbilityGroup('Constitución')}
-          </div>
-          {/* Columna der: INT, SAB, CAR */}
-          <div className="cs-abilities__col">
             {renderAbilityGroup('Inteligencia')}
             {renderAbilityGroup('Sabiduría')}
             {renderAbilityGroup('Carisma')}
@@ -2197,6 +2193,29 @@ function Hoja1({
             </SheetSection>
           </div>
 
+          {/* Entrenamiento y competencias */}
+          <SheetSection title="Entrenamiento y competencias con equipo" grow>
+            <div className="cs-prof-text">
+              {personaje.competenciasArmaduras?.length > 0 && (
+                <p><strong>Armaduras:</strong> {personaje.competenciasArmaduras.join(', ')}</p>
+              )}
+              {personaje.competenciasArmas?.length > 0 && (
+                <p><strong>Armas:</strong> {personaje.competenciasArmas.join(', ')}</p>
+              )}
+              {personaje.competenciasHerramientas?.length > 0 && (
+                <p><strong>Herramientas:</strong> {personaje.competenciasHerramientas.join(', ')}</p>
+              )}
+              {personaje.idiomas?.length > 0 && (
+                <p><strong>Idiomas:</strong> {personaje.idiomas.join(', ')}</p>
+              )}
+              {!personaje.competenciasArmaduras?.length &&
+               !personaje.competenciasHerramientas?.length &&
+               !personaje.idiomas?.length && (
+                <em className="cs-empty">Sin datos</em>
+              )}
+            </div>
+          </SheetSection>
+
           {/* Equipo */}
           <SheetSection title="Equipo">
             {personaje.equipoResuelto?.length > 0 && (
@@ -2248,45 +2267,22 @@ function Hoja1({
         </div>
       </div>
 
-      {/* ═══ Pie: Competencias + Monedas ═══ */}
-      <div className="cs-footer-row">
-        <SheetSection title="Entrenamiento y competencias con equipo" grow>
-          <div className="cs-prof-text">
-            {personaje.competenciasArmaduras?.length > 0 && (
-              <p><strong>Armaduras:</strong> {personaje.competenciasArmaduras.join(', ')}</p>
-            )}
-            {personaje.competenciasArmas?.length > 0 && (
-              <p><strong>Armas:</strong> {personaje.competenciasArmas.join(', ')}</p>
-            )}
-            {personaje.competenciasHerramientas?.length > 0 && (
-              <p><strong>Herramientas:</strong> {personaje.competenciasHerramientas.join(', ')}</p>
-            )}
-            {personaje.idiomas?.length > 0 && (
-              <p><strong>Idiomas:</strong> {personaje.idiomas.join(', ')}</p>
-            )}
-            {!personaje.competenciasArmaduras?.length &&
-             !personaje.competenciasHerramientas?.length &&
-             !personaje.idiomas?.length && (
-              <em className="cs-empty">Sin datos</em>
-            )}
-          </div>
-        </SheetSection>
-        <div className="cs-monedas-section">
-          <div className="cs-sec__title">Monedas</div>
-          <div className="cs-monedas">
-            {['PC', 'PP', 'PE', 'PO', 'PA'].map(m => (
-              <div key={m} className="cs-moneda">
-                <input
-                  className="cs-moneda__input"
-                  type="number"
-                  min={0}
-                  value={monedas?.[m] ?? 0}
-                  onChange={e => onMonedasCambiar(prev => ({ ...prev, [m]: Math.max(0, Number(e.target.value) || 0) }))}
-                />
-                <span className="cs-moneda__label">{m}</span>
-              </div>
-            ))}
-          </div>
+      {/* ═══ Pie: Monedas ═══ */}
+      <div className="cs-monedas-section cs-monedas-footer">
+        <div className="cs-sec__title">Monedas</div>
+        <div className="cs-monedas">
+          {['PC', 'PP', 'PE', 'PO', 'PA'].map(m => (
+            <div key={m} className="cs-moneda">
+              <input
+                className="cs-moneda__input"
+                type="number"
+                min={0}
+                value={monedas?.[m] ?? 0}
+                onChange={e => onMonedasCambiar(prev => ({ ...prev, [m]: Math.max(0, Number(e.target.value) || 0) }))}
+              />
+              <span className="cs-moneda__label">{m}</span>
+            </div>
+          ))}
         </div>
       </div>
 
