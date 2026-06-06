@@ -1603,7 +1603,7 @@ Con un espacio de conjuro de nivel superior. El daño aumenta en 1d6 por cada ni
     alcance: 'Toque',
     componentes: 'V, S, M (una pizca de tierra de cementerio)',
     duracion: '1 hora',
-    descripcion: `Tocas a una criatura voluntaria y la sumes en un estado cataléptico que no se puede distinguir de la muerte. Hasta que termine el conjuro, la criatura parecerá muerta ante cualquier inspección externa o conjuro que intente averiguar su estado. El objetivo tendrá los estados de cegado e incapacitado y su velocidad será O. El objetivo también tendrá resistencia a todo el daño excepto el psíquico e inmunidad al estado de envenenado`
+    descripcion: `Tocas a una criatura voluntaria y la sumes en un estado cataléptico que no se puede distinguir de la muerte. Hasta que termine el conjuro, la criatura parecerá muerta ante cualquier inspección externa o conjuro que intente averiguar su estado. El objetivo tendrá los estados de cegado e incapacitado y su velocidad será 0. El objetivo también tendrá resistencia a todo el daño excepto el psíquico e inmunidad al estado de envenenado`
   },
   'Flecha de Relámpago': {
     nivel: 3,
