@@ -540,6 +540,7 @@ function SeccionBagatelas({ busqueda }) {
 export default function Glossary({ abierto, onCerrar }) {
   const [categoria, setCategoria] = useState('conjuros')
   const [busqueda, setBusqueda] = useState('')
+  const [modoModal, setModoModal] = useState(false)
   const searchRef = useRef(null)
   const contentRef = useRef(null)
 
@@ -582,9 +583,16 @@ export default function Glossary({ abierto, onCerrar }) {
   return (
     <>
       <div className={`glossary-backdrop ${abierto ? 'open' : ''}`} onClick={onCerrar} />
-      <div className={`glossary-panel ${abierto ? 'open' : ''}`}>
+      <div className={`glossary-panel ${abierto ? 'open' : ''} ${modoModal ? 'modal' : ''}`}>
         <div className="glossary-header">
           <h2>Glosario</h2>
+          <button
+            className="glossary-mode-btn"
+            onClick={() => setModoModal(m => !m)}
+            title={modoModal ? 'Ver como panel lateral' : 'Ver como ventana flotante'}
+          >
+            {modoModal ? '⬜' : '⊞'}
+          </button>
           <button className="glossary-close" onClick={onCerrar} title="Cerrar">✕</button>
         </div>
 
