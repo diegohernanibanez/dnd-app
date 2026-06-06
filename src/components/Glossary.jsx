@@ -58,7 +58,9 @@ function SeccionConjuros({ busqueda }) {
   const [filtroClase, setFiltroClase] = useState('')
 
   const conjurosArr = useMemo(() =>
-    Object.entries(CONJUROS).map(([nombre, data]) => ({ nombre, ...data })),
+    Object.entries(CONJUROS)
+      .map(([nombre, data]) => ({ nombre, ...data }))
+      .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es')),
     []
   )
 
