@@ -71,6 +71,31 @@ function App() {
   const [characterId, setCharacterId] = useState(null)
   const [glosarioAbierto, setGlosarioAbierto] = useState(false)
 
+  const [tema, setTema] = useState(() => localStorage.getItem('tema') || 'auto')
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (tema === 'auto') {
+      root.removeAttribute('data-theme')
+    } else {
+      root.setAttribute('data-theme', tema)
+    }
+    localStorage.setItem('tema', tema)
+  }, [tema])
+
+  function toggleTema() {
+    setTema(prev => {
+      if (prev === 'auto') {
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        return systemDark ? 'light' : 'dark'
+      }
+      return 'auto'
+    })
+  }
+
+  const temaIcono = tema === 'dark' ? '☀️' : tema === 'light' ? '🌙' : '🌓'
+  const temaLabel = tema === 'dark' ? 'Modo claro' : tema === 'light' ? 'Modo oscuro' : 'Tema auto'
+
   // ── Estado principal del personaje ──
   const [nivel, setNivel] = useState(1)
   const [claseSeleccionada, setClaseSeleccionada] = useState(null)
@@ -338,9 +363,15 @@ function App() {
             <h1>Crear Personaje</h1>
             <p>Dungeons &amp; Dragons 2024 — Manual del Jugador</p>
           </div>
-          <button className="glossary-open-btn" onClick={() => setGlosarioAbierto(true)}>
-            Glosario
-          </button>
+          <div className="header-actions">
+            <button className="theme-toggle-btn" onClick={toggleTema} title={temaLabel}>
+              <span className="theme-toggle-icon">{temaIcono}</span>
+              <span>{temaLabel}</span>
+            </button>
+            <button className="glossary-open-btn" onClick={() => setGlosarioAbierto(true)}>
+              Glosario
+            </button>
+          </div>
         </div>
       </header>
 
