@@ -1427,81 +1427,7 @@ function Hoja1({
         {/* ── Centro: Stats de combate ── */}
         <div className="cs-combat">
 
-          {/* CA — muy prominente */}
-          <div className="cs-combat__ca-wrap">
-            <div className="cs-combat__ca-box">
-              <input
-                className="cs-combat__ca-val cs-stat-input"
-                type="number"
-                value={personajeOverrides?.ca ?? personaje.ca ?? ''}
-                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, ca: +e.target.value }))}
-                readOnly={!modoEdicion}
-              />
-              <span className="cs-combat__ca-label">Clase de Armadura</span>
-            </div>
-          </div>
-
-          {/* Bonif. competencia + Inspiración */}
-          <div className="cs-combat__row2">
-            <div className="cs-combat__stat">
-              <input
-                className="cs-combat__stat-val cs-stat-input"
-                type="number"
-                value={personajeOverrides?.bonificadorCompetencia ?? personaje.bonificadorCompetencia ?? ''}
-                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, bonificadorCompetencia: +e.target.value }))}
-                readOnly={!modoEdicion}
-              />
-              <span className="cs-combat__stat-label">Bonif. competencia</span>
-            </div>
-            <button
-              type="button"
-              className={`cs-combat__stat cs-combat__insp${inspiracion ? ' cs-combat__insp--on' : ''}`}
-              onClick={() => setInspiracion(v => !v)}
-              aria-pressed={inspiracion}
-              title={inspiracion ? 'Gastar inspiración heroica' : 'Ganar inspiración heroica'}
-            >
-              <span className="cs-combat__stat-val">{inspiracion ? '★' : '☆'}</span>
-              <span className="cs-combat__stat-label">Inspiración</span>
-            </button>
-          </div>
-
-          {/* 4 mini stats: Init | Speed | PP | Tamaño */}
-          <div className="cs-combat__grid4">
-            <div className="cs-combat__mini">
-              <input
-                className="cs-combat__mini-val cs-stat-input"
-                type="number"
-                value={personajeOverrides?.iniciativa ?? personaje.iniciativa ?? ''}
-                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, iniciativa: +e.target.value }))}
-                readOnly={!modoEdicion}
-              />
-              <span className="cs-combat__mini-label">Iniciativa</span>
-            </div>
-            <div className="cs-combat__mini">
-              <input
-                className="cs-combat__mini-val cs-stat-input"
-                type="number"
-                value={personajeOverrides?.velocidad ?? personaje.velocidad ?? ''}
-                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, velocidad: +e.target.value }))}
-                readOnly={!modoEdicion}
-              />
-              <span className="cs-combat__mini-label">Velocidad</span>
-            </div>
-            <div className="cs-combat__mini">
-              <input
-                className="cs-combat__mini-val cs-stat-input"
-                type="number"
-                value={personajeOverrides?.percepcionPasiva ?? personaje.percepcionPasiva ?? ''}
-                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, percepcionPasiva: +e.target.value }))}
-                readOnly={!modoEdicion}
-              />
-              <span className="cs-combat__mini-label">Perc. pasiva</span>
-            </div>
-            <div className="cs-combat__mini">
-              <span className="cs-combat__mini-val cs-combat__mini-val--sm">{personaje.especie?.tamano ?? '—'}</span>
-              <span className="cs-combat__mini-label">Tamaño</span>
-            </div>
-          </div>
+          {/* Fila 1: PG | DG | Iniciativa | Velocidad */}
 
           {/* Puntos de golpe */}
           <div className="cs-combat__pg">
@@ -1644,6 +1570,70 @@ function Hoja1({
             <span className="cs-header__section-title">Dados de golpe</span>
           </div>
 
+          {/* Iniciativa — fila 1 */}
+          <div className="cs-combat__mini cs-combat__ini">
+            <input
+              className="cs-combat__mini-val cs-stat-input"
+              type="number"
+              value={personajeOverrides?.iniciativa ?? personaje.iniciativa ?? ''}
+              onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, iniciativa: +e.target.value }))}
+              readOnly={!modoEdicion}
+            />
+            <span className="cs-combat__mini-label">Iniciativa</span>
+          </div>
+
+          {/* Velocidad — fila 1 */}
+          <div className="cs-combat__mini cs-combat__vel">
+            <input
+              className="cs-combat__mini-val cs-stat-input"
+              type="number"
+              value={personajeOverrides?.velocidad ?? personaje.velocidad ?? ''}
+              onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, velocidad: +e.target.value }))}
+              readOnly={!modoEdicion}
+            />
+            <span className="cs-combat__mini-label">Velocidad</span>
+          </div>
+
+          {/* Fila 2: CA | Bonif. comp | Inspiración | Salvaciones | Perc. pasiva | Tamaño */}
+
+          {/* CA */}
+          <div className="cs-combat__ca-wrap">
+            <div className="cs-combat__ca-box">
+              <input
+                className="cs-combat__ca-val cs-stat-input"
+                type="number"
+                value={personajeOverrides?.ca ?? personaje.ca ?? ''}
+                onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, ca: +e.target.value }))}
+                readOnly={!modoEdicion}
+              />
+              <span className="cs-combat__ca-label">Clase de Armadura</span>
+            </div>
+          </div>
+
+          {/* Bonif. competencia */}
+          <div className="cs-combat__stat cs-combat__bonif">
+            <input
+              className="cs-combat__stat-val cs-stat-input"
+              type="number"
+              value={personajeOverrides?.bonificadorCompetencia ?? personaje.bonificadorCompetencia ?? ''}
+              onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, bonificadorCompetencia: +e.target.value }))}
+              readOnly={!modoEdicion}
+            />
+            <span className="cs-combat__stat-label">Bonif. competencia</span>
+          </div>
+
+          {/* Inspiración */}
+          <button
+            type="button"
+            className={`cs-combat__stat cs-combat__insp${inspiracion ? ' cs-combat__insp--on' : ''}`}
+            onClick={() => setInspiracion(v => !v)}
+            aria-pressed={inspiracion}
+            title={inspiracion ? 'Gastar inspiración heroica' : 'Ganar inspiración heroica'}
+          >
+            <span className="cs-combat__stat-val">{inspiracion ? '★' : '☆'}</span>
+            <span className="cs-combat__stat-label">Inspiración</span>
+          </button>
+
           {/* Salvaciones contra muerte */}
           <div className="cs-combat__muerte">
             <div className="cs-header__death">
@@ -1665,6 +1655,24 @@ function Hoja1({
               </div>
             </div>
             <span className="cs-header__cbox-label">Salvaciones contra muerte</span>
+          </div>
+
+          {/* Percepción pasiva — fila 2 */}
+          <div className="cs-combat__mini cs-combat__pp">
+            <input
+              className="cs-combat__mini-val cs-stat-input"
+              type="number"
+              value={personajeOverrides?.percepcionPasiva ?? personaje.percepcionPasiva ?? ''}
+              onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, percepcionPasiva: +e.target.value }))}
+              readOnly={!modoEdicion}
+            />
+            <span className="cs-combat__mini-label">Perc. pasiva</span>
+          </div>
+
+          {/* Tamaño — fila 2 */}
+          <div className="cs-combat__mini cs-combat__tam">
+            <span className="cs-combat__mini-val cs-combat__mini-val--sm">{personaje.especie?.tamano ?? '—'}</span>
+            <span className="cs-combat__mini-label">Tamaño</span>
           </div>
 
         </div>
