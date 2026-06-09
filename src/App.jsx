@@ -12,7 +12,7 @@ import { CARACTERISTICAS } from './data/abilityScores'
 import { calcularPersonaje } from './data/character'
 import { CLASES } from './data/classes'
 import { crearMonedasVacias, getMonedasInicialesDesdeEquipo, restarMonedas, sumarMonedas } from './data/equipment'
-import { guardarPersonaje, cargarPersonaje, crearEstadoInicial, sincronizarDesdeSupabase } from './data/storage'
+import { guardarPersonaje, cargarPersonaje, listarPersonajes, crearEstadoInicial, sincronizarDesdeSupabase } from './data/storage'
 import './App.css'
 
 const PASOS = [
@@ -70,6 +70,7 @@ function App() {
   const [pasoActual, setPasoActual] = useState(1)
   const [characterId, setCharacterId] = useState(null)
   const [glosarioAbierto, setGlosarioAbierto] = useState(false)
+  const [confirmGuardar, setConfirmGuardar] = useState(null) // { idExistente, nombreBase }
 
   const [tema, setTema] = useState(() => localStorage.getItem('tema') || 'auto')
 
@@ -142,16 +143,27 @@ function App() {
   // Sincronizar con Supabase al iniciar la app
   useEffect(() => { sincronizarDesdeSupabase() }, [])
 
-  // Flag para evitar que los useEffect de reset se disparen al cargar un personaje
+  // Guards para evitar que los useEffect de reset se disparen al cargar un personaje.
+  // Guardamos los valores que se acaban de cargar; el effect los compara y si coinciden
+  // los descarta (consumiéndolos) en lugar de resetear el estado.
+  const claseCargadaRef    = useRef(null)
+  const trasfondoCargadoRef = useRef(null)
+  // Flag adicional para el effect de monedas, que no hace comparación de valor
   const cargandoRef = useRef(false)
 
   useEffect(() => {
-    if (cargandoRef.current) return
+    if (origen.trasfondo === trasfondoCargadoRef.current) {
+      trasfondoCargadoRef.current = null   // consumir el guard una sola vez
+      return
+    }
     setBonusTrasfondo({ modo: null, stats: {} })
   }, [origen.trasfondo])
 
   useEffect(() => {
-    if (cargandoRef.current) return
+    if (claseSeleccionada === claseCargadaRef.current) {
+      claseCargadaRef.current = null       // consumir el guard una sola vez
+      return
+    }
     setHabilidadesClase([])
     setEleccionNivel1(null)
     setSubclaseSeleccionada(null)
@@ -231,7 +243,11 @@ function App() {
   }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, ataquesHojaConfig, ataquesOcultos, itemsOcultos, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, pgGananciaPorNivel, personajeOverrides])
 
   const cargarDesdeData = useCallback((data) => {
-    cargandoRef.current = true
+    // Guardar los valores que vamos a cargar para que los effects de reset
+    // los reconozcan y no borren el estado recién establecido.
+    claseCargadaRef.current    = data.claseSeleccionada ?? null
+    trasfondoCargadoRef.current = data.origen?.trasfondo ?? null
+    cargandoRef.current = true   // sigue protegiendo el effect de equipo/monedas
     setCharacterId(data.id ?? null)
     setNivel(data.nivel ?? 1)
     setClaseSeleccionada(data.claseSeleccionada ?? null)
@@ -264,8 +280,8 @@ function App() {
     setXpNivelActual(data.xpNivelActual ?? 0)
     setPgGananciaPorNivel(data.pgGananciaPorNivel ?? {})
     setPersonajeOverrides(data.personajeOverrides ?? {})
-    // Resetear flag después de que React procese los setState
-    requestAnimationFrame(() => { cargandoRef.current = false })
+    // Resetear flag con setTimeout para que corra después de los useEffects pasivos
+    setTimeout(() => { cargandoRef.current = false }, 0)
   }, [])
 
   // ── Auto-guardado (debounced) ──
@@ -301,11 +317,57 @@ function App() {
     }
   }, [cargarDesdeData])
 
-  const handleGuardar = useCallback(() => {
+  const ejecutarGuardar = useCallback(async (idOverride) => {
     const data = serializarPersonaje()
-    const id = guardarPersonaje(data)
+    if (idOverride !== undefined) data.id = idOverride
+    const id = await guardarPersonaje(data)
     setCharacterId(id)
   }, [serializarPersonaje])
+
+  const handleGuardar = useCallback(() => {
+    const data = serializarPersonaje()
+    const nombre = data.descripcion?.nombre?.trim() || ''
+    if (!nombre) {
+      ejecutarGuardar()
+      return
+    }
+    const lista = listarPersonajes()
+    const conflicto = lista.find(p => {
+      if (p.id === data.id) return false
+      return (p.nombre || '').trim().toLowerCase() === nombre.toLowerCase()
+    })
+    if (conflicto) {
+      setConfirmGuardar({ idExistente: conflicto.id, nombreBase: nombre })
+    } else {
+      ejecutarGuardar()
+    }
+  }, [serializarPersonaje, ejecutarGuardar])
+
+  const handleConfirmarReemplazar = useCallback(() => {
+    if (!confirmGuardar) return
+    ejecutarGuardar(confirmGuardar.idExistente)
+    setConfirmGuardar(null)
+  }, [confirmGuardar, ejecutarGuardar])
+
+  const handleConfirmarAparte = useCallback(async () => {
+    if (!confirmGuardar) return
+    const lista = listarPersonajes()
+    const base = confirmGuardar.nombreBase
+    let nuevoNombre = base
+    let i = 1
+    while (lista.some(p => (p.nombre || '').trim().toLowerCase() === nuevoNombre.toLowerCase())) {
+      nuevoNombre = `${base}_${i}`
+      i++
+    }
+    setDescripcion(d => ({ ...d, nombre: nuevoNombre }))
+    // Guardar con nuevo ID (sin data.id para que generateId cree uno nuevo)
+    const data = serializarPersonaje()
+    data.id = null
+    data.descripcion = { ...data.descripcion, nombre: nuevoNombre }
+    const id = await guardarPersonaje(data)
+    setCharacterId(id)
+    setConfirmGuardar(null)
+  }, [confirmGuardar, serializarPersonaje])
 
   // ── Cálculo del personaje ──
   const personajeBase = useMemo(() => {
@@ -521,6 +583,26 @@ function App() {
       </div>
 
       <Glossary abierto={glosarioAbierto} onCerrar={() => setGlosarioAbierto(false)} />
+
+      {confirmGuardar && (
+        <div className="modal-overlay" onClick={() => setConfirmGuardar(null)}>
+          <div className="modal-box" onClick={e => e.stopPropagation()}>
+            <p>Ya existe un personaje llamado <strong>{confirmGuardar.nombreBase}</strong>.</p>
+            <p>¿Querés reemplazarlo o guardarlo como uno nuevo?</p>
+            <div className="modal-actions">
+              <button className="modal-btn modal-btn--primary" onClick={handleConfirmarReemplazar}>
+                Reemplazar
+              </button>
+              <button className="modal-btn modal-btn--secondary" onClick={handleConfirmarAparte}>
+                Guardar aparte
+              </button>
+              <button className="modal-btn modal-btn--cancel" onClick={() => setConfirmGuardar(null)}>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
