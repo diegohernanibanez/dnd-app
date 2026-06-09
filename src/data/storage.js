@@ -4,8 +4,9 @@
 
 import { supabase } from './supabase.js'
 
-const STORAGE_PREFIX = 'dnd_personaje_'
-const INDEX_KEY      = 'dnd_personajes_index'
+const STORAGE_PREFIX    = 'dnd_personaje_'
+const INDEX_KEY         = 'dnd_personajes_index'
+const TOMBSTONES_KEY    = 'dnd_personajes_eliminados'
 
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8)
@@ -18,6 +19,17 @@ function getIndex() {
 
 function saveIndex(index) {
   localStorage.setItem(INDEX_KEY, JSON.stringify(index))
+}
+
+function getTombstones() {
+  try { return new Set(JSON.parse(localStorage.getItem(TOMBSTONES_KEY)) || []) }
+  catch { return new Set() }
+}
+
+function addTombstone(id) {
+  const set = getTombstones()
+  set.add(String(id))
+  localStorage.setItem(TOMBSTONES_KEY, JSON.stringify([...set]))
 }
 
 // ── CRUD ──────────────────────────────────────────────────────────────────
@@ -71,6 +83,8 @@ export async function guardarPersonaje(data) {
 export function eliminarPersonaje(id) {
   localStorage.removeItem(`${STORAGE_PREFIX}${id}`)
   saveIndex(getIndex().filter(p => p.id !== id))
+  // Marcar como eliminado para que sincronizarDesdeSupabase no lo vuelva a agregar
+  addTombstone(id)
 
   if (supabase) {
     // CASCADE en FK elimina todas las tablas relacionadas automáticamente
@@ -102,10 +116,14 @@ export async function sincronizarDesdeSupabase() {
     }
     if (!lista?.length) return
 
-    const index   = getIndex()
-    let   changed = false
+    const index      = getIndex()
+    const tombstones = getTombstones()
+    let   changed    = false
 
     for (const row of lista) {
+      // Si el usuario lo eliminó localmente, ignorarlo aunque esté en Supabase
+      if (tombstones.has(String(row.id))) continue
+
       const localRaw  = localStorage.getItem(`${STORAGE_PREFIX}${row.id}`)
       const localData = localRaw ? JSON.parse(localRaw) : null
 
