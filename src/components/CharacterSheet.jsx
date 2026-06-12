@@ -3569,7 +3569,8 @@ export default function CharacterSheet({
   personajeOverrides, onPersonajeOverridesCambiar,
 }) {
   const [pestaña, setPestaña] = useState(1)
-  const [modoEdicion, setModoEdicion] = useState(false)
+  // La hoja siempre es editable: se eliminó el modo vista/bloqueado.
+  const modoEdicion = true
   const [editorAbierto, setEditorAbierto] = useState(false)
   const tieneMagia = !!personaje.conjuros
 
@@ -3605,30 +3606,12 @@ export default function CharacterSheet({
           Conjuros
         </button>
         <div className="cs-tabs__actions">
-          {modoEdicion && (
-            <button
-              className="cs-tab cs-tab--tools"
-              onClick={() => setEditorAbierto(true)}
-              title="Editar valores calculados (habilidades, salvaciones, CD de conjuros…)"
-            >
-              ⚙ Valores
-            </button>
-          )}
           <button
-            className={`cs-tab cs-tab--lock${modoEdicion ? ' cs-tab--lock-open' : ''}`}
-            onClick={() => setModoEdicion(prev => !prev)}
-            title={modoEdicion ? 'Bloquear hoja (modo vista)' : 'Desbloquear para editar'}
+            className="cs-tab cs-tab--tools"
+            onClick={() => setEditorAbierto(true)}
+            title="Editar valores calculados (habilidades, salvaciones, CD de conjuros…)"
           >
-            {modoEdicion ? (
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
-                <path d="M18 8h-1V6A5 5 0 0 0 7 6h2a3 3 0 0 1 6 0v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm-6 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
-              </svg>
-            ) : (
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
-                <path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM8 8V6a4 4 0 0 1 8 0v2H8zm4 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
-              </svg>
-            )}
-            <span className="cs-tab__lock-label">{modoEdicion ? 'Editando' : 'Editar'}</span>
+            ⚙ Valores
           </button>
         </div>
       </div>
