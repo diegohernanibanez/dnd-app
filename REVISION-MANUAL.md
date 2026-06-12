@@ -48,7 +48,7 @@ saber dónde estamos parados sin releer todos los hallazgos.
 
 | Área | Reglas | Texto completo | Notas |
 |------|--------|----------------|-------|
-| Creación (cap. 2) | 🟡 A1–A2 | 🟡 A1 | Gen. características ✓, idiomas ✓, progresión/PG ✓; alineamientos ahora literales; pendiente preferencia/complejidad (R) y **multiclase no implementada** (A2) |
+| Creación (cap. 2) | ✅ A1–A3 | ✅ A1–A3 | Gen. características ✓, idiomas ✓, progresión/PG ✓, bagatelas ✓; alineamientos y bagatela 47 corregidos a texto literal; **multiclase implementada**. Bloque A cerrado (queda preferencia/complejidad → B0) |
 | Clases (rasgos) | ⬜ pendiente | ⬜ pendiente | |
 | Subclases | ⬜ pendiente | ⬜ pendiente | |
 | Trasfondos | ⬜ pendiente | ⬜ pendiente | `RASGOS_POR_TRASFONDO` con datos de 2014 (ver A1) |
@@ -64,7 +64,7 @@ Leyenda: ✅ verificado · 🟡 parcial/con hallazgos abiertos · ⬜ pendiente.
 ### Bloque A — Cap. 2: Crear un personaje (págs. 32–47)
 - [x] **A1** `[R ✓] [T 🟡]` págs. 32–40 · Pasos de creación (clase, origen, características, detalles) ↔ `src/App.jsx`, `src/components/ClassSelector.jsx`, `src/components/OriginSelector.jsx`, `src/components/AbilityScoreGenerator.jsx`, `src/data/abilityScores.js`, `src/data/character.js` — revisado 2026-06-12
 - [x] **A2** `[R 🟡] [T —]` págs. 41–45 · Progresión de niveles, comenzar en niveles superiores, multiclase ↔ `src/data/levelProgression.js`, `src/components/LevelSelector.jsx`, `src/data/classLevelData.js` — revisado 2026-06-12
-- [ ] **A3** págs. 46–47 · Bagatelas ↔ `src/data/bagatelas.js`
+- [x] **A3** `[R ✓] [T ✓]` págs. 46–47 · Bagatelas ↔ `src/data/bagatelas.js` — revisado 2026-06-12 (bloque A completo)
 
 ### Bloque B — Cap. 3: Clases de personaje (págs. 48–175)
 Cada sesión compara rasgos por nivel, dado de golpe, salvaciones, competencias, subclases y
@@ -123,6 +123,18 @@ Formato: `- [ ] (sesión) [R|T] pág. X — descripción — archivo:línea — 
   Único duplicado en todo el dataset (trasfondos/especies/linajes/dotes verificados sin duplicados).
   ⚠️ Personajes ya guardados con la subclase del Explorador (`subclaseSeleccionada: 'feerico'`) habría
   que migrarlos a `errante_feerico` (caso borde; sin personajes así en uso).
+
+### Sesión A3 (págs. 46–47)
+
+**Lo que funciona (verificado ✓):** las 100 bagatelas de la tabla 1d100 están presentes, completas,
+en el orden correcto y sin duplicados — `src/data/bagatelas.js`. Mapeo 1d100 → índice (resultado-1) correcto.
+
+**Hallazgos:**
+- [x] (A3) [T] pág. 46 — La bagatela 47 omitía el paréntesis final del manual:
+  "…o cristales rotos **(a tu elección)**". **CORREGIDO 2026-06-12** — `src/data/bagatelas.js:51`.
+
+Con A3 queda **cerrado el bloque A (Cap. 2: Crear un personaje)** salvo la épica de multiclase
+(ya implementada) y los hallazgos diferidos a sus bloques (preferencia/complejidad → B0; `RASGOS_POR_TRASFONDO` → C1).
 
 ### Sesión A2 (págs. 41–45)
 
