@@ -1675,16 +1675,15 @@ function Hoja1({
           {/* Fila 2: CA | Bonif. comp | Inspiración | Salvaciones | Perc. pasiva | Tamaño */}
 
           {/* CA */}
-          <div className="cs-combat__ca-wrap">
-            <div className="cs-combat__ca-box">
+            <div className="cs-combat__stat">
               <input
-                className="cs-combat__ca-val cs-stat-input"
+                className="cs-combat__stat-val cs-stat-input"
                 type="number"
                 value={personajeOverrides?.ca ?? personaje.ca ?? ''}
                 onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, ca: +e.target.value }))}
                 readOnly={!modoEdicion}
               />
-              <span className="cs-combat__ca-label">Clase de Armadura</span>
+              <span className="cs-combat__stat-label">CA</span>
               <button
                 type="button"
                 className={`cs-escudo${escudoEquipado ? ' cs-escudo--on' : ''}`}
@@ -1694,7 +1693,6 @@ function Hoja1({
                 <span className="cs-escudo__rombo">{escudoEquipado ? '◆' : '◇'}</span> Escudo
               </button>
             </div>
-          </div>
 
           {/* Bonif. competencia */}
           <div className="cs-combat__stat cs-combat__bonif">
