@@ -27,7 +27,8 @@ ALTER TABLE personaje_config
   ADD COLUMN IF NOT EXISTS sintonizaciones      JSONB   DEFAULT '[]',
   ADD COLUMN IF NOT EXISTS escudo_equipado      BOOLEAN DEFAULT FALSE,
   ADD COLUMN IF NOT EXISTS competencias_override JSONB  DEFAULT '{}',
-  ADD COLUMN IF NOT EXISTS conjuros_hoja_config JSONB   DEFAULT '{}';
+  ADD COLUMN IF NOT EXISTS conjuros_hoja_config JSONB   DEFAULT '{}',
+  ADD COLUMN IF NOT EXISTS clases_secundarias   JSONB   DEFAULT '[]';
 
 -- ── 2. Espacios de conjuro: clave TEXT (soporta 'pacto' del brujo) ────
 ALTER TABLE personaje_espacios_conjuro
@@ -196,7 +197,8 @@ BEGIN
     bonus_asi, dotes_elegidos, dotes_libres,
     dados_golpe_gastados, pg_max_personalizado, xp_nivel_actual,
     inspiracion, sintonizaciones,
-    escudo_equipado, competencias_override, conjuros_hoja_config
+    escudo_equipado, competencias_override, conjuros_hoja_config,
+    clases_secundarias
   ) VALUES (
     v_id,
     ARRAY(SELECT jsonb_array_elements_text(COALESCE(p_datos->'habilidadesClase', '[]'))),
@@ -225,7 +227,8 @@ BEGIN
     COALESCE(p_datos->'sintonizaciones', '[]'),
     COALESCE((p_datos->>'escudoEquipado')::BOOLEAN, FALSE),
     COALESCE(p_datos->'competenciasOverride', '{}'),
-    COALESCE(p_datos->'conjurosHojaConfig', '{}')
+    COALESCE(p_datos->'conjurosHojaConfig', '{}'),
+    COALESCE(p_datos->'clasesSecundarias', '[]')
   )
   ON CONFLICT (personaje_id) DO UPDATE SET
     habilidades_clase       = EXCLUDED.habilidades_clase,
@@ -254,7 +257,8 @@ BEGIN
     sintonizaciones         = EXCLUDED.sintonizaciones,
     escudo_equipado         = EXCLUDED.escudo_equipado,
     competencias_override   = EXCLUDED.competencias_override,
-    conjuros_hoja_config    = EXCLUDED.conjuros_hoja_config;
+    conjuros_hoja_config    = EXCLUDED.conjuros_hoja_config,
+    clases_secundarias      = EXCLUDED.clases_secundarias;
 
   -- ── Conjuros (delete + insert) ───────────────────────────────────
   DELETE FROM personaje_conjuros WHERE personaje_id = v_id;
@@ -460,6 +464,7 @@ BEGIN
     'escudoEquipado',     COALESCE(v_co.escudo_equipado, FALSE),
     'competenciasOverride', COALESCE(v_co.competencias_override, '{}'),
     'conjurosHojaConfig', COALESCE(v_co.conjuros_hoja_config, '{}'),
+    'clasesSecundarias',  COALESCE(v_co.clases_secundarias, '[]'),
 
     'personajeOverrides', COALESCE(
       v_ov.valores,

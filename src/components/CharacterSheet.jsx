@@ -1373,6 +1373,8 @@ function Hoja1({
   const pgMaxEfectivo = pgMaxPersonalizado ?? personaje.pgMax
   const dadoGolpeTipo = personaje.clase?.dadoGolpe ?? 'd8'
   const dadosGolpeTotal = personaje.nivel ?? 1
+  // En multiclase los dados van agrupados por tipo (p. ej. "6d8 + 1d10")
+  const dadosGolpeAgrupados = personaje.dadosGolpe ?? `${dadosGolpeTotal}${dadoGolpeTipo}`
   const nivelActual = personaje.nivel ?? 1
   const gastadosActuales = dadosGolpeGastados ?? 0
   const dadosGolpeDisponibles = dadosGolpeTotal - gastadosActuales
@@ -1470,8 +1472,16 @@ function Hoja1({
           </div>
           <div className="cs-header__meta-item cs-header__meta-item--narrow">
             <input className="cs-header__meta-input" type="number" min={1} max={20} value={nivel} onChange={e => onNivelCambiar(Math.max(1, Math.min(20, Number(e.target.value) || 1)))} />
-            <span className="cs-header__meta-label">Nivel</span>
+            <span className="cs-header__meta-label">{personaje.esMulticlase ? `Nivel ${personaje.clase?.nombre ?? 'prim.'}` : 'Nivel'}</span>
           </div>
+          {personaje.esMulticlase && (
+            <div className="cs-header__meta-item cs-header__meta-item--multiclase">
+              <span className="cs-header__meta-val cs-header__meta-val--mc">
+                {personaje.clasesActivas?.map(c => `${c.nombre} ${c.nivel}`).join(' / ')}
+              </span>
+              <span className="cs-header__meta-label">Multiclase · Nivel total {personaje.nivel}</span>
+            </div>
+          )}
           <div className="cs-header__meta-item cs-header__meta-item--narrow">
             <input className="cs-header__meta-input" type="number" min={0} value={personaje.xpNivelActual ?? 0} onChange={e => onXpNivelActualCambiar(Math.max(0, Number(e.target.value) || 0))} />
             <span className="cs-header__meta-label">Exp.</span>
@@ -1620,8 +1630,14 @@ function Hoja1({
           <div className="cs-combat__dg">
             <div className="cs-header__dg-content">
               <div className="cs-header__dg-info">
-                <span className="cs-header__dg-tipo">{dadoGolpeTipo}</span>
-                <span className="cs-header__dg-total">×{dadosGolpeTotal}</span>
+                {personaje.esMulticlase ? (
+                  <span className="cs-header__dg-tipo">{dadosGolpeAgrupados}</span>
+                ) : (
+                  <>
+                    <span className="cs-header__dg-tipo">{dadoGolpeTipo}</span>
+                    <span className="cs-header__dg-total">×{dadosGolpeTotal}</span>
+                  </>
+                )}
               </div>
               <div className="cs-header__dg-tracker">
                 <div className="cs-header__dg-bubbles">

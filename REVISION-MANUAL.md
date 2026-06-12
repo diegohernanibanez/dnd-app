@@ -48,7 +48,7 @@ saber dónde estamos parados sin releer todos los hallazgos.
 
 | Área | Reglas | Texto completo | Notas |
 |------|--------|----------------|-------|
-| Creación (cap. 2) | 🟡 A1 | 🟡 A1 | Gen. de características ✓ e idiomas ✓; alineamientos resumidos (T), falta preferencia/complejidad (R) |
+| Creación (cap. 2) | 🟡 A1–A2 | 🟡 A1 | Gen. características ✓, idiomas ✓, progresión/PG ✓; alineamientos ahora literales; pendiente preferencia/complejidad (R) y **multiclase no implementada** (A2) |
 | Clases (rasgos) | ⬜ pendiente | ⬜ pendiente | |
 | Subclases | ⬜ pendiente | ⬜ pendiente | |
 | Trasfondos | ⬜ pendiente | ⬜ pendiente | `RASGOS_POR_TRASFONDO` con datos de 2014 (ver A1) |
@@ -63,7 +63,7 @@ Leyenda: ✅ verificado · 🟡 parcial/con hallazgos abiertos · ⬜ pendiente.
 
 ### Bloque A — Cap. 2: Crear un personaje (págs. 32–47)
 - [x] **A1** `[R ✓] [T 🟡]` págs. 32–40 · Pasos de creación (clase, origen, características, detalles) ↔ `src/App.jsx`, `src/components/ClassSelector.jsx`, `src/components/OriginSelector.jsx`, `src/components/AbilityScoreGenerator.jsx`, `src/data/abilityScores.js`, `src/data/character.js` — revisado 2026-06-12
-- [ ] **A2** págs. 41–45 · Progresión de niveles, comenzar en niveles superiores, multiclase ↔ `src/data/levelProgression.js`, `src/components/LevelSelector.jsx`, `src/data/classLevelData.js`
+- [x] **A2** `[R 🟡] [T —]` págs. 41–45 · Progresión de niveles, comenzar en niveles superiores, multiclase ↔ `src/data/levelProgression.js`, `src/components/LevelSelector.jsx`, `src/data/classLevelData.js` — revisado 2026-06-12
 - [ ] **A3** págs. 46–47 · Bagatelas ↔ `src/data/bagatelas.js`
 
 ### Bloque B — Cap. 3: Clases de personaje (págs. 48–175)
@@ -123,6 +123,41 @@ Formato: `- [ ] (sesión) [R|T] pág. X — descripción — archivo:línea — 
   Único duplicado en todo el dataset (trasfondos/especies/linajes/dotes verificados sin duplicados).
   ⚠️ Personajes ya guardados con la subclase del Explorador (`subclaseSeleccionada: 'feerico'`) habría
   que migrarlos a `errante_feerico` (caso borde; sin personajes así en uso).
+
+### Sesión A2 (págs. 41–45)
+
+Nota: estas páginas son **tablas de reglas**, no descripciones de sabor → no hay eje (T) que revisar.
+Los "Escalones del juego" (págs. 42–43) son texto narrativo de campaña, no datos de personaje (fuera de alcance de la BD).
+
+**Lo que funciona (verificado ✓):**
+- Tabla "Progreso de los personajes" (XP + bonificador de competencia, niveles 1–20): coincide
+  exactamente con el manual — `src/data/levelProgression.js:4-25`.
+- PG nivel 1 por clase (d12→12, d10→10, d8→8, d6→6 + Con) y PG fijos por nivel 2+
+  (Bárbaro 7, Explorador/Guerrero/Paladín 6, resto d8 5, Hechicero/Mago 4 + Con): exactos — `:29-34`.
+- Bonificador de competencia por nivel (`getBonoCompetencia`): correcto.
+- Comenzar en nivel superior: el `LevelSelector` permite niveles 1–20 y el XP del nivel usa la
+  cantidad mínima del nivel ("Comienzas con la cantidad mínima de PX"): correcto.
+- Fórmulas de CA base, iniciativa, ataques c/c y a distancia, CD de conjuros (pág. 41): ya verificadas
+  en `src/data/character.js` (Fase 1).
+
+**Hallazgos:**
+- [x] (A2) [R] págs. 44–45 — **Multiclase IMPLEMENTADA 2026-06-12.** Estado aditivo `clasesSecundarias`
+  (cero regresión en una sola clase). Motor (`src/data/character.js`): nivel total = suma de niveles,
+  bonif. por competencia y XP por nivel total, PG (nivel 1 solo en la primaria + valor fijo por nivel de
+  cada clase), dados de golpe agrupados por tipo ("6d8 + 1d10"), salvaciones solo de la primaria,
+  entrenamiento con armaduras unión de todas las clases, rasgos de todas las clases, mejor "Defensa sin
+  armadura" entre clases. Conjuros (`src/data/spellSlots.js`): nivel de lanzador multiclase (completo +
+  ½ ↑ + ⅓ ↓ caballero/embaucador arcano) → tabla pág. 45; Magia del pacto del brujo aparte. UI:
+  `src/components/MulticlassPanel.jsx` (añadir/quitar/subir nivel + aviso de requisito ≥13) y desglose en
+  la hoja. Persistencia local + Supabase (migración 003, columna `clases_secundarias`).
+  **Pendiente** `npm run db:seed` no aplica (es schema); re-ejecutar **migración 003**.
+  Limitaciones conocidas: la preparación de conjuros por clase usa contadores combinados (no separa
+  listas por clase); el gasto de dados de golpe usa un contador total (no por tipo de dado).
+- [ ] (A2) [R] pág. 43 — Falta la tabla **"Equipo inicial a niveles superiores"** (oro y objetos
+  mágicos según el escalón al empezar en nivel >1). Es guía de DM y el paso de Equipo no la consume
+  hoy — **baja** (opcional; se decide en sesión E2).
+- [x] (A2) [doc] pág. 41 — Comentario de fuente decía "pág. 36"; la tabla "Progreso de los personajes"
+  está en la pág. 41. **CORREGIDO 2026-06-12** — `src/data/levelProgression.js:1`.
 
 ### Sesión A1 (págs. 32–40)
 

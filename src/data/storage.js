@@ -55,11 +55,14 @@ export async function guardarPersonaje(data) {
   localStorage.setItem(`${STORAGE_PREFIX}${id}`, JSON.stringify(personaje))
 
   const index = getIndex()
+  // Nivel total = nivel de la clase primaria + niveles de las clases secundarias (multiclase)
+  const nivelTotal = (data.nivel || 1) +
+    (data.clasesSecundarias ?? []).reduce((s, c) => s + (Number(c?.nivel) || 0), 0)
   const meta  = {
     id,
     nombre:            data.descripcion?.nombre || 'Sin nombre',
     clase:             data.claseSeleccionada   || null,
-    nivel:             data.nivel               || 1,
+    nivel:             nivelTotal,
     fechaCreacion:     personaje.fechaCreacion,
     fechaModificacion: ahora,
   }
@@ -208,6 +211,7 @@ export function crearEstadoInicial(CARACTERISTICAS) {
     claseSeleccionada:    null,
     eleccionNivel1:       null,
     subclaseSeleccionada: null,
+    clasesSecundarias:    [],
     bonusASI:             {},
     dotesElegidos:        {},
     dotesLibres:          [],
