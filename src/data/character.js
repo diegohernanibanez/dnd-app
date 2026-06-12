@@ -7,9 +7,9 @@ import { resolverArma } from './weapons'
 import { getClaseById } from './classes'
 import { TRASFONDOS, ESPECIES } from './origins'
 import { calcModificador } from './abilityScores'
-import { getBonoCompetencia, getPGMax, getXPSiguienteNivel, getXPNivelActual } from './levelProgression'
+import { getBonoCompetencia, getPGMax, getXPSiguienteNivel, getXPNivelActual, PG_FIJO_POR_DADO } from './levelProgression'
 import { getDoteById } from './dotes'
-import { TIPO_MAGIA, TIPO_PREPARACION, getEspaciosConjuro, getTrucosMax, getConjurosPreparadosMax, getNivelMaxConjuro, getGrimorioMax, getConjurosSubclase } from './spellSlots'
+import { TIPO_MAGIA, TIPO_PREPARACION, getEspaciosConjuro, getTrucosMax, getConjurosPreparadosMax, getNivelMaxConjuro, getGrimorioMax, getConjurosSubclase, getNivelLanzadorMulticlase, getEspaciosMulticlase } from './spellSlots'
 
 // ── Constantes ───────────────────────────────────────────────────────
 
@@ -125,6 +125,7 @@ export function calcularPersonaje({
   equipo,
   eleccionNivel1,
   nivel = 1,
+  clasesSecundarias = [],
   pgGananciaPorNivel = {},
   itemOcultos = [],
   ataquesOcultos = [],
@@ -136,6 +137,50 @@ export function calcularPersonaje({
   const especieBase = ESPECIES.find(e => e.id === especieId) ?? null
   const linaje    = especieBase?.linajes?.find(l => l.id === linajeId) ?? null
   const especie   = especieBase ? { ...especieBase, linajeSel: linaje } : null
+
+  // ── Multiclase ──
+  // clasesActivas = [primaria, ...secundarias]. La primaria (índice 0) determina la
+  // identidad, las salvaciones y los PG del nivel 1. Las secundarias son aditivas.
+  // Cuando no hay secundarias, todo el cálculo es idéntico al de una sola clase.
+  const secundariasValidas = (clasesSecundarias ?? [])
+    .filter(c => c?.claseId && c.claseId !== claseId)
+    .map(c => ({
+      claseId:        c.claseId,
+      subclaseId:     c.subclaseId ?? null,
+      nivel:          Math.max(1, Number(c.nivel) || 1),
+      eleccionNivel1: c.eleccionNivel1 ?? null,
+      clase:          getClaseById(c.claseId) ?? null,
+    }))
+    .filter(c => c.clase)
+  const esMulticlase = secundariasValidas.length > 0
+  const clasesActivas = [
+    { claseId, subclaseId, nivel, eleccionNivel1, clase, esPrimaria: true },
+    ...secundariasValidas,
+  ]
+  const nivelTotal = clasesActivas.reduce((s, c) => s + (c.nivel ?? 0), 0)
+
+  // Recolecta los rasgos (clase + subclase) de una clase activa hasta su nivel.
+  const recolectarRasgosDe = (activa) => {
+    const out = []
+    const cl = activa.clase
+    if (!cl) return out
+    for (let n = 1; n <= activa.nivel; n++) {
+      for (const r of (cl.rasgosNivel?.[n] ?? [])) {
+        out.push({ ...r, nivelObtenido: n, claseId: activa.claseId, claseNombre: cl.nombre })
+      }
+    }
+    const sub = cl.subclases?.find(s => s.id === activa.subclaseId) ?? null
+    if (sub?.rasgosNivel) {
+      for (const [n, rasgos] of Object.entries(sub.rasgosNivel)) {
+        if (Number(n) > activa.nivel) continue
+        for (const r of rasgos) {
+          out.push({ ...r, nivelObtenido: Number(n), claseId: activa.claseId, claseNombre: cl.nombre, esSubclase: true })
+        }
+      }
+    }
+    return out
+  }
+  const rasgosTodasLasClases = clasesActivas.flatMap(recolectarRasgosDe)
 
   // ── Puntuaciones finales (base + bonus trasfondo + ASI) ──
   const bonusStats = bonusTrasfondo?.stats ?? {}
@@ -171,22 +216,7 @@ export function calcularPersonaje({
   const maestriaArmas = (() => {
     const fuentes = []
 
-    const rasgosClase = []
-    for (let n = 1; n <= nivel; n++) {
-      const rasgos = clase?.rasgosNivel?.[n] ?? []
-      for (const r of rasgos) rasgosClase.push(r)
-    }
-
-    const subclaseActiva = clase?.subclases?.find(s => s.id === subclaseId) ?? null
-    const rasgosSubclase = []
-    if (subclaseActiva?.rasgosNivel) {
-      for (const [n, rasgos] of Object.entries(subclaseActiva.rasgosNivel)) {
-        if (Number(n) > nivel) continue
-        for (const r of rasgos) rasgosSubclase.push(r)
-      }
-    }
-
-    for (const r of [...rasgosClase, ...rasgosSubclase]) {
+    for (const r of rasgosTodasLasClases) {
       const nombre = r?.nombre ?? ''
       const desc = r?.desc ?? ''
       if (textoDaMaestriaArmas(nombre) || textoDaMaestriaArmas(desc)) {
@@ -263,16 +293,12 @@ export function calcularPersonaje({
   }
 
   // Apply automatic stat boosts from class features (e.g. Monje lv20 "Cuerpo y mente")
-  // These use their own maxStat cap (may exceed 20)
-  if (clase?.rasgosNivel) {
-    for (let n = 1; n <= nivel; n++) {
-      for (const r of clase.rasgosNivel[n] ?? []) {
-        if (r.aplicaStats) {
-          for (const [stat, amt] of Object.entries(r.aplicaStats)) {
-            if (puntuaciones[stat] != null) {
-              puntuaciones[stat] = Math.min(puntuaciones[stat] + amt, r.maxStat ?? 20)
-            }
-          }
+  // These use their own maxStat cap (may exceed 20). Recorre todas las clases activas.
+  for (const r of rasgosTodasLasClases) {
+    if (r.aplicaStats) {
+      for (const [stat, amt] of Object.entries(r.aplicaStats)) {
+        if (puntuaciones[stat] != null) {
+          puntuaciones[stat] = Math.min(puntuaciones[stat] + amt, r.maxStat ?? 20)
         }
       }
     }
@@ -284,7 +310,7 @@ export function calcularPersonaje({
     mods[car] = puntuaciones[car] != null ? calcModificador(puntuaciones[car]) : null
   }
 
-  const BONO = getBonoCompetencia(nivel)
+  const BONO = getBonoCompetencia(nivelTotal)
 
   // ── Competencias ──
   const competenciasHabilidad = new Set([
@@ -416,21 +442,27 @@ export function calcularPersonaje({
   const sabMod = mods['Sabiduría']    ?? 0
   const carMod = mods['Carisma']      ?? 0
 
-  // Clase armadura base según clase/subclase (Defensa sin armadura u otras fórmulas)
-  let ca = 10 + desMod  // default sin armadura
-  if (claseId === 'barbaro') {
-    // Defensa sin armadura: 10 + DES + CON (escudo permitido)
-    ca = 10 + desMod + conMod
-  } else if (claseId === 'monje') {
-    // Defensa sin armadura: 10 + DES + SAB (sin escudo)
-    ca = 10 + desMod + sabMod
-  } else if (
-    (claseId === 'hechicero' && subclaseId === 'draconico' && nivel >= 3) ||
-    (claseId === 'bardo'     && subclaseId === 'danza'     && nivel >= 3)
-  ) {
-    // Resistencia dracónica / Juego de pies deslumbrante: 10 + DES + CAR (sin armadura)
-    ca = 10 + desMod + carMod
-  }
+  // Clase de armadura sin armadura. Con multiclase puede haber varias fórmulas de
+  // "Defensa sin armadura"; el manual (pág. 44) permite beneficiarse solo de una, así
+  // que tomamos la más alta como valor por defecto (editable en la hoja).
+  const caSinArmadura = (() => {
+    let mejor = 10 + desMod  // default genérico sin armadura
+    for (const c of clasesActivas) {
+      let val = null
+      if (c.claseId === 'barbaro') {
+        val = 10 + desMod + conMod            // 10 + DES + CON (escudo permitido)
+      } else if (c.claseId === 'monje') {
+        val = 10 + desMod + sabMod            // 10 + DES + SAB (sin escudo)
+      } else if (c.claseId === 'hechicero' && c.subclaseId === 'draconico' && c.nivel >= 3) {
+        val = 10 + desMod + carMod            // Resistencia dracónica
+      } else if (c.claseId === 'bardo' && c.subclaseId === 'danza' && c.nivel >= 3) {
+        val = 10 + desMod + carMod            // Juego de pies deslumbrante
+      }
+      if (val != null && val > mejor) mejor = val
+    }
+    return mejor
+  })()
+  let ca = caSinArmadura
 
   // Bonus de la elección de nivel 1 (p. ej. Estilo de combate: Defensa → +1 CA con armadura)
   const caEleccionBonus = clase?.eleccionNivel1?.opciones
@@ -443,11 +475,35 @@ export function calcularPersonaje({
   const iniciativa  = desMod
   const velocidad   = especie?.velocidad ?? '9 m'
 
-  // PG: nivel 1 = máximo del dado + CON; niveles 2+ suman valor fijo + CON por nivel
+  // PG: nivel 1 = máximo del dado + CON; niveles 2+ suman valor fijo + CON por nivel.
+  // Multiclase (PHB 2024, pág. 44): el nivel 1 (máximo del dado) solo se obtiene en la
+  // clase primaria; cada nivel posterior de cualquier clase usa el valor fijo de su dado.
   const dadoGolpe = clase?.dadoGolpe ?? 'd8'
-  const pgBase = getPGMax(nivel, dadoGolpe, conMod, pgGananciaPorNivel)
-  const pgBonusEspecie = (especie?.pgPorNivelBonus ?? 0) * nivel
+  let pgBase
+  if (!esMulticlase) {
+    pgBase = getPGMax(nivel, dadoGolpe, conMod, pgGananciaPorNivel)
+  } else {
+    let total = (DADO_GOLPE_NUM[dadoGolpe] ?? 8) + conMod           // nivel 1 primaria
+    const primFijo = PG_FIJO_POR_DADO[dadoGolpe] ?? 5
+    for (let l = 2; l <= nivel; l++) total += Math.max(1, primFijo + conMod)
+    for (const c of secundariasValidas) {
+      const dg = c.clase?.dadoGolpe ?? 'd8'
+      const fijo = PG_FIJO_POR_DADO[dg] ?? 5
+      for (let l = 1; l <= c.nivel; l++) total += Math.max(1, fijo + conMod)
+    }
+    pgBase = Math.max(nivelTotal, total)
+  }
+  const pgBonusEspecie = (especie?.pgPorNivelBonus ?? 0) * nivelTotal
   const pgMax = pgBase + pgBonusEspecie
+
+  // Dados de golpe: agrupados por tipo de dado entre todas las clases (p. ej. "5d8 + 5d10")
+  const dadosGolpePorTipo = {}
+  for (const c of clasesActivas) {
+    const dg = c.clase?.dadoGolpe ?? 'd8'
+    dadosGolpePorTipo[dg] = (dadosGolpePorTipo[dg] ?? 0) + c.nivel
+  }
+  const dadosGolpeStr = Object.entries(dadosGolpePorTipo)
+    .map(([d, n]) => `${n}${d}`).join(' + ')
   const itemOcultosSet = new Set(itemOcultos ?? [])
   const ataquesOcultosSet = new Set(ataquesOcultos ?? [])
 
@@ -459,7 +515,17 @@ export function calcularPersonaje({
     // Identidad
     nombre:      descripcion?.nombre ?? '',
     clase,
-    nivel,
+    nivel:       nivelTotal,
+    nivelPrimaria: nivel,
+    esMulticlase,
+    // Desglose de clases para la hoja (ej. "Clérigo 6 / Guerrero 1")
+    clasesActivas: clasesActivas.map(c => ({
+      claseId:    c.claseId,
+      nombre:     c.clase?.nombre ?? c.claseId,
+      nivel:      c.nivel,
+      subclaseId: c.subclaseId ?? null,
+      esPrimaria: !!c.esPrimaria,
+    })),
     trasfondo,
     especie,
     alineamiento: descripcion?.alineamiento
@@ -468,8 +534,8 @@ export function calcularPersonaje({
 
     // Progresión
     bonificadorCompetencia: BONO,
-    xpNivelActual:    getXPNivelActual(nivel),
-    xpSiguienteNivel: getXPSiguienteNivel(nivel),
+    xpNivelActual:    getXPNivelActual(nivelTotal),
+    xpSiguienteNivel: getXPSiguienteNivel(nivelTotal),
 
     // Puntuaciones
     puntuaciones,
@@ -482,7 +548,7 @@ export function calcularPersonaje({
     iniciativa,
     velocidad,
     pgMax,
-    dadosGolpe: `${nivel}${dadoGolpe}`,
+    dadosGolpe: dadosGolpeStr,
 
     // Competencias
     habilidadesCompetencia:       [...competenciasHabilidad],
@@ -533,9 +599,14 @@ export function calcularPersonaje({
       return items
     })(),
 
-    // Competencias texto
+    // Competencias texto (unión del entrenamiento con armaduras de todas las clases activas)
     competenciasArmaduras: (() => {
-      const base = [...(clase?.entrenamientoArmaduras ?? [])]
+      const base = []
+      for (const c of clasesActivas) {
+        for (const a of (c.clase?.entrenamientoArmaduras ?? [])) {
+          if (!base.includes(a)) base.push(a)
+        }
+      }
       if (claseId === 'clerigo' && eleccionNivel1 === 'protector' && !base.includes('Pesadas')) base.push('Pesadas')
       if (claseId === 'druida'  && eleccionNivel1 === 'guardian'  && !base.includes('Medias')) base.push('Medias')
       return base
@@ -606,13 +677,50 @@ export function calcularPersonaje({
       return lista
     })(),
 
-    // Lanzamiento de conjuros (solo clases lanzadoras)
+    // Lanzamiento de conjuros (una o varias clases lanzadoras)
     conjuros: (() => {
-      const aptitudCar = APTITUD_MAGICA[claseId]
-      if (!aptitudCar) return null
+      const clasesLanzadoras = clasesActivas.filter(c => APTITUD_MAGICA[c.claseId])
+      const claseBrujo = clasesActivas.find(c => c.claseId === 'brujo')
+      if (clasesLanzadoras.length === 0 && !claseBrujo) return null
+
+      // Aptitud mágica: clase primaria si lanza; si no, la primera lanzadora; si no, el brujo.
+      const aptClase = clasesActivas.find(c => c.esPrimaria && APTITUD_MAGICA[c.claseId])
+        ?? clasesLanzadoras[0] ?? claseBrujo
+      const aptitudCar = APTITUD_MAGICA[aptClase?.claseId] ?? 'Carisma'
       const aptMod = mods[aptitudCar] ?? 0
-      const tipoMagia = TIPO_MAGIA[claseId] ?? null
-      const tipoPrepara = TIPO_PREPARACION[claseId] ?? 'tabla'
+
+      let espacios, pacto = null, tipoMagia, tipoPrepara, trucosMax, preparadosMax, nivelMax, grimorioMax
+
+      if (!esMulticlase) {
+        // — Camino de una sola clase: idéntico al cálculo anterior —
+        tipoMagia     = TIPO_MAGIA[claseId] ?? null
+        tipoPrepara   = TIPO_PREPARACION[claseId] ?? 'tabla'
+        espacios      = getEspaciosConjuro(claseId, nivel)
+        trucosMax     = getTrucosMax(claseId, nivel)
+        preparadosMax = getConjurosPreparadosMax(claseId, nivel)
+        nivelMax      = getNivelMaxConjuro(claseId, nivel)
+        grimorioMax   = tipoPrepara === 'grimorio' ? getGrimorioMax(nivel) : 0
+      } else {
+        // — Multiclase (PHB 2024, pág. 45) —
+        const nivelLanzador = getNivelLanzadorMulticlase(clasesActivas)
+        espacios = getEspaciosMulticlase(nivelLanzador)  // array[9] de espacios o null
+        tipoMagia = espacios ? 'completo' : null
+        tipoPrepara = TIPO_PREPARACION[aptClase?.claseId] ?? 'tabla'
+        // Trucos y preparados: cada clase aporta los suyos según su propio nivel
+        const todasLanzadoras = [...clasesLanzadoras, ...(claseBrujo ? [claseBrujo] : [])]
+        trucosMax = todasLanzadoras.reduce((s, c) => s + getTrucosMax(c.claseId, c.nivel), 0)
+        preparadosMax = todasLanzadoras.reduce((s, c) => s + getConjurosPreparadosMax(c.claseId, c.nivel), 0)
+        nivelMax = espacios ? espacios.reduce((mx, v, i) => v > 0 ? i + 1 : mx, 0) : 0
+        const magoC = clasesActivas.find(c => c.claseId === 'mago')
+        grimorioMax = magoC ? getGrimorioMax(magoC.nivel) : 0
+        // Magia del pacto del brujo: espacios aparte
+        if (claseBrujo) {
+          pacto = getEspaciosConjuro('brujo', claseBrujo.nivel)
+          // Si no hay lanzadores estándar, exponer el pacto como "espacios" (UI existente)
+          if (!espacios) { espacios = pacto; pacto = null; tipoMagia = 'pacto'; nivelMax = espacios?.nivel ?? 0 }
+        }
+      }
+
       return {
         caracteristica:    aptitudCar,
         modificador:       aptMod,
@@ -620,34 +728,30 @@ export function calcularPersonaje({
         bonAtaque:         aptMod + BONO,
         tipo:              tipoMagia,
         tipoPreparacion:   tipoPrepara,
-        espacios:          getEspaciosConjuro(claseId, nivel),
-        trucosMax:         getTrucosMax(claseId, nivel),
-        preparadosMax:     getConjurosPreparadosMax(claseId, nivel),
-        nivelMaxConjuro:   getNivelMaxConjuro(claseId, nivel),
-        grimorioMax:       tipoPrepara === 'grimorio' ? getGrimorioMax(nivel) : 0,
+        espacios,
+        pacto,
+        trucosMax,
+        preparadosMax,
+        nivelMaxConjuro:   nivelMax,
+        grimorioMax,
         siemprePreparados: (() => {
-          const lista = subclaseId ? getConjurosSubclase(claseId, subclaseId, nivel) : []
-          // Agregar conjuros de linaje de especie (p.ej. elfo altivo, drow, tiefling, gnomo)
+          const lista = []
+          for (const c of clasesActivas) {
+            if (c.subclaseId) lista.push(...getConjurosSubclase(c.claseId, c.subclaseId, c.nivel))
+          }
+          // Conjuros de linaje de especie (p.ej. elfo altivo, drow, tiefling, gnomo)
           if (linaje?.conjuros) {
             for (const c of linaje.conjuros) {
-              if (nivel >= c.nivel && c.nombre) lista.push(c.nombre)
+              if (nivelTotal >= c.nivel && c.nombre) lista.push(c.nombre)
             }
           }
-          return lista
+          return [...new Set(lista)]
         })(),
       }
     })(),
 
-    // Rasgos de clase acumulados hasta el nivel actual
-    rasgosClase: (() => {
-      if (!clase?.rasgosNivel) return []
-      const lista = []
-      for (let n = 1; n <= nivel; n++) {
-        const rasgos = clase.rasgosNivel[n] ?? []
-        rasgos.forEach(r => lista.push({ ...r, nivelObtenido: n }))
-      }
-      return lista
-    })(),
+    // Rasgos acumulados de todas las clases hasta su nivel (etiquetados con su clase)
+    rasgosClase: rasgosTodasLasClases,
 
     maestriaArmas,
 

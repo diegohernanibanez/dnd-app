@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import ClassSelector from './components/ClassSelector'
+import MulticlassPanel from './components/MulticlassPanel'
 import OriginSelector from './components/OriginSelector'
 import AbilityScoreGenerator from './components/AbilityScoreGenerator'
 import CharacterDescription from './components/CharacterDescription'
@@ -102,6 +103,7 @@ function App() {
   const [claseSeleccionada, setClaseSeleccionada] = useState(null)
   const [eleccionNivel1, setEleccionNivel1] = useState(null)
   const [subclaseSeleccionada, setSubclaseSeleccionada] = useState(null)
+  const [clasesSecundarias, setClasesSecundarias] = useState([])
   const [bonusASI, setBonusASI] = useState({})
   const [dotesElegidos, setDotesElegidos] = useState({})
   const [dotesLibres, setDotesLibres] = useState([])
@@ -170,6 +172,7 @@ function App() {
     setHabilidadesClase([])
     setEleccionNivel1(null)
     setSubclaseSeleccionada(null)
+    setClasesSecundarias([])
     setBonusASI({})
     setDotesElegidos({})
     setDotesLibres([])
@@ -217,6 +220,7 @@ function App() {
     claseSeleccionada,
     eleccionNivel1,
     subclaseSeleccionada,
+    clasesSecundarias,
     bonusASI,
     dotesElegidos,
     dotesLibres,
@@ -249,7 +253,7 @@ function App() {
     conjurosHojaConfig,
     pgGananciaPorNivel,
     personajeOverrides,
-  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, ataquesHojaConfig, ataquesOcultos, itemsOcultos, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, inspiracion, sintonizaciones, escudoEquipado, competenciasOverride, conjurosHojaConfig, pgGananciaPorNivel, personajeOverrides])
+  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, clasesSecundarias, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, ataquesHojaConfig, ataquesOcultos, itemsOcultos, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, inspiracion, sintonizaciones, escudoEquipado, competenciasOverride, conjurosHojaConfig, pgGananciaPorNivel, personajeOverrides])
 
   const cargarDesdeData = useCallback((data) => {
     // Guardar los valores que vamos a cargar para que los effects de reset
@@ -261,6 +265,7 @@ function App() {
     setClaseSeleccionada(data.claseSeleccionada ?? null)
     setEleccionNivel1(data.eleccionNivel1 ?? null)
     setSubclaseSeleccionada(data.subclaseSeleccionada ?? null)
+    setClasesSecundarias(data.clasesSecundarias ?? [])
     setBonusASI(data.bonusASI ?? {})
     setDotesElegidos(data.dotesElegidos ?? {})
     setDotesLibres(data.dotesLibres ?? [])
@@ -385,6 +390,7 @@ function App() {
     const p = calcularPersonaje({
       claseId:          claseSeleccionada,
       subclaseId:       subclaseSeleccionada,
+      clasesSecundarias,
       trasfondoId:      origen.trasfondo,
       especieId:        origen.especie,
       linajeId:         origen.linaje,
@@ -409,7 +415,7 @@ function App() {
       competenciasOverride,
     })
     return { ...p, xpNivelActual }
-  }, [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel, xpNivelActual, pgGananciaPorNivel, ataquesOcultos, itemsOcultos, escudoEquipado, competenciasOverride])
+  }, [claseSeleccionada, subclaseSeleccionada, clasesSecundarias, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel, xpNivelActual, pgGananciaPorNivel, ataquesOcultos, itemsOcultos, escudoEquipado, competenciasOverride])
 
   const personaje = useMemo(() => {
     return deepMerge(personajeBase, personajeOverrides ?? {})
@@ -461,15 +467,23 @@ function App() {
 
       <main>
         {pasoActual === 1 && (
-          <ClassSelector
-            claseSeleccionada={claseSeleccionada}
-            onSeleccionar={setClaseSeleccionada}
-            eleccionNivel1={eleccionNivel1}
-            onEleccionNivel1={setEleccionNivel1}
-            subclaseSeleccionada={subclaseSeleccionada}
-            onSubclaseSeleccionar={setSubclaseSeleccionada}
-            nivel={nivel}
-          />
+          <>
+            <ClassSelector
+              claseSeleccionada={claseSeleccionada}
+              onSeleccionar={setClaseSeleccionada}
+              eleccionNivel1={eleccionNivel1}
+              onEleccionNivel1={setEleccionNivel1}
+              subclaseSeleccionada={subclaseSeleccionada}
+              onSubclaseSeleccionar={setSubclaseSeleccionada}
+              nivel={nivel}
+            />
+            <MulticlassPanel
+              clasePrimariaId={claseSeleccionada}
+              clasesSecundarias={clasesSecundarias}
+              onCambiar={setClasesSecundarias}
+              puntuaciones={personaje.puntuaciones}
+            />
+          </>
         )}
         {pasoActual === 2 && (
           <OriginSelector

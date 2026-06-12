@@ -221,6 +221,44 @@ export function getEspaciosConjuro(claseId, nivel) {
   return null
 }
 
+// ── Multiclase: nivel de lanzador combinado (PHB 2024, pág. 45) ──────────
+// Lanzadores completos (bardo/clérigo/druida/hechicero/mago): suman su nivel entero.
+// Lanzadores de mitad (explorador/paladín): suman la mitad, redondeando HACIA ARRIBA.
+// Lanzadores de un tercio (caballero arcano del guerrero / embaucador arcano del pícaro):
+//   suman un tercio, redondeando HACIA ABAJO.
+// El brujo (Magia del pacto) NO cuenta para este total; sus espacios van aparte.
+const SUBCLASES_TERCIO = {
+  guerrero: 'caballero_arcano',
+  picaro:   'embaucador',
+}
+
+/**
+ * Calcula el nivel de lanzador multiclase a partir de las clases activas.
+ * @param {{claseId:string, subclaseId?:string, nivel:number}[]} clasesActivas
+ * @returns {number}
+ */
+export function getNivelLanzadorMulticlase(clasesActivas = []) {
+  let total = 0
+  for (const c of clasesActivas) {
+    const tipo = TIPO_MAGIA[c.claseId]
+    const n = c.nivel ?? 0
+    if (tipo === 'completo') {
+      total += n
+    } else if (tipo === 'mitad') {
+      total += Math.ceil(n / 2)
+    } else if (SUBCLASES_TERCIO[c.claseId] && c.subclaseId === SUBCLASES_TERCIO[c.claseId]) {
+      total += Math.floor(n / 3)
+    }
+    // 'pacto' (brujo) no contribuye al total de espacios multiclase
+  }
+  return total
+}
+
+/** Espacios de conjuro multiclase según el nivel de lanzador combinado (tabla pág. 45). */
+export function getEspaciosMulticlase(nivelLanzador) {
+  return ESPACIOS_COMPLETO[nivelLanzador] ?? null
+}
+
 /**
  * Devuelve el nivel máximo de conjuro al que puede acceder una clase/nivel.
  */
@@ -349,7 +387,7 @@ export const CONJUROS_SUBCLASE = {
       13: ['Invisibilidad Mejorada'],
       17: ['Apariencia'],
     },
-    feerico: {
+    errante_feerico: {
       3:  ['Hechizar Persona'],
       5:  ['Paso Brumoso'],
       9:  ['Invocar Feérico'],

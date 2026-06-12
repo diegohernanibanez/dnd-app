@@ -1,4 +1,4 @@
-// Fuente: Manual del Jugador D&D 2024 — Cap. 2, tabla "Progreso de los personajes" (pág. 36)
+// Fuente: Manual del Jugador D&D 2024 — Cap. 2, tabla "Progreso de los personajes" (pág. 41)
 
 // XP requerida para alcanzar cada nivel y bonificador de competencia
 export const PROGRESO_NIVEL = [
