@@ -128,6 +128,8 @@ export function calcularPersonaje({
   pgGananciaPorNivel = {},
   itemOcultos = [],
   ataquesOcultos = [],
+  escudoEquipado = false,
+  competenciasOverride = {},
 }) {
   const clase     = getClaseById(claseId) ?? null
   const trasfondo = TRASFONDOS.find(t => t.id === trasfondoId) ?? null
@@ -369,6 +371,20 @@ export function calcularPersonaje({
     }
   }
 
+  // ── Overrides manuales de competencias (hoja editable) ──
+  // habilidades: { [hab]: 'competencia' | 'pericia' | 'ninguna' }
+  // salvaciones: { [car]: 'competencia' | 'ninguna' }
+  for (const [hab, modo] of Object.entries(competenciasOverride?.habilidades ?? {})) {
+    competenciasHabilidad.delete(hab)
+    pericias.delete(hab)
+    if (modo === 'competencia') competenciasHabilidad.add(hab)
+    else if (modo === 'pericia') { competenciasHabilidad.add(hab); pericias.add(hab) }
+  }
+  for (const [car, modo] of Object.entries(competenciasOverride?.salvaciones ?? {})) {
+    if (modo === 'competencia') competenciasSalvacion.add(car)
+    else competenciasSalvacion.delete(car)
+  }
+
   // ── Tiradas de salvación ──
   const tiradasSalvacion = {}
   for (const car of CARACTERISTICAS_ORDER) {
@@ -420,6 +436,10 @@ export function calcularPersonaje({
   const caEleccionBonus = clase?.eleccionNivel1?.opciones
     ?.find(o => o.id === eleccionNivel1)?.beneficios?.caBonus ?? 0
   ca += caEleccionBonus
+
+  // Escudo equipado: +2 CA (PHB 2024). El monje pierde Defensa sin armadura con escudo,
+  // pero eso se deja al jugador vía override de CA en la hoja.
+  if (escudoEquipado) ca += 2
   const iniciativa  = desMod
   const velocidad   = especie?.velocidad ?? '9 m'
 

@@ -33,10 +33,19 @@ function AbilityBox({ nombre, puntuacion, modificador }) {
   )
 }
 
-function DotRow({ filled, pericia, label, valor, sub }) {
+function DotRow({ filled, pericia, label, valor, sub, onCycle, overridden }) {
+  const estado = pericia ? 'Pericia' : filled ? 'Competencia' : 'Sin competencia'
+  const titulo = onCycle
+    ? `${estado}${overridden ? ' (manual)' : ''} — clic para cambiar`
+    : (pericia ? 'Pericia' : filled ? 'Competencia' : '')
+  const dot = (
+    <span className={`cs-dot ${pericia ? 'cs-dot--pericia' : filled ? 'cs-dot--on' : ''}${overridden ? ' cs-dot--manual' : ''}`} title={titulo} />
+  )
   return (
     <div className="cs-dot-row">
-      <span className={`cs-dot ${pericia ? 'cs-dot--pericia' : filled ? 'cs-dot--on' : ''}`} title={pericia ? 'Pericia' : filled ? 'Competencia' : ''} />
+      {onCycle
+        ? <button type="button" className="cs-dot-btn" onClick={onCycle} title={titulo}>{dot}</button>
+        : dot}
       <span className="cs-dot-val">{fmtM(valor)}</span>
       <span className="cs-dot-label">
         {label}{sub && <em className="cs-dot-sub"> ({sub})</em>}
@@ -184,6 +193,30 @@ function EquipoInlineAdd({ onAñadir }) {
       />
       <button className="cs-equipo-add__btn" onClick={añadir}>+</button>
     </div>
+  )
+}
+
+// ── Añadir idioma inline (chip compacto) ──
+function IdiomaInlineAdd({ onAñadir }) {
+  const [texto, setTexto] = useState('')
+  const añadir = () => {
+    const t = texto.trim()
+    if (!t) return
+    onAñadir(t)
+    setTexto('')
+  }
+  return (
+    <span className="cs-idiomas__add">
+      <input
+        className="cs-idiomas__add-input"
+        type="text"
+        placeholder="Añadir…"
+        value={texto}
+        onChange={e => setTexto(e.target.value)}
+        onKeyDown={e => e.key === 'Enter' && añadir()}
+      />
+      <button type="button" className="cs-idiomas__add-btn" onClick={añadir}>+</button>
+    </span>
   )
 }
 
@@ -1202,6 +1235,10 @@ function Hoja1({
   trucosSeleccionados,
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
   onXpNivelActualCambiar,
+  inspiracion, onInspiracionCambiar,
+  sintonizaciones, onSintonizacionesCambiar,
+  escudoEquipado, onEscudoCambiar,
+  competenciasOverride, onCompetenciasOverrideCambiar,
   pgGananciaPorNivel, onPgGananciaPorNivelCambiar,
   modoEdicion, onPersonajeOverridesCambiar, personajeOverrides,
 }) {
@@ -1210,12 +1247,45 @@ function Hoja1({
   const [ataqueModal, setAtaqueModal] = useState(null)
   const [detalleAtaqueModal, setDetalleAtaqueModal] = useState(null)
   const [modalDoteLibreAbierto, setModalDoteLibreAbierto] = useState(false)
-  const [inspiracion, setInspiracion] = useState(false)
   const [pgMetodoAbierto, setPgMetodoAbierto] = useState(false)
 
   const toggleMuerte = (tipo) => {
     const k = tipo === 'exito' ? 'exitos' : 'fallos'
     onMuerteCambiar(p => ({ ...p, [k]: p[k] >= 3 ? 0 : p[k] + 1 }))
+  }
+
+  // Ciclo manual de competencia (hoja editable):
+  // habilidades: auto → competencia → pericia → ninguna → auto
+  // salvaciones: auto → competencia → ninguna → auto
+  const cycleHabilidad = (hab) => {
+    const cur = competenciasOverride?.habilidades?.[hab] ?? null
+    const d = personaje.habilidades?.[hab]
+    let next
+    if (cur == null)               next = d?.pericia ? 'ninguna' : d?.competencia ? 'pericia' : 'competencia'
+    else if (cur === 'competencia') next = 'pericia'
+    else if (cur === 'pericia')     next = 'ninguna'
+    else                            next = null
+    onCompetenciasOverrideCambiar?.(prev => {
+      const habs = { ...(prev?.habilidades ?? {}) }
+      if (next == null) delete habs[hab]
+      else habs[hab] = next
+      return { ...prev, habilidades: habs }
+    })
+  }
+
+  const cycleSalvacion = (car) => {
+    const cur = competenciasOverride?.salvaciones?.[car] ?? null
+    const efectiva = personaje.tiradasSalvacion?.[car]?.competencia
+    let next
+    if (cur == null)               next = efectiva ? 'ninguna' : 'competencia'
+    else if (cur === 'competencia') next = 'ninguna'
+    else                            next = null
+    onCompetenciasOverrideCambiar?.(prev => {
+      const salvs = { ...(prev?.salvaciones ?? {}) }
+      if (next == null) delete salvs[car]
+      else salvs[car] = next
+      return { ...prev, salvaciones: salvs }
+    })
   }
 
   // Helper to render one ability group (score + save + skills)
@@ -1250,11 +1320,19 @@ function Hoja1({
             </div>
           </div>
           <div className="ca-group__checks">
-            <DotRow filled={save?.competencia} valor={save?.total} label="Tirada de salvación" />
+            <DotRow
+              filled={save?.competencia} valor={save?.total} label="Tirada de salvación"
+              onCycle={modoEdicion ? () => cycleSalvacion(car) : undefined}
+              overridden={competenciasOverride?.salvaciones?.[car] != null}
+            />
             {skills.map(hab => {
               const d = personaje.habilidades?.[hab]
               return (
-                <DotRow key={hab} filled={d?.competencia} pericia={d?.pericia} valor={d?.total} label={hab} />
+                <DotRow
+                  key={hab} filled={d?.competencia} pericia={d?.pericia} valor={d?.total} label={hab}
+                  onCycle={modoEdicion ? () => cycleHabilidad(hab) : undefined}
+                  overridden={competenciasOverride?.habilidades?.[hab] != null}
+                />
               )
             })}
           </div>
@@ -1586,9 +1664,9 @@ function Hoja1({
           <div className="cs-combat__mini cs-combat__vel">
             <input
               className="cs-combat__mini-val cs-stat-input"
-              type="number"
+              type="text"
               value={personajeOverrides?.velocidad ?? personaje.velocidad ?? ''}
-              onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, velocidad: +e.target.value }))}
+              onChange={e => onPersonajeOverridesCambiar(prev => ({ ...prev, velocidad: e.target.value }))}
               readOnly={!modoEdicion}
             />
             <span className="cs-combat__mini-label">Velocidad</span>
@@ -1607,6 +1685,14 @@ function Hoja1({
                 readOnly={!modoEdicion}
               />
               <span className="cs-combat__ca-label">Clase de Armadura</span>
+              <button
+                type="button"
+                className={`cs-escudo${escudoEquipado ? ' cs-escudo--on' : ''}`}
+                onClick={() => onEscudoCambiar?.(!escudoEquipado)}
+                title={escudoEquipado ? 'Escudo equipado (+2 CA) — clic para quitar' : 'Equipar escudo (+2 CA)'}
+              >
+                <span className="cs-escudo__rombo">{escudoEquipado ? '◆' : '◇'}</span> Escudo
+              </button>
             </div>
           </div>
 
@@ -1626,7 +1712,7 @@ function Hoja1({
           <button
             type="button"
             className={`cs-combat__stat cs-combat__insp${inspiracion ? ' cs-combat__insp--on' : ''}`}
-            onClick={() => setInspiracion(v => !v)}
+            onClick={() => onInspiracionCambiar?.(!inspiracion)}
             aria-pressed={inspiracion}
             title={inspiracion ? 'Gastar inspiración heroica' : 'Ganar inspiración heroica'}
           >
@@ -1671,7 +1757,17 @@ function Hoja1({
 
           {/* Tamaño — fila 2 */}
           <div className="cs-combat__mini cs-combat__tam">
-            <span className="cs-combat__mini-val cs-combat__mini-val--sm">{personaje.especie?.tamano ?? '—'}</span>
+            <input
+              className="cs-combat__mini-val cs-combat__mini-val--sm cs-stat-input"
+              type="text"
+              value={personaje.especie?.tamano ?? ''}
+              placeholder="—"
+              onChange={e => onPersonajeOverridesCambiar(prev => ({
+                ...prev,
+                especie: { ...(prev?.especie ?? {}), tamano: e.target.value },
+              }))}
+              readOnly={!modoEdicion}
+            />
             <span className="cs-combat__mini-label">Tamaño</span>
           </div>
 
@@ -2235,23 +2331,62 @@ function Hoja1({
           {/* Entrenamiento y competencias */}
           <SheetSection title="Entrenamiento y competencias con equipo" grow>
             <div className="cs-prof-text">
-              {personaje.competenciasArmaduras?.length > 0 && (
-                <p><strong>Armaduras:</strong> {personaje.competenciasArmaduras.join(', ')}</p>
-              )}
+              {/* Entrenamiento con armaduras: rombos como la hoja oficial */}
+              <div className="cs-armaduras">
+                <strong>Armaduras:</strong>
+                {['Ligeras', 'Medias', 'Pesadas', 'Escudos'].map(tipo => {
+                  const activo = personaje.competenciasArmaduras?.includes(tipo)
+                  return (
+                    <button
+                      key={tipo}
+                      type="button"
+                      className={`cs-armaduras__item${activo ? ' cs-armaduras__item--on' : ''}`}
+                      disabled={!modoEdicion}
+                      title={modoEdicion ? `${activo ? 'Quitar' : 'Añadir'} entrenamiento con ${tipo.toLowerCase()}` : ''}
+                      onClick={() => {
+                        const lista = personaje.competenciasArmaduras ?? []
+                        const nueva = activo ? lista.filter(t => t !== tipo) : [...lista, tipo]
+                        onPersonajeOverridesCambiar(prev => ({ ...prev, competenciasArmaduras: nueva }))
+                      }}
+                    >
+                      <span className="cs-armaduras__rombo">{activo ? '◆' : '◇'}</span> {tipo}
+                    </button>
+                  )
+                })}
+              </div>
               {personaje.competenciasArmas?.length > 0 && (
                 <p><strong>Armas:</strong> {personaje.competenciasArmas.join(', ')}</p>
               )}
               {personaje.competenciasHerramientas?.length > 0 && (
                 <p><strong>Herramientas:</strong> {personaje.competenciasHerramientas.join(', ')}</p>
               )}
-              {personaje.idiomas?.length > 0 && (
-                <p><strong>Idiomas:</strong> {personaje.idiomas.join(', ')}</p>
-              )}
-              {!personaje.competenciasArmaduras?.length &&
-               !personaje.competenciasHerramientas?.length &&
-               !personaje.idiomas?.length && (
-                <em className="cs-empty">Sin datos</em>
-              )}
+              {/* Idiomas: chips editables */}
+              <div className="cs-idiomas">
+                <strong>Idiomas:</strong>
+                {(personaje.idiomas ?? []).map(idioma => (
+                  <span key={idioma} className="cs-idiomas__chip">
+                    {idioma}
+                    {modoEdicion && idioma !== 'Común' && (
+                      <button
+                        type="button"
+                        className="cs-idiomas__del"
+                        title="Quitar idioma"
+                        onClick={() => onOrigenCambiar(prev => ({
+                          ...prev,
+                          idiomas: (prev.idiomas ?? []).filter(i => i !== idioma),
+                        }))}
+                      >✕</button>
+                    )}
+                  </span>
+                ))}
+                {modoEdicion && (
+                  <IdiomaInlineAdd onAñadir={(idioma) => onOrigenCambiar(prev => (
+                    (prev.idiomas ?? []).includes(idioma)
+                      ? prev
+                      : { ...prev, idiomas: [...(prev.idiomas ?? []), idioma] }
+                  ))} />
+                )}
+              </div>
             </div>
           </SheetSection>
 
@@ -2302,6 +2437,25 @@ function Hoja1({
                 extras: [...(prev.extras ?? []), texto],
               }))
             }} />
+            <div className="cs-sinto">
+              <div className="cs-sinto__title">Sintonización con objetos mágicos</div>
+              {[0, 1, 2].map(i => (
+                <div key={i} className="cs-sinto__row">
+                  <span className="cs-sinto__rombo">✦</span>
+                  <input
+                    className="cs-sinto__input"
+                    value={sintonizaciones?.[i] ?? ''}
+                    onChange={e => onSintonizacionesCambiar?.(prev => {
+                      const next = [...(prev ?? ['', '', ''])]
+                      while (next.length < 3) next.push('')
+                      next[i] = e.target.value
+                      return next
+                    })}
+                    placeholder="—"
+                  />
+                </div>
+              ))}
+            </div>
           </SheetSection>
         </div>
       </div>
@@ -2319,7 +2473,7 @@ function Hoja1({
                 value={monedas?.[m] ?? 0}
                 onChange={e => onMonedasCambiar(prev => ({ ...prev, [m]: Math.max(0, Number(e.target.value) || 0) }))}
               />
-              <span className="cs-moneda__label">{m}</span>
+              <span className="cs-moneda__label">{m === 'PA' ? 'PPT' : m}</span>
             </div>
           ))}
         </div>
@@ -2507,6 +2661,43 @@ function MetaTrucoCompacta({ info }) {
   )
 }
 
+// Meta de conjuro para la ficha oficial: tiempo, alcance y marcas C/R/M
+function metaConjuroOficial(nombre) {
+  const c = CONJUROS[nombre]
+  if (!c) return null
+  return {
+    tiempo:        c.tiempoLanzamiento ?? '—',
+    alcance:       c.alcance ?? '—',
+    concentracion: /concentraci/i.test(c.duracion ?? ''),
+    ritual:        /ritual/i.test(c.tiempoLanzamiento ?? ''),
+    material:      /(^|[,\s])M(\s*\(|\s*$|,)/.test(c.componentes ?? ''),
+  }
+}
+
+function ConjuroFichaMeta({ nombre, cfg, onNotasCambiar, modoEdicion }) {
+  const meta = metaConjuroOficial(nombre)
+  if (!meta) return null
+  return (
+    <div className="conj-item__ficha">
+      <span className="conj-item__meta-txt">{meta.tiempo} · {meta.alcance}</span>
+      <span className="conj-item__flags">
+        <span className={`conj-flag${meta.concentracion ? ' conj-flag--on' : ''}`} title="Concentración">C</span>
+        <span className={`conj-flag${meta.ritual ? ' conj-flag--on' : ''}`} title="Ritual">R</span>
+        <span className={`conj-flag${meta.material ? ' conj-flag--on' : ''}`} title="Material necesario">M</span>
+      </span>
+      {(modoEdicion || cfg?.notas) && (
+        <input
+          className="conj-item__notas"
+          value={cfg?.notas ?? ''}
+          placeholder="Notas…"
+          readOnly={!modoEdicion}
+          onChange={e => onNotasCambiar?.(e.target.value)}
+        />
+      )}
+    </div>
+  )
+}
+
 function parseComponentes(str) {
   if (!str) return []
   const result = []
@@ -2662,9 +2853,30 @@ function PickerModal({ titulo, lista, grupos, seleccionados, seleccionadosTodos,
   )
 }
 
-function Hoja3({ personaje, trucosSeleccionados, onTrucosCambiar, grimorioConjuros, onGrimorioCambiar, conjurosSeleccionados, onConjurosCambiar, espaciosUsados, onEspaciosUsadosCambiar }) {
+function Hoja3({ personaje, trucosSeleccionados, onTrucosCambiar, grimorioConjuros, onGrimorioCambiar, conjurosSeleccionados, onConjurosCambiar, espaciosUsados, onEspaciosUsadosCambiar, conjurosHojaConfig, onConjurosHojaConfigCambiar, modoEdicion }) {
   const [picker, setPicker] = useState(null) // { tipo: 'truco'|'conjuro'|'grimorio' }
   const [detalleNombre, setDetalleNombre] = useState(null)
+
+  const setNotasConjuro = (nombre, notas) => {
+    onConjurosHojaConfigCambiar?.(prev => {
+      const next = { ...(prev ?? {}) }
+      if (!notas) {
+        delete next[nombre]
+        return next
+      }
+      next[nombre] = { ...(next[nombre] ?? {}), notas }
+      return next
+    })
+  }
+
+  const fichaDe = (nombre) => (
+    <ConjuroFichaMeta
+      nombre={nombre}
+      cfg={conjurosHojaConfig?.[nombre]}
+      onNotasCambiar={(v) => setNotasConjuro(nombre, v)}
+      modoEdicion={modoEdicion}
+    />
+  )
 
   const conj = personaje.conjuros
   if (!conj) {
@@ -2935,6 +3147,7 @@ function Hoja3({ personaje, trucosSeleccionados, onTrucosCambiar, grimorioConjur
                   {CONJUROS[nombre] && <EtiquetaEscuela escuela={CONJUROS[nombre].escuela} />}
                   <EtiquetaTruco info={info} />
                   <button className="conj-item__remove" onClick={() => toggleTruco(nombre)} title="Quitar">✕</button>
+                  {fichaDe(nombre)}
                 </div>
               )
             })}
@@ -2951,6 +3164,7 @@ function Hoja3({ personaje, trucosSeleccionados, onTrucosCambiar, grimorioConjur
                   {CONJUROS[nombre] && <EtiquetaEscuela escuela={CONJUROS[nombre].escuela} />}
                   <EtiquetaTruco info={info} />
                   <button className="conj-item__remove" onClick={() => toggleTruco(nombre)} title="Quitar">✕</button>
+                  {fichaDe(nombre)}
                 </div>
               )
             })}
@@ -3062,6 +3276,7 @@ function Hoja3({ personaje, trucosSeleccionados, onTrucosCambiar, grimorioConjur
                   <span className="conj-item__nombre">{nombre}</span>
                   {CONJUROS[nombre] && <EtiquetaEscuela escuela={CONJUROS[nombre].escuela} />}
                   <span className="conj-item__badge conj-item__badge--sub">🔱 Subclase</span>
+                  {fichaDe(nombre)}
                 </div>
               ))}
               {/* Conjuros preparados por el jugador */}
@@ -3071,6 +3286,7 @@ function Hoja3({ personaje, trucosSeleccionados, onTrucosCambiar, grimorioConjur
                   <span className="conj-item__nombre">{nombre}</span>
                   {CONJUROS[nombre] && <EtiquetaEscuela escuela={CONJUROS[nombre].escuela} />}
                   <button className="conj-item__remove" onClick={() => toggleConjuro(nombre)} title="Quitar">✕</button>
+                  {fichaDe(nombre)}
                 </div>
               ))}
               {totalNv === 0 && (
@@ -3235,7 +3451,7 @@ function EditorAmigable({ personaje, personajeBase, personajeOverrides, onPerson
               <div className="cs-edf-section__title">Combate</div>
               <div className="cs-edf-section__grid">
                 {renderField('CA', ['ca'])}
-                {renderField('Velocidad (pies)', ['velocidad'])}
+                {renderField('Velocidad', ['velocidad'])}
                 {renderField('Iniciativa', ['iniciativa'])}
                 {renderField('Perc. pasiva', ['percepcionPasiva'])}
                 {renderField('Bonif. comp.', ['bonificadorCompetencia'])}
@@ -3329,12 +3545,18 @@ export default function CharacterSheet({
   itemsOcultos, onItemsOcultosCambiar,
   dadosGolpeGastados, onDadosGolpeGastadosCambiar,
   onXpNivelActualCambiar,
+  inspiracion, onInspiracionCambiar,
+  sintonizaciones, onSintonizacionesCambiar,
+  escudoEquipado, onEscudoCambiar,
+  competenciasOverride, onCompetenciasOverrideCambiar,
+  conjurosHojaConfig, onConjurosHojaConfigCambiar,
   pgGananciaPorNivel, onPgGananciaPorNivelCambiar,
   personajeBase,
   personajeOverrides, onPersonajeOverridesCambiar,
 }) {
   const [pestaña, setPestaña] = useState(1)
   const [modoEdicion, setModoEdicion] = useState(false)
+  const [editorAbierto, setEditorAbierto] = useState(false)
   const tieneMagia = !!personaje.conjuros
 
   const cambiarPestaña = (n) => {
@@ -3369,6 +3591,15 @@ export default function CharacterSheet({
           Conjuros
         </button>
         <div className="cs-tabs__actions">
+          {modoEdicion && (
+            <button
+              className="cs-tab cs-tab--tools"
+              onClick={() => setEditorAbierto(true)}
+              title="Editar valores calculados (habilidades, salvaciones, CD de conjuros…)"
+            >
+              ⚙ Valores
+            </button>
+          )}
           <button
             className={`cs-tab cs-tab--lock${modoEdicion ? ' cs-tab--lock-open' : ''}`}
             onClick={() => setModoEdicion(prev => !prev)}
@@ -3438,6 +3669,14 @@ export default function CharacterSheet({
           dadosGolpeGastados={dadosGolpeGastados}
           onDadosGolpeGastadosCambiar={onDadosGolpeGastadosCambiar}
           onXpNivelActualCambiar={onXpNivelActualCambiar}
+          inspiracion={inspiracion}
+          onInspiracionCambiar={onInspiracionCambiar}
+          sintonizaciones={sintonizaciones}
+          onSintonizacionesCambiar={onSintonizacionesCambiar}
+          escudoEquipado={escudoEquipado}
+          onEscudoCambiar={onEscudoCambiar}
+          competenciasOverride={competenciasOverride}
+          onCompetenciasOverrideCambiar={onCompetenciasOverrideCambiar}
           pgGananciaPorNivel={pgGananciaPorNivel}
           onPgGananciaPorNivelCambiar={onPgGananciaPorNivelCambiar}
         />
@@ -3462,10 +3701,22 @@ export default function CharacterSheet({
           onConjurosCambiar={onConjurosSeleccionadosCambiar}
           espaciosUsados={espaciosUsados ?? {}}
           onEspaciosUsadosCambiar={onEspaciosUsadosCambiar}
+          conjurosHojaConfig={conjurosHojaConfig ?? {}}
+          onConjurosHojaConfigCambiar={onConjurosHojaConfigCambiar}
           modoEdicion={modoEdicion}
         />
       )}
       </div>{/* cs-hoja */}
+
+      {editorAbierto && (
+        <EditorAmigable
+          personaje={personaje}
+          personajeBase={personajeBase}
+          personajeOverrides={personajeOverrides}
+          onPersonajeOverridesCambiar={onPersonajeOverridesCambiar}
+          onClose={() => setEditorAbierto(false)}
+        />
+      )}
     </div>
   )
 }
