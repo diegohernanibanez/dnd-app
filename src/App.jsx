@@ -144,26 +144,24 @@ function App() {
   useEffect(() => { sincronizarDesdeSupabase() }, [])
 
   // Guards para evitar que los useEffect de reset se disparen al cargar un personaje.
-  // Guardamos los valores que se acaban de cargar; el effect los compara y si coinciden
-  // los descarta (consumiéndolos) en lugar de resetear el estado.
-  const claseCargadaRef    = useRef(null)
+  //
+  // Estrategia: guardamos el valor recién cargado en un ref. En el effect, si el
+  // valor actual COINCIDE con el ref → lo es una carga, NO reseteamos (y NO
+  // nulleamos el ref, para que StrictMode pueda correr el effect dos veces sin
+  // problema). Solo nulleamos el ref cuando el valor YA NO coincide, lo que
+  // significa que el usuario hizo un cambio real → reseteamos y limpiamos el guard.
+  const claseCargadaRef     = useRef(null)
   const trasfondoCargadoRef = useRef(null)
-  // Flag adicional para el effect de monedas, que no hace comparación de valor
-  const cargandoRef = useRef(false)
 
   useEffect(() => {
-    if (origen.trasfondo === trasfondoCargadoRef.current) {
-      trasfondoCargadoRef.current = null   // consumir el guard una sola vez
-      return
-    }
+    if (origen.trasfondo === trasfondoCargadoRef.current) return  // carga → skip (no tocar ref)
+    trasfondoCargadoRef.current = null   // cambio real → limpiar guard
     setBonusTrasfondo({ modo: null, stats: {} })
   }, [origen.trasfondo])
 
   useEffect(() => {
-    if (claseSeleccionada === claseCargadaRef.current) {
-      claseCargadaRef.current = null       // consumir el guard una sola vez
-      return
-    }
+    if (claseSeleccionada === claseCargadaRef.current) return     // carga → skip
+    // NO nulleamos aquí; lo hace el effect de equipo (que corre después en el mismo ciclo)
     setHabilidadesClase([])
     setEleccionNivel1(null)
     setSubclaseSeleccionada(null)
@@ -180,7 +178,8 @@ function App() {
   }, [claseSeleccionada])
 
   useEffect(() => {
-    if (cargandoRef.current) return
+    if (claseSeleccionada === claseCargadaRef.current) return     // carga → skip
+    claseCargadaRef.current = null  // cambio real → limpiar guard (aquí, al final)
     setEquipo(prev => ({
       opcionClase: null,
       opcionTrasfondo: null,
@@ -245,9 +244,8 @@ function App() {
   const cargarDesdeData = useCallback((data) => {
     // Guardar los valores que vamos a cargar para que los effects de reset
     // los reconozcan y no borren el estado recién establecido.
-    claseCargadaRef.current    = data.claseSeleccionada ?? null
+    claseCargadaRef.current     = data.claseSeleccionada ?? null
     trasfondoCargadoRef.current = data.origen?.trasfondo ?? null
-    cargandoRef.current = true   // sigue protegiendo el effect de equipo/monedas
     setCharacterId(data.id ?? null)
     setNivel(data.nivel ?? 1)
     setClaseSeleccionada(data.claseSeleccionada ?? null)
@@ -280,8 +278,6 @@ function App() {
     setXpNivelActual(data.xpNivelActual ?? 0)
     setPgGananciaPorNivel(data.pgGananciaPorNivel ?? {})
     setPersonajeOverrides(data.personajeOverrides ?? {})
-    // Resetear flag con setTimeout para que corra después de los useEffects pasivos
-    setTimeout(() => { cargandoRef.current = false }, 0)
   }, [])
 
   // ── Auto-guardado (debounced) ──
