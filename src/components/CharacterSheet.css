@@ -4028,3 +4028,195 @@
   background: color-mix(in srgb, var(--cs-gold) 5%, transparent) !important;
   border-radius: 3px;
 }
+
+/* ── Sintonización con objetos mágicos ── */
+.cs-sinto {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.cs-sinto__title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted, #888);
+  margin-bottom: 4px;
+}
+.cs-sinto__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+.cs-sinto__rombo {
+  color: var(--dnd-gold);
+  font-size: 11px;
+}
+.cs-sinto__input {
+  flex: 1;
+  font-size: 12px;
+  padding: 3px 6px;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+}
+.cs-sinto__input:focus {
+  border-bottom-color: var(--accent, #76abae);
+  outline: none;
+}
+
+/* ── Escudo junto a la CA ── */
+.cs-escudo {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted, #888);
+  padding: 2px 4px;
+}
+.cs-escudo--on { color: var(--dnd-gold); }
+.cs-escudo__rombo { font-size: 12px; }
+.cs-hoja--bloqueada .cs-escudo { pointer-events: none; }
+
+/* ── Toggle manual de competencia en DotRow ── */
+.cs-dot-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+.cs-dot--manual {
+  outline: 1px dashed var(--dnd-gold);
+  outline-offset: 1px;
+}
+
+/* ── Entrenamiento con armaduras (rombos) ── */
+.cs-armaduras {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.cs-armaduras__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  padding: 1px 3px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--text-muted, #888);
+  cursor: pointer;
+}
+.cs-armaduras__item:disabled { cursor: default; }
+.cs-armaduras__item--on { color: var(--text); }
+.cs-armaduras__rombo { color: var(--dnd-gold); font-size: 11px; }
+
+/* ── Idiomas (chips editables) ── */
+.cs-idiomas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+.cs-idiomas__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 1px 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+}
+.cs-idiomas__del {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 10px;
+  cursor: pointer;
+  color: var(--text-muted, #888);
+}
+.cs-idiomas__del:hover { color: #c0392b; }
+.cs-idiomas__add { display: inline-flex; gap: 3px; }
+.cs-idiomas__add-input {
+  width: 90px;
+  font-size: 12px;
+  padding: 1px 6px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+}
+.cs-idiomas__add-input:focus { border-color: var(--accent, #76abae); outline: none; }
+.cs-idiomas__add-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dnd-gold);
+  cursor: pointer;
+}
+
+/* ── Ficha oficial por conjuro: tiempo · alcance, C/R/M, notas ── */
+.conj-item { flex-wrap: wrap; }
+.conj-item__ficha {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 24px;
+  font-size: 11px;
+  color: var(--text-muted, #888);
+}
+.conj-item__meta-txt { white-space: nowrap; }
+.conj-item__flags { display: inline-flex; gap: 3px; }
+.conj-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted, #666);
+  opacity: 0.45;
+}
+.conj-flag--on {
+  opacity: 1;
+  color: var(--dnd-gold);
+  border-color: var(--dnd-gold);
+}
+.conj-item__notas {
+  flex: 1;
+  min-width: 80px;
+  font-size: 11px;
+  padding: 1px 6px;
+  border: none;
+  border-bottom: 1px dashed var(--border);
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+}
+.conj-item__notas:focus { border-bottom-color: var(--accent, #76abae); outline: none; }
+.conj-item__notas:read-only { border-bottom-color: transparent; }

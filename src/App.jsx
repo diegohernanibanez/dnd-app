@@ -137,6 +137,11 @@ function App() {
   const [dadosGolpeGastados, setDadosGolpeGastados] = useState(0)
   const [pgMaxPersonalizado, setPgMaxPersonalizado] = useState(null)
   const [xpNivelActual, setXpNivelActual] = useState(0)
+  const [inspiracion, setInspiracion] = useState(false)
+  const [sintonizaciones, setSintonizaciones] = useState(['', '', ''])
+  const [escudoEquipado, setEscudoEquipado] = useState(false)
+  const [competenciasOverride, setCompetenciasOverride] = useState({ habilidades: {}, salvaciones: {} })
+  const [conjurosHojaConfig, setConjurosHojaConfig] = useState({})
   const [pgGananciaPorNivel, setPgGananciaPorNivel] = useState({})
   const [personajeOverrides, setPersonajeOverrides] = useState({})
 
@@ -237,9 +242,14 @@ function App() {
     dadosGolpeGastados,
     pgMaxPersonalizado,
     xpNivelActual,
+    inspiracion,
+    sintonizaciones,
+    escudoEquipado,
+    competenciasOverride,
+    conjurosHojaConfig,
     pgGananciaPorNivel,
     personajeOverrides,
-  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, ataquesHojaConfig, ataquesOcultos, itemsOcultos, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, pgGananciaPorNivel, personajeOverrides])
+  }), [characterId, nivel, claseSeleccionada, eleccionNivel1, subclaseSeleccionada, bonusASI, dotesElegidos, dotesLibres, origen, puntuaciones, bonusTrasfondo, habilidadesClase, descripcion, equipo, hoja2, monedas, pgActuales, pgTemporales, muerte, trucosSeleccionados, grimorioConjuros, conjurosSeleccionados, espaciosUsados, armasCustom, ataquesHojaConfig, ataquesOcultos, itemsOcultos, dadosGolpeGastados, pgMaxPersonalizado, xpNivelActual, inspiracion, sintonizaciones, escudoEquipado, competenciasOverride, conjurosHojaConfig, pgGananciaPorNivel, personajeOverrides])
 
   const cargarDesdeData = useCallback((data) => {
     // Guardar los valores que vamos a cargar para que los effects de reset
@@ -262,7 +272,7 @@ function App() {
     setEquipo(data.equipo ?? ESTADO_VACIO.equipo)
     setHoja2(data.hoja2 ?? ESTADO_VACIO.hoja2)
     setMonedas(data.monedas ?? ESTADO_VACIO.monedas)
-    setPgActuales(0)
+    setPgActuales(data.pgActuales ?? 0)
     setPgTemporales(data.pgTemporales ?? 0)
     setMuerte(data.muerte ?? { exitos: 0, fallos: 0 })
     setTrucosSeleccionados(data.trucosSeleccionados ?? [])
@@ -276,6 +286,11 @@ function App() {
     setDadosGolpeGastados(data.dadosGolpeGastados ?? 0)
     setPgMaxPersonalizado(data.pgMaxPersonalizado ?? null)
     setXpNivelActual(data.xpNivelActual ?? 0)
+    setInspiracion(data.inspiracion ?? false)
+    setSintonizaciones(data.sintonizaciones?.length ? data.sintonizaciones : ['', '', ''])
+    setEscudoEquipado(data.escudoEquipado ?? false)
+    setCompetenciasOverride(data.competenciasOverride ?? { habilidades: {}, salvaciones: {} })
+    setConjurosHojaConfig(data.conjurosHojaConfig ?? {})
     setPgGananciaPorNivel(data.pgGananciaPorNivel ?? {})
     setPersonajeOverrides(data.personajeOverrides ?? {})
   }, [])
@@ -390,9 +405,11 @@ function App() {
       pgGananciaPorNivel,
       ataquesOcultos,
       itemOcultos: itemsOcultos,
+      escudoEquipado,
+      competenciasOverride,
     })
     return { ...p, xpNivelActual }
-  }, [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel, xpNivelActual, pgGananciaPorNivel, ataquesOcultos, itemsOcultos])
+  }, [claseSeleccionada, subclaseSeleccionada, origen, puntuaciones, bonusTrasfondo, bonusASI, dotesElegidos, dotesLibres, habilidadesClase, descripcion, equipo, eleccionNivel1, nivel, xpNivelActual, pgGananciaPorNivel, ataquesOcultos, itemsOcultos, escudoEquipado, competenciasOverride])
 
   const personaje = useMemo(() => {
     return deepMerge(personajeBase, personajeOverrides ?? {})
@@ -551,6 +568,16 @@ function App() {
             pgMaxPersonalizado={pgMaxPersonalizado}
             onPgMaxPersonalizadoCambiar={setPgMaxPersonalizado}
             onXpNivelActualCambiar={setXpNivelActual}
+            inspiracion={inspiracion}
+            onInspiracionCambiar={setInspiracion}
+            sintonizaciones={sintonizaciones}
+            onSintonizacionesCambiar={setSintonizaciones}
+            escudoEquipado={escudoEquipado}
+            onEscudoCambiar={setEscudoEquipado}
+            competenciasOverride={competenciasOverride}
+            onCompetenciasOverrideCambiar={setCompetenciasOverride}
+            conjurosHojaConfig={conjurosHojaConfig}
+            onConjurosHojaConfigCambiar={setConjurosHojaConfig}
             pgGananciaPorNivel={pgGananciaPorNivel}
             onPgGananciaPorNivelCambiar={setPgGananciaPorNivel}
             personajeBase={personajeBase}
