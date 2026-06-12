@@ -349,7 +349,7 @@ export const CONJUROS_SUBCLASE = {
       13: ['Invisibilidad Mejorada'],
       17: ['Apariencia'],
     },
-    feerico: {
+    errante_feerico: {
       3:  ['Hechizar Persona'],
       5:  ['Paso Brumoso'],
       9:  ['Invocar Feérico'],

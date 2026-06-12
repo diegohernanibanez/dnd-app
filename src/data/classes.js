@@ -571,7 +571,7 @@ export const CLASES = [
         },
       },
       {
-        id: 'feerico',
+        id: 'errante_feerico',
         nombre: 'Errante Feérico',
         desc: 'Un aura mística te envuelve gracias a la bendición de los Parajes Feéricos. Tu risa alegre ilumina los corazones de los oprimidos y tu destreza marcial infunde terror a tus enemigos.',
         rasgosNivel: {

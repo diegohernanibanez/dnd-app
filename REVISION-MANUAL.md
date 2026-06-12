@@ -8,7 +8,8 @@ y el código de creación de personajes, repasando desde la página 32 hasta el 
 1. Leer las páginas del PDF de la sesión (lectura visual con la herramienta Read, máx. 20 págs. por tanda).
 2. Comparar contra los archivos de código indicados (datos + componente que los consume).
 3. Registrar cada inconsistencia en la sección **Hallazgos** con formato:
-   `- [ ] (sesión) pág. X — descripción — archivo:línea — severidad (alta/media/baja)`
+   `- [ ] (sesión) [R|T] pág. X — descripción — archivo:línea — severidad (alta/media/baja)`
+   donde `R` = problema de reglas/datos y `T` = texto resumido/incompleto vs. el manual.
 4. Marcar la sesión como hecha en el checklist y anotar la fecha.
 5. Las correcciones se aplican aparte (por bloque o al final), no durante el repaso.
 6. Toda corrección se hace en `src/data/*.js` (fuente canónica versionada) y se cierra el
@@ -17,10 +18,51 @@ y el código de creación de personajes, repasando desde la página 32 hasta el 
 Este documento es la **Fase 2** del plan maestro (`PLAN.md`); la Fase 1 es la hoja de
 personaje editable basada en `public/ES_Character_Sheet.pdf`.
 
+## Principio rector: descripciones COMPLETAS, sin resumir
+
+Requisito explícito del proyecto (prioridad máxima): **todo texto descriptivo en la base de
+datos debe ser una transcripción literal e íntegra del manual, sin resumir, parafrasear ni
+recortar.** Esto aplica a rasgos de clase y subclase, dotes, conjuros, trasfondos, especies,
+propiedades de armas, etc.
+
+Reglas de transcripción:
+- Copiar el texto **palabra por palabra** del PDF, incluyendo tablas, listas de opciones,
+  "Mejora de nivel superior" de conjuros, y notas entre paréntesis.
+- Conservar valores numéricos, CD, alcances, duraciones y unidades exactamente como aparecen.
+- Mantener nombres de reglas y términos en su forma del manual ES 2024.
+- Solo se permite normalizar el formato (saltos de línea, escapado de comillas para JS),
+  nunca el contenido.
+- Si un rasgo en el manual remite a otro (p. ej. "ver Furia"), incluir igualmente el texto
+  propio del rasgo; no reemplazar por la referencia.
+
+Por eso cada sesión revisa **dos ejes** y ambos se anotan por separado en Hallazgos:
+- **(R) Reglas/datos** — valores correctos (niveles, CD, competencias, listas, etc.).
+- **(T) Texto** — la descripción está completa y literal vs. el manual (resumida = hallazgo).
+
+En el checklist, cada sesión marca dos casillas: `[R]` reglas y `[T]` texto.
+
+## Qué funciona / qué no (estado vivo)
+
+Se completa a medida que avanzan las sesiones. Resumen rápido del estado de cada área para
+saber dónde estamos parados sin releer todos los hallazgos.
+
+| Área | Reglas | Texto completo | Notas |
+|------|--------|----------------|-------|
+| Creación (cap. 2) | 🟡 A1 | 🟡 A1 | Gen. de características ✓ e idiomas ✓; alineamientos resumidos (T), falta preferencia/complejidad (R) |
+| Clases (rasgos) | ⬜ pendiente | ⬜ pendiente | |
+| Subclases | ⬜ pendiente | ⬜ pendiente | |
+| Trasfondos | ⬜ pendiente | ⬜ pendiente | `RASGOS_POR_TRASFONDO` con datos de 2014 (ver A1) |
+| Especies | ⬜ pendiente | ⬜ pendiente | |
+| Dotes | ⬜ pendiente | ⬜ pendiente | |
+| Equipo/armas | ⬜ pendiente | ⬜ pendiente | |
+| Conjuros | ⬜ pendiente | ⬜ pendiente | |
+
+Leyenda: ✅ verificado · 🟡 parcial/con hallazgos abiertos · ⬜ pendiente.
+
 ## Checklist de sesiones
 
 ### Bloque A — Cap. 2: Crear un personaje (págs. 32–47)
-- [ ] **A1** págs. 32–40 · Pasos de creación (clase, origen, características, detalles) ↔ `src/App.jsx`, `src/components/ClassSelector.jsx`, `src/components/OriginSelector.jsx`, `src/components/AbilityScoreGenerator.jsx`, `src/data/abilityScores.js`, `src/data/character.js`
+- [x] **A1** `[R ✓] [T 🟡]` págs. 32–40 · Pasos de creación (clase, origen, características, detalles) ↔ `src/App.jsx`, `src/components/ClassSelector.jsx`, `src/components/OriginSelector.jsx`, `src/components/AbilityScoreGenerator.jsx`, `src/data/abilityScores.js`, `src/data/character.js` — revisado 2026-06-12
 - [ ] **A2** págs. 41–45 · Progresión de niveles, comenzar en niveles superiores, multiclase ↔ `src/data/levelProgression.js`, `src/components/LevelSelector.jsx`, `src/data/classLevelData.js`
 - [ ] **A3** págs. 46–47 · Bagatelas ↔ `src/data/bagatelas.js`
 
@@ -68,7 +110,47 @@ Cada sesión compara rasgos por nivel, dado de golpe, salvaciones, competencias,
 
 ## Hallazgos
 
-(ninguno todavía)
+Formato: `- [ ] (sesión) [R|T] pág. X — descripción — archivo:línea — severidad`
+
+### Bugs de datos (encontrados fuera del repaso de páginas)
+
+- [x] [R] **id de subclase duplicado rompía `npm run db:seed`** — `feerico` se usaba como id tanto en
+  Brujo (Patrón feérico) como en Explorador (Errante feérico). Como `subclases.id` es PK de una sola
+  columna y `personajes.subclase_id` es un FK plano a ella, el upsert fallaba con *"ON CONFLICT DO UPDATE
+  command cannot affect row a second time"*. **CORREGIDO 2026-06-12**: Explorador renombrado a
+  `errante_feerico` en `src/data/classes.js:574` y `src/data/spellSlots.js:352` (clave de
+  `CONJUROS_SUBCLASE.explorador`). Verificado: `getConjurosSubclase` resuelve ambas subclases.
+  Único duplicado en todo el dataset (trasfondos/especies/linajes/dotes verificados sin duplicados).
+  ⚠️ Personajes ya guardados con la subclase del Explorador (`subclaseSeleccionada: 'feerico'`) habría
+  que migrarlos a `errante_feerico` (caso borde; sin personajes así en uso).
+
+### Sesión A1 (págs. 32–40)
+
+**Lo que funciona (verificado ✓):**
+- Conjunto estándar `[15,14,13,12,10,8]`, coste en puntos (27 pts, tabla 8→0…15→9) y
+  conjunto estándar por clase: las 12 clases coinciden exactamente con el manual — `src/data/abilityScores.js`.
+- Fórmula de modificador `floor((p-10)/2)` y 4d6 descartando el menor — correctas.
+- Idiomas estándar (10) e inusuales (9) con sus orígenes y los 4 dialectos del primordial:
+  coinciden palabra por palabra — `src/data/origins.js:438-461`.
+- Estructura de los 5 pasos de creación y los 9 alineamientos (ids/abreviaturas) — correcta.
+- Cálculo de PG nivel 1 por clase y Percepción pasiva (10 + mod) — correcto (ya validado en Fase 1).
+
+**Hallazgos:**
+- [x] (A1) [T] pág. 39 — Las descripciones de los 9 alineamientos estaban **parafraseadas/resumidas**.
+  **CORREGIDO 2026-06-12**: reemplazadas por el texto literal del manual — `src/data/description.js:3-67`.
+  Verificado en el paso Descripción (Neutral Bueno muestra el texto completo). ⏳ Falta correr
+  `npm run db:seed` con credenciales (`.env.local` con `VITE_SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY`)
+  para sincronizar Supabase — no disponible en este worktree.
+- [ ] (A1) [R] pág. 33 — La tabla "Resumen de las clases" del manual incluye **Preferencia** (Batalla,
+  Actuación, Ocultismo…) y **Complejidad** (Baja/Media/Alta) por clase; estos campos **no existen** en
+  `src/data/classes.js`. Falta agregarlos — **baja**.
+- [ ] (A1) [R] pág. 36 / cap. 4 — `RASGOS_POR_TRASFONDO` usa trasfondos que **no son del PHB 2024**
+  (`guerrero`, `proscrito`, `sabio`, `urchin` — son de 2014) y faltan los reales `escriba`, `guardia`,
+  `guia`, `vagabundo`. Además el PHB 2024 no trae tablas de rasgos de personalidad por trasfondo (movió
+  esa guía a las tablas por alineamiento, pág. 40). Revisar el origen de estos datos — `src/data/description.js:70-204` — **media** (se cierra en sesión C1).
+- [ ] (A1) [T] pág. 39 — Posible inversión en `CALIFICATIVOS_CARACTERISTICA.Carisma`: "Dominante"
+  figura en el manual como calificativo **alto**, pero el código lo tiene en `baja` y pone "Atrevido"
+  en `alta`. Re-verificar con texto limpio del PDF — `src/data/description.js:247` — **baja**.
 
 ## Registro de sesiones
 
