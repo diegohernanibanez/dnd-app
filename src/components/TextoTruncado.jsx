@@ -7,12 +7,12 @@ export default function TextoTruncado({ texto, limite = LIMITE_DEFAULT, classNam
   const [expandido, setExpandido] = useState(false)
 
   if (!texto || texto.length <= limite) {
-    return <span className={className}>{texto}</span>
+    return <span className={`texto-truncado ${className}`}>{texto}</span>
   }
 
   if (expandido) {
     return (
-      <span className={className}>
+      <span className={`texto-truncado ${className}`}>
         {texto}{' '}
         <button className="texto-truncado__btn" onClick={() => setExpandido(false)}>
           Ver menos
@@ -25,7 +25,7 @@ export default function TextoTruncado({ texto, limite = LIMITE_DEFAULT, classNam
   const textoCorto = texto.slice(0, corte > 0 ? corte : limite)
 
   return (
-    <span className={className}>
+    <span className={`texto-truncado ${className}`}>
       {textoCorto}…{' '}
       <button className="texto-truncado__btn" onClick={() => setExpandido(true)}>
         Ver más
