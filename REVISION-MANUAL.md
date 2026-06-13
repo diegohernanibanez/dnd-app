@@ -48,8 +48,9 @@ saber dónde estamos parados sin releer todos los hallazgos.
 
 | Área | Reglas | Texto completo | Notas |
 |------|--------|----------------|-------|
-| Creación (cap. 2) | 🟡 A1–A2 | 🟡 A1 | Gen. características ✓, idiomas ✓, progresión/PG ✓; alineamientos ahora literales; pendiente preferencia/complejidad (R) y **multiclase no implementada** (A2) |
-| Clases (rasgos) | ⬜ pendiente | ⬜ pendiente | |
+| Creación (cap. 2) | ✅ A1–A3 | ✅ A1–A3 | Gen. características ✓, idiomas ✓, progresión/PG ✓, bagatelas ✓; alineamientos y bagatela 47 corregidos a texto literal; **multiclase implementada**. Bloque A cerrado (queda preferencia/complejidad → B0) |
+| Clases (resumen/intro) | ✅ B0 | ✅ B0 | Preferencia/complejidad añadidas; descripciones intro ✓ |
+| Clases (rasgos por nivel) | ⬜ B1–B12 | ⬜ B1–B12 | Pendiente: comparar `classLevelData.js` contra cada clase |
 | Subclases | ⬜ pendiente | ⬜ pendiente | |
 | Trasfondos | ⬜ pendiente | ⬜ pendiente | `RASGOS_POR_TRASFONDO` con datos de 2014 (ver A1) |
 | Especies | ⬜ pendiente | ⬜ pendiente | |
@@ -64,13 +65,13 @@ Leyenda: ✅ verificado · 🟡 parcial/con hallazgos abiertos · ⬜ pendiente.
 ### Bloque A — Cap. 2: Crear un personaje (págs. 32–47)
 - [x] **A1** `[R ✓] [T 🟡]` págs. 32–40 · Pasos de creación (clase, origen, características, detalles) ↔ `src/App.jsx`, `src/components/ClassSelector.jsx`, `src/components/OriginSelector.jsx`, `src/components/AbilityScoreGenerator.jsx`, `src/data/abilityScores.js`, `src/data/character.js` — revisado 2026-06-12
 - [x] **A2** `[R 🟡] [T —]` págs. 41–45 · Progresión de niveles, comenzar en niveles superiores, multiclase ↔ `src/data/levelProgression.js`, `src/components/LevelSelector.jsx`, `src/data/classLevelData.js` — revisado 2026-06-12
-- [ ] **A3** págs. 46–47 · Bagatelas ↔ `src/data/bagatelas.js`
+- [x] **A3** `[R ✓] [T ✓]` págs. 46–47 · Bagatelas ↔ `src/data/bagatelas.js` — revisado 2026-06-12 (bloque A completo)
 
 ### Bloque B — Cap. 3: Clases de personaje (págs. 48–175)
 Cada sesión compara rasgos por nivel, dado de golpe, salvaciones, competencias, subclases y
 (si aplica) lista de conjuros ↔ `src/data/classes.js`, `src/data/classLevelData.js`, `src/data/spellSlots.js`, `src/data/spells.js`.
-- [ ] **B0** págs. 48–49 · Introducción del capítulo y tabla general de clases
-- [ ] **B1** págs. 50–57 · Bárbaro (4 sendas)
+- [x] **B0** `[R ✓] [T ✓]` págs. 48–49 (+ tabla pág. 33) · Introducción del capítulo y resumen de clases — revisado 2026-06-12
+- [x] **B1** `[R ✓] [T ✓]` págs. 50–57 · Bárbaro (4 sendas) — revisado 2026-06-12
 - [ ] **B2** págs. 58–67 · Bardo (lista de conjuros + 4 colegios)
 - [ ] **B3** págs. 68–79 · Brujo (invocaciones, lista de conjuros, 4 patrones)
 - [ ] **B4** págs. 80–89 · Clérigo (lista de conjuros + 4 dominios)
@@ -112,6 +113,51 @@ Cada sesión compara rasgos por nivel, dado de golpe, salvaciones, competencias,
 
 Formato: `- [ ] (sesión) [R|T] pág. X — descripción — archivo:línea — severidad`
 
+### Re-auditoría de multiclase (págs. 44–45) — 2026-06-12
+
+Repaso regla por regla del apartado Multiclase. Reglas ya correctas: XP por nivel total ✓; PG
+(nivel 1 solo en la 1.ª clase) y dados de golpe acumulados por tipo ✓; bonif. competencia por nivel
+total ✓; tabla de espacios multiclase (completo + ½↑ + ⅓↓ caballero/embaucador arcano) ✓; CA con una
+sola fórmula ✓.
+
+**Hallazgos corregidos:**
+- [x] (MC) [R] pág. 44 — **Requisitos mal calculados.** Se usaba "alguna característica ≥13" (OR) para
+  todas las clases, pero monje, paladín y explorador exigen **dos** (AND) y guerrero admite **una de dos**
+  (OR). Además no se comprobaba el requisito de la **clase primaria/actuales** ("…y en las de tus clases
+  actuales"). **CORREGIDO**: campo `requisitoMulticlase {caracteristicas, modo: and|or}` en las 12 clases;
+  `MulticlassPanel` aplica AND/OR correcto y avisa también si la clase primaria no cumple. Verificado por
+  script (guerrero OR, monje/paladín AND).
+- [x] (MC) [R] pág. 44 — **Competencias de multiclase demasiado generosas.** Se unía el entrenamiento con
+  armaduras COMPLETO de cada clase secundaria; el manual da solo un subconjunto por clase (p. ej.
+  multiclasear a bárbaro da únicamente Escudos, no Ligeras/Medias). **CORREGIDO**: campo
+  `competenciasMulticlase {armaduras, armas, habilidadesElegir, herramientas}` en las 12 clases (transcrito
+  de cada bloque "Como personaje multiclase"); el motor aplica el subconjunto a las secundarias y el
+  entrenamiento completo solo a la primaria. Verificado (Mago+Bárbaro → solo Escudos).
+
+**UX de leveo por clase (rediseño 2026-06-12):**
+- [x] El panel de multiclase ahora es un **asignador de niveles**: cada nivel del personaje se asigna a
+  una clase. ▲/▼ por clase suben/bajan su nivel; "+ Multiclase" da el próximo nivel a una clase nueva
+  (entra en nivel 1); bajar una secundaria desde nivel 1 la elimina. Nivel total = suma (tope 20).
+  El `LevelSelector` superior, cuando hay multiclase, muestra "Nivel total" y queda bloqueado (el leveo
+  se hace en el asignador). Coincide con el modelo del manual: "subir de nivel en una nueva clase cada
+  vez que subas de nivel, en lugar de subir de nivel en tu clase actual". Verificado en navegador
+  (Bárbaro 3 → +Guerrero = 4 → ▲ Guerrero = 5 → ▲ Bárbaro = 6; tope 20; subclase por clase a nivel 3).
+- [x] **El asignador vive ahora en la HOJA, no al crear** (2026-06-12): el paso 1 vuelve a ser de clase
+  única. En la hoja, junto al nivel, hay un chip sutil "⚗️ Multiclase" (resaltado en oro cuando está
+  activa) que abre el asignador embebido. Para clase única el campo "Nivel" se edita normalmente; al
+  multiclasear pasa a mostrar "Nivel total" (bloqueado) y el leveo se hace eligiendo clase en el
+  asignador. Verificado: crear Bárbaro single → hoja → ⚗️ → +Guerrero (total 4) → ▲ Guerrero (total 5,
+  dados "3d12 + 2d10").
+
+**Pendiente / limitaciones anotadas:**
+- [ ] (MC) [R] pág. 44 — **Ataque adicional no acumulable**: si dos clases lo otorgan, aparece dos veces en
+  la lista de rasgos sin señalar que no se acumulan (máx. 2 ataques). Solo display (el app no calcula
+  ataques). **baja**.
+- [ ] (MC) [R] pág. 44 — Las competencias de multiclase de **armas/habilidades/herramientas** están en los
+  datos pero el motor solo auto-aplica las **armaduras**; el resto se añade desde la hoja editable. **baja**.
+- [ ] (MC) [R] pág. 44 — Preparación de conjuros **por clase** (cada conjuro ligado a su clase y aptitud):
+  el motor usa contadores combinados. Limitación ya conocida. **media**.
+
 ### Bugs de datos (encontrados fuera del repaso de páginas)
 
 - [x] [R] **id de subclase duplicado rompía `npm run db:seed`** — `feerico` se usaba como id tanto en
@@ -123,6 +169,48 @@ Formato: `- [ ] (sesión) [R|T] pág. X — descripción — archivo:línea — 
   Único duplicado en todo el dataset (trasfondos/especies/linajes/dotes verificados sin duplicados).
   ⚠️ Personajes ya guardados con la subclase del Explorador (`subclaseSeleccionada: 'feerico'`) habría
   que migrarlos a `errante_feerico` (caso borde; sin personajes así en uso).
+
+### Sesión B1 — Bárbaro (págs. 50–57)
+
+**Lo que funciona (verificado ✓):** los 20 niveles de rasgos de bárbaro coinciden con la tabla y el
+texto del manual (Furia, Maestría con armas, Ataque temerario, Golpe brutal y sus mejoras, Furia
+implacable/persistente, Campeón primordial). Aumentos de furia (2→3→4→5→6 en niveles 1/3/6/12/17) ✓.
+Las 4 sendas (Árbol del Mundo, Berserker, Corazón Salvaje, Fanático) están completas y fieles,
+incluidas las opciones múltiples (Águila/Lobo/Oso, Búho/Pantera/Salmón, Carnero/Halcón/León) y la
+reserva del Fanático (4→5→6→7 dados en 3/6/12/17). `classLevelData.js` + `classes.js`.
+
+**Hallazgos:**
+- [x] (B1) [T] pág. 52 — la elección de subclase decía "camino del bárbaro"; el manual usa "senda".
+  **CORREGIDO** — `classLevelData.js` (`subclaseElegir('senda del bárbaro')`).
+- [x] (B1) [R] pág. 52 — el aumento de daño por furia a +4 (nivel 16) estaba anotado, pero faltaba el
+  +3 de nivel 9. **CORREGIDO** — añadido en nivel 9.
+- [ ] (B1) [R] pág. 52 — la columna "Maestría con armas" (2/3/4 tipos en niveles 1/4/10) no se anota
+  por nivel (solo el rasgo de nivel 1 lo describe en general). **baja** (completitud; el dato funcional
+  de maestrías no se calcula). Patrón a revisar en todas las clases con esa columna.
+
+### Sesión B0 (págs. 48–49 + tabla pág. 33)
+
+**Lo que funciona (verificado ✓):** las descripciones one-liner de las 12 clases en la intro del
+capítulo coinciden con `descripcion` en `src/data/classes.js`. (Las págs. 48–49 son solo intro;
+la "tabla general de clases" con preferencia/complejidad está en la pág. 33, cap. 2.)
+
+**Hallazgos:**
+- [x] (B0 / cierra A1) [R] pág. 33 — Faltaban los campos **Preferencia** (Batalla, Actuación…) y
+  **Complejidad** (Baja/Media/Alta) de la tabla "Resumen de las clases". **AÑADIDOS 2026-06-12** a las
+  12 clases — `src/data/classes.js`. Verificado por script contra el manual. La característica principal
+  ya estaba en `caracteristicaPrincipal`. (Surfacing en Supabase/UI: opcional, nada los consume aún.)
+
+### Sesión A3 (págs. 46–47)
+
+**Lo que funciona (verificado ✓):** las 100 bagatelas de la tabla 1d100 están presentes, completas,
+en el orden correcto y sin duplicados — `src/data/bagatelas.js`. Mapeo 1d100 → índice (resultado-1) correcto.
+
+**Hallazgos:**
+- [x] (A3) [T] pág. 46 — La bagatela 47 omitía el paréntesis final del manual:
+  "…o cristales rotos **(a tu elección)**". **CORREGIDO 2026-06-12** — `src/data/bagatelas.js:51`.
+
+Con A3 queda **cerrado el bloque A (Cap. 2: Crear un personaje)** salvo la épica de multiclase
+(ya implementada) y los hallazgos diferidos a sus bloques (preferencia/complejidad → B0; `RASGOS_POR_TRASFONDO` → C1).
 
 ### Sesión A2 (págs. 41–45)
 

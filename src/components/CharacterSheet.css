@@ -4181,3 +4181,36 @@
 }
 .conj-item__notas:focus { border-bottom-color: var(--accent, #76abae); outline: none; }
 .conj-item__notas:read-only { border-bottom-color: transparent; }
+
+/* ── Multiclase en la hoja: toggle + panel embebido ── */
+.cs-mc-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 220px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--text-muted, #888);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.cs-mc-toggle:hover { border-color: var(--dnd-gold, #b8860b); color: var(--dnd-gold, #b8860b); }
+/* Resalte sutil cuando la multiclase está activa */
+.cs-mc-toggle--activo {
+  border-style: solid;
+  border-color: rgba(184, 134, 11, 0.55);
+  color: var(--dnd-gold, #b8860b);
+  background: rgba(184, 134, 11, 0.10);
+}
+.cs-mc-toggle--abierto { box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.18); }
+
+.cs-header__mc-panel { margin-top: 12px; }
+/* El panel embebido en la hoja no necesita su borde punteado externo */
+.cs-header__mc-panel .mc-panel { margin-top: 0; }

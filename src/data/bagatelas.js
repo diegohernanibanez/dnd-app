@@ -48,7 +48,7 @@ export const BAGATELAS = [
   'Un canario mecánico dentro de una lámpara',
   'Un cofre en miniatura tallado para que parezca que tiene muchos pies en la base',
   'Un duende muerto dentro de una botella de cristal',
-  'Una lata de metal que no tiene abertura, pero suena como si estuviera llena de líquido, arena, arañas o cristales rotos',
+  'Una lata de metal que no tiene abertura, pero suena como si estuviera llena de líquido, arena, arañas o cristales rotos (a tu elección)',
   'Un orbe de cristal lleno de agua en el que nada un pez mecánico',
   'Una cuchara de plata con una "M" grabada en el mango',
   'Un silbato de madera dorada',

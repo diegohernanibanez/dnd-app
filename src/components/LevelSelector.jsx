@@ -8,16 +8,19 @@ const RANGOS = [
   { label: 'Leyenda (17-20)', min: 17, max: 20 },
 ]
 
-export default function LevelSelector({ nivel, onCambiar, nivelesASI }) {
-  const bono = getBonoCompetencia(nivel)
-  const fila = PROGRESO_NIVEL[nivel - 1]
-  const siguiente = PROGRESO_NIVEL[nivel]
-  const esASI = nivelesASI?.includes(nivel)
+export default function LevelSelector({ nivel, onCambiar, nivelesASI, nivelTotal, bloqueado = false }) {
+  // Cuando hay multiclase (bloqueado), el selector muestra el nivel TOTAL y no permite
+  // cambiarlo directamente: el leveo se gestiona en el asignador "Niveles por clase".
+  const nivelMostrado = bloqueado ? (nivelTotal ?? nivel) : nivel
+  const bono = getBonoCompetencia(nivelMostrado)
+  const fila = PROGRESO_NIVEL[nivelMostrado - 1]
+  const siguiente = PROGRESO_NIVEL[nivelMostrado]
+  const esASI = nivelesASI?.includes(nivelMostrado)
 
   return (
-    <div className="level-selector">
+    <div className={`level-selector${bloqueado ? ' level-selector--bloqueado' : ''}`}>
       <div className="level-selector__inner">
-        <span className="level-selector__label">Nivel</span>
+        <span className="level-selector__label">{bloqueado ? 'Nivel total' : 'Nivel'}</span>
 
         <div className="level-selector__btns">
           {Array.from({ length: 20 }, (_, i) => i + 1).map(n => {
@@ -26,9 +29,12 @@ export default function LevelSelector({ nivel, onCambiar, nivelesASI }) {
             return (
               <button
                 key={n}
-                className={`level-btn ${n === nivel ? 'level-btn--active' : ''} level-btn--t${RANGOS.indexOf(rango) + 1} ${esASIBtn ? 'level-btn--asi' : ''}`}
-                onClick={() => onCambiar(n)}
-                title={`Nivel ${n}${esASIBtn ? ' ★ ASI' : ''} — ${n < 20 ? `${PROGRESO_NIVEL[n].xp.toLocaleString('es')} XP` : 'Máximo'}`}
+                className={`level-btn ${n === nivelMostrado ? 'level-btn--active' : ''} level-btn--t${RANGOS.indexOf(rango) + 1} ${esASIBtn ? 'level-btn--asi' : ''}`}
+                onClick={() => !bloqueado && onCambiar(n)}
+                disabled={bloqueado}
+                title={bloqueado
+                  ? 'Multiclase: gestiona los niveles por clase en el paso 1'
+                  : `Nivel ${n}${esASIBtn ? ' ★ ASI' : ''} — ${n < 20 ? `${PROGRESO_NIVEL[n].xp.toLocaleString('es')} XP` : 'Máximo'}`}
                 type="button"
               >{n}</button>
             )

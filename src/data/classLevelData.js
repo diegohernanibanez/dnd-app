@@ -44,7 +44,7 @@ export const NIVEL_DATOS = {
         { nombre: 'Sentir el peligro', desc: 'Eres capaz de percibir de forma casi sobrenatural cuándo las cosas no son como deberían. Gracias a ello, se te da bien evitar el peligro. Tienes ventaja en las tiradas de salvación de Destreza salvo que tengas el estado de incapacitado.' },
       ],
       3: [
-        subclaseElegir('camino del bárbaro'),
+        subclaseElegir('senda del bárbaro'),
         { nombre: 'Conocimiento primigenio', desc: 'Ganas competencia en otra habilidad de tu elección de la lista de habilidades disponibles para los bárbaros en el nivel 1. Además, mientras estés enfurecido, puedes canalizar el poder primigenio: siempre que hagas una prueba de característica con Acrobacias, Intimidación, Percepción, Sigilo o Supervivencia, podrás hacerla como una prueba de Fuerza incluso si normalmente utiliza otra característica.' },
         { nombre: 'Furias', desc: 'Aumentan a 3 usos.' },
       ],
@@ -64,6 +64,7 @@ export const NIVEL_DATOS = {
       8: [ASI],
       9: [
         { nombre: 'Golpe brutal', desc: 'Si utilizas Ataque temerario, puedes renunciar a cualquier ventaja en una tirada de ataque basada en la Fuerza en tu turno. La tirada elegida no debe tener desventaja. Si acierta, el objetivo sufre 1d10 de daño adicional del mismo tipo que inflija el arma o ataque sin armas y puedes causar un efecto de Golpe brutal: Golpe enérgico (el objetivo es empujado 4,5 m en línea recta; luego puedes moverte hasta la mitad de tu velocidad hacia él sin provocar ataques de oportunidad) o Golpe ralentizador (la velocidad del objetivo se reduce en 4,5 m hasta el principio de tu siguiente turno; un objetivo solo puede sufrir un golpe ralentizador cada vez).' },
+        { nombre: 'Furias', desc: 'El bonificador de daño por furia sube a +3.' },
       ],
       10: [subclaseRasgo()],
       11: [

@@ -12,6 +12,7 @@ import { TRASFONDOS, ESPECIES } from '../data/origins'
 import { getDoteById, DOTES_GENERALES, DOTES_DON_EPICO, TODAS_LAS_DOTES, cumpleRequisitos } from '../data/dotes'
 import { CONJUROS, getTrucoDanioEtiqueta, getTrucoNivel0Info } from '../data/spells'
 import SpellDescription from './SpellDescription'
+import MulticlassPanel from './MulticlassPanel'
 import './CharacterSheet.css'
 import { PG_FIJO_POR_DADO } from '../data/levelProgression'
 import { TODAS_LAS_PROPIEDADES_ARMA, PROPIEDADES_ARMA_DESC, TODAS_LAS_MAESTRIAS_ARMA, MAESTRIAS_ARMA_DESC } from '../data/weapons'
@@ -1218,7 +1219,7 @@ const SKILLS_BY_ABILITY = {
 function Hoja1({
   personaje, subclaseSeleccionada, onSubclaseSeleccionar,
   onNombreCambiar, onAlineamientoCambiar, onPersonalidadCambiar,
-  onNivelCambiar, nivel, onClaseCambiar, claseSeleccionada,
+  onNivelCambiar, nivel, clasesSecundarias, onClasesSecundariasCambiar, onClaseCambiar, claseSeleccionada,
   onOrigenCambiar, origen, onPuntuacionesCambiar, puntuacionesBase,
   onEquipoCambiar, equipoState,
   monedas, onMonedasCambiar,
@@ -1245,6 +1246,7 @@ function Hoja1({
   const [modalSubclase, setModalSubclase] = useState(false)
   const [asiModalNivel, setAsiModalNivel] = useState(null)
   const [ataqueModal, setAtaqueModal] = useState(null)
+  const [mcAbierto, setMcAbierto] = useState(false)
   const [detalleAtaqueModal, setDetalleAtaqueModal] = useState(null)
   const [modalDoteLibreAbierto, setModalDoteLibreAbierto] = useState(false)
   const [pgMetodoAbierto, setPgMetodoAbierto] = useState(false)
@@ -1471,15 +1473,31 @@ function Hoja1({
             <span className="cs-header__meta-label">Subclase</span>
           </div>
           <div className="cs-header__meta-item cs-header__meta-item--narrow">
-            <input className="cs-header__meta-input" type="number" min={1} max={20} value={nivel} onChange={e => onNivelCambiar(Math.max(1, Math.min(20, Number(e.target.value) || 1)))} />
-            <span className="cs-header__meta-label">{personaje.esMulticlase ? `Nivel ${personaje.clase?.nombre ?? 'prim.'}` : 'Nivel'}</span>
+            <input
+              className="cs-header__meta-input"
+              type="number" min={1} max={20}
+              value={personaje.esMulticlase ? personaje.nivel : nivel}
+              disabled={personaje.esMulticlase}
+              title={personaje.esMulticlase ? 'Multiclase: gestiona los niveles por clase con ⚗️' : 'Sube o baja el nivel'}
+              onChange={e => onNivelCambiar(Math.max(1, Math.min(20, Number(e.target.value) || 1)))}
+            />
+            <span className="cs-header__meta-label">{personaje.esMulticlase ? 'Nivel total' : 'Nivel'}</span>
           </div>
-          {personaje.esMulticlase && (
+          {onClasesSecundariasCambiar && (
             <div className="cs-header__meta-item cs-header__meta-item--multiclase">
-              <span className="cs-header__meta-val cs-header__meta-val--mc">
-                {personaje.clasesActivas?.map(c => `${c.nombre} ${c.nivel}`).join(' / ')}
+              <button
+                type="button"
+                className={`cs-mc-toggle${personaje.esMulticlase ? ' cs-mc-toggle--activo' : ''}${mcAbierto ? ' cs-mc-toggle--abierto' : ''}`}
+                onClick={() => setMcAbierto(v => !v)}
+                title={personaje.esMulticlase ? 'Gestionar niveles por clase' : 'Activar multiclase: dar niveles a otra clase'}
+              >
+                ⚗️ {personaje.esMulticlase
+                  ? personaje.clasesActivas?.map(c => `${c.nombre} ${c.nivel}`).join(' / ')
+                  : 'Multiclase'}
+              </button>
+              <span className="cs-header__meta-label">
+                {personaje.esMulticlase ? `Multiclase · Nivel total ${personaje.nivel}` : 'Opcional'}
               </span>
-              <span className="cs-header__meta-label">Multiclase · Nivel total {personaje.nivel}</span>
             </div>
           )}
           <div className="cs-header__meta-item cs-header__meta-item--narrow">
@@ -1494,6 +1512,19 @@ function Hoja1({
             <span className="cs-header__meta-label">Alineamiento</span>
           </div>
         </div>
+
+        {mcAbierto && onClasesSecundariasCambiar && (
+          <div className="cs-header__mc-panel">
+            <MulticlassPanel
+              clasePrimariaId={claseSeleccionada}
+              nivelPrimaria={nivel}
+              onNivelPrimariaCambiar={onNivelCambiar}
+              clasesSecundarias={clasesSecundarias ?? []}
+              onCambiar={onClasesSecundariasCambiar}
+              puntuaciones={personaje.puntuaciones}
+            />
+          </div>
+        )}
 
       </header>
 
@@ -3538,7 +3569,7 @@ function EditorAmigable({ personaje, personajeBase, personajeOverrides, onPerson
 export default function CharacterSheet({
   personaje, subclaseSeleccionada, onSubclaseSeleccionar,
   onNombreCambiar, onAlineamientoCambiar, onPersonalidadCambiar, onAparienciaCambiar,
-  onNivelCambiar, nivel, onClaseCambiar, claseSeleccionada,
+  onNivelCambiar, nivel, clasesSecundarias, onClasesSecundariasCambiar, onClaseCambiar, claseSeleccionada,
   onOrigenCambiar, origen, onPuntuacionesCambiar, puntuacionesBase,
   onEquipoCambiar, equipoState,
   hoja2, onHoja2Cambiar,
@@ -3630,6 +3661,8 @@ export default function CharacterSheet({
           onPersonalidadCambiar={onPersonalidadCambiar}
           onNivelCambiar={onNivelCambiar}
           nivel={nivel}
+          clasesSecundarias={clasesSecundarias}
+          onClasesSecundariasCambiar={onClasesSecundariasCambiar}
           onClaseCambiar={onClaseCambiar}
           claseSeleccionada={claseSeleccionada}
           onOrigenCambiar={onOrigenCambiar}
