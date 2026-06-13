@@ -72,8 +72,8 @@ Cada sesión compara rasgos por nivel, dado de golpe, salvaciones, competencias,
 (si aplica) lista de conjuros ↔ `src/data/classes.js`, `src/data/classLevelData.js`, `src/data/spellSlots.js`, `src/data/spells.js`.
 - [x] **B0** `[R ✓] [T ✓]` págs. 48–49 (+ tabla pág. 33) · Introducción del capítulo y resumen de clases — revisado 2026-06-12
 - [x] **B1** `[R ✓] [T ✓]` págs. 50–57 · Bárbaro (4 sendas) — revisado 2026-06-12
-- [ ] **B2** págs. 58–67 · Bardo (lista de conjuros + 4 colegios)
-- [ ] **B3** págs. 68–79 · Brujo (invocaciones, lista de conjuros, 4 patrones)
+- [x] **B2** `[R ✓] [T ✓]` págs. 58–67 · Bardo (4 colegios; lista de conjuros → F0) — revisado 2026-06-12
+- [x] **B3** `[R ✓] [T ✓]` págs. 68–79 · Brujo (invocaciones, 4 patrones; lista de conjuros → F0) — revisado 2026-06-12
 - [ ] **B4** págs. 80–89 · Clérigo (lista de conjuros + 4 dominios)
 - [ ] **B5** págs. 90–101 · Druida (lista de conjuros + 4 círculos)
 - [ ] **B6** págs. 102–111 · Explorador (lista de conjuros + 4 subclases)
@@ -169,6 +169,41 @@ sola fórmula ✓.
   Único duplicado en todo el dataset (trasfondos/especies/linajes/dotes verificados sin duplicados).
   ⚠️ Personajes ya guardados con la subclase del Explorador (`subclaseSeleccionada: 'feerico'`) habría
   que migrarlos a `errante_feerico` (caso borde; sin personajes así en uso).
+
+### Sesión B3 — Brujo (págs. 68–79)
+
+**Lo que funciona (verificado ✓):** los 20 niveles de rasgos coinciden con la tabla (Invocaciones
+sobrenaturales, Magia del pacto, Astucia mágica, Contactar patrón, Arcanum místico 6/7/8/9, Maestro
+sobrenatural). Trucos (2/3/4) ✓. Los 4 patrones (Celestial, Feérico, Infernal, Primigenio) completos y
+fieles, incl. los tres rasgos de nivel 3 del Primigenio y los conjuros siempre preparados (que coinciden
+con `CONJUROS_SUBCLASE` en `spellSlots.js`). Lista de conjuros de brujo → **F0**.
+
+**Hallazgos:**
+- [x] (B3) [R] pág. 69 — La progresión de invocaciones decía "niveles 3, 5, 7 y 9" (incorrecto). El manual
+  sube a 3 (niv. 2), 5 (5), 6 (7), 7 (9), 8 (11), 9 (14) y 10 (17). **CORREGIDO** — `classLevelData.js`.
+- [x] (B3) [T/gap] págs. 71–73 — Las **28 invocaciones sobrenaturales no existían** como datos (solo se
+  mencionaban en el rasgo de nivel 1). **AÑADIDAS** como `INVOCACIONES_BRUJO` en `src/data/classes.js`
+  (nombre, requisitos, descripción literal, repetible). Verificado: 28 invocaciones, 4 repetibles.
+- [ ] (B3) [UI] No hay interfaz para **elegir invocaciones** (ni cantidad por nivel) en el creador/hoja;
+  los datos ya existen para cuando se construya. **media** (feature pendiente, como las dotes).
+- [ ] (B3) [DB] `INVOCACIONES_BRUJO` no se siembra a Supabase (no hay tabla); igual que
+  preferencia/complejidad/requisitoMulticlase, vive en `src/data` (fuente canónica). **baja**.
+
+### Sesión B2 — Bardo (págs. 58–67)
+
+**Lo que funciona (verificado ✓):** los 20 niveles de rasgos de bardo coinciden con la tabla
+(Inspiración bárdica con su progresión de dado d6→d12, Aprendiz de mucho, Pericia ×2, Fuente de
+inspiración, Contraencantamiento, Secretos mágicos, Inspiración superior, Palabras de creación).
+Trucos (2/3/4) y preparados ✓. Los 4 colegios (Danza, Conocimiento, Glamour, Valor) completos y fieles,
+incl. sub-beneficios de "Juego de pies deslumbrante" y entrenamiento marcial del Valor. La CA de la
+Danza (10+DES+CAR) ya está en el motor. La **lista de conjuros de bardo** (qué conjuros la integran)
+se cruza en **F0** (inventario programático).
+
+**Hallazgos:**
+- [x] (B2) [T] pág. 59 — Inspiración bárdica omitía "Cada criatura no puede tener más de un dado…" y el
+  matiz de que el dado se gasta al tirarlo. **CORREGIDO** — `classLevelData.js`.
+- [x] (B2) [R] pág. 60 — el nivel 15 anotaba el dado d12 pero no el desbloqueo de espacios de nivel 8
+  (11/13/17 sí anotaban los suyos). **CORREGIDO** — añadido "Conjuros de nivel 8" en nivel 15.
 
 ### Sesión B1 — Bárbaro (págs. 50–57)
 
