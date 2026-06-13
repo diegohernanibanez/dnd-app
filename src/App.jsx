@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import ClassSelector from './components/ClassSelector'
-import MulticlassPanel from './components/MulticlassPanel'
 import OriginSelector from './components/OriginSelector'
 import AbilityScoreGenerator from './components/AbilityScoreGenerator'
 import CharacterDescription from './components/CharacterDescription'
@@ -456,7 +455,7 @@ function App() {
         </div>
       </header>
 
-      <LevelSelector nivel={nivel} onCambiar={setNivel} nivelesASI={CLASES.find(c => c.id === claseSeleccionada)?.nivelesASI} />
+      <LevelSelector nivel={nivel} onCambiar={setNivel} nivelesASI={CLASES.find(c => c.id === claseSeleccionada)?.nivelesASI} nivelTotal={personaje.nivel} bloqueado={clasesSecundarias.length > 0} />
 
       <StepIndicator
         pasoActual={pasoActual}
@@ -467,23 +466,15 @@ function App() {
 
       <main>
         {pasoActual === 1 && (
-          <>
-            <ClassSelector
-              claseSeleccionada={claseSeleccionada}
-              onSeleccionar={setClaseSeleccionada}
-              eleccionNivel1={eleccionNivel1}
-              onEleccionNivel1={setEleccionNivel1}
-              subclaseSeleccionada={subclaseSeleccionada}
-              onSubclaseSeleccionar={setSubclaseSeleccionada}
-              nivel={nivel}
-            />
-            <MulticlassPanel
-              clasePrimariaId={claseSeleccionada}
-              clasesSecundarias={clasesSecundarias}
-              onCambiar={setClasesSecundarias}
-              puntuaciones={personaje.puntuaciones}
-            />
-          </>
+          <ClassSelector
+            claseSeleccionada={claseSeleccionada}
+            onSeleccionar={setClaseSeleccionada}
+            eleccionNivel1={eleccionNivel1}
+            onEleccionNivel1={setEleccionNivel1}
+            subclaseSeleccionada={subclaseSeleccionada}
+            onSubclaseSeleccionar={setSubclaseSeleccionada}
+            nivel={nivel}
+          />
         )}
         {pasoActual === 2 && (
           <OriginSelector
@@ -542,6 +533,8 @@ function App() {
             }))}
             onNivelCambiar={setNivel}
             nivel={nivel}
+            clasesSecundarias={clasesSecundarias}
+            onClasesSecundariasCambiar={setClasesSecundarias}
             onClaseCambiar={setClaseSeleccionada}
             claseSeleccionada={claseSeleccionada}
             onOrigenCambiar={setOrigen}

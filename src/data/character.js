@@ -599,13 +599,16 @@ export function calcularPersonaje({
       return items
     })(),
 
-    // Competencias texto (unión del entrenamiento con armaduras de todas las clases activas)
+    // Competencias texto (PHB 2024, pág. 44):
+    // - La clase PRIMARIA otorga su entrenamiento con armaduras completo.
+    // - Cada clase SECUNDARIA otorga solo el subconjunto de multiclase (competenciasMulticlase),
+    //   no el entrenamiento completo (p. ej. multiclasear a bárbaro solo da Escudos, no Ligeras/Medias).
     competenciasArmaduras: (() => {
       const base = []
-      for (const c of clasesActivas) {
-        for (const a of (c.clase?.entrenamientoArmaduras ?? [])) {
-          if (!base.includes(a)) base.push(a)
-        }
+      const add = (lista) => { for (const a of (lista ?? [])) if (!base.includes(a)) base.push(a) }
+      add(clase?.entrenamientoArmaduras)
+      for (const c of secundariasValidas) {
+        add(c.clase?.competenciasMulticlase?.armaduras)
       }
       if (claseId === 'clerigo' && eleccionNivel1 === 'protector' && !base.includes('Pesadas')) base.push('Pesadas')
       if (claseId === 'druida'  && eleccionNivel1 === 'guardian'  && !base.includes('Medias')) base.push('Medias')
