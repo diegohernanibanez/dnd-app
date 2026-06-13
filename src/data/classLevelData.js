@@ -105,7 +105,7 @@ export const NIVEL_DATOS = {
     nivelesASI: [4, 8, 12, 16],
     rasgosNivel: {
       1: [
-        { nombre: 'Inspiración bárdica', desc: 'Puedes recurrir a tus palabras, música o danza para inspirar de forma sobrenatural a los demás. Como acción adicional, puedes inspirar a otra criatura a 18 m o menos que te pueda ver u oír; obtiene uno de tus dados de Inspiración bárdica (d6). Una sola vez durante la siguiente hora, cuando falle una prueba con d20, podrá tirar el dado y sumar el resultado. Usos iguales a tu modificador por Carisma (mínimo 1); recuperas todos tras descanso largo. El dado sube a d8 en nivel 5, d10 en nivel 10 y d12 en nivel 15.' },
+        { nombre: 'Inspiración bárdica', desc: 'Puedes recurrir a tus palabras, música o danza para inspirar de forma sobrenatural a los demás. Como acción adicional, puedes inspirar a otra criatura a 18 m o menos que te pueda ver u oír; obtiene uno de tus dados de Inspiración bárdica (d6). Cada criatura no puede tener más de un dado de Inspiración bárdica. Una sola vez durante la siguiente hora, cuando falle una prueba con d20, podrá tirar el dado y sumar el resultado, lo que podría hacerle superar la prueba; un dado de Inspiración bárdica se gasta al tirarlo. Usos iguales a tu modificador por Carisma (mínimo 1); recuperas todos tras descanso largo. El dado sube a d8 en nivel 5, d10 en nivel 10 y d12 en nivel 15.' },
         { nombre: 'Lanzamiento de conjuros', desc: 'Has aprendido a lanzar conjuros mediante tus artes bárdicas. Conoces 2 trucos de la lista de bardo. Preparas conjuros de nivel 1 y superiores de la lista de bardo (4 en nivel 1); el número aumenta según la tabla de tu clase. Cada vez que subas un nivel de bardo, puedes sustituir un conjuro por otro de la lista. Aptitud mágica: Carisma. Puedes utilizar un instrumento musical como canalizador. Espacios de conjuro se recuperan en descanso largo.' },
       ],
       2: [
@@ -132,7 +132,10 @@ export const NIVEL_DATOS = {
       12: [ASI],
       13: [{ nombre: 'Conjuros de nivel 7', desc: 'Desbloqueas espacios de conjuro de nivel 7.' }],
       14: [subclaseRasgo()],
-      15: [{ nombre: 'Dado bárdico d12', desc: 'El dado de Inspiración bárdica sube a d12.' }],
+      15: [
+        { nombre: 'Dado bárdico d12', desc: 'El dado de Inspiración bárdica sube a d12.' },
+        { nombre: 'Conjuros de nivel 8', desc: 'Desbloqueas espacios de conjuro de nivel 8.' },
+      ],
       16: [ASI],
       17: [{ nombre: 'Conjuros de nivel 9', desc: 'Desbloqueas espacios de conjuro de nivel 9.' }],
       18: [
@@ -151,7 +154,7 @@ export const NIVEL_DATOS = {
     nivelesASI: [4, 8, 12, 16],
     rasgosNivel: {
       1: [
-        { nombre: 'Invocaciones sobrenaturales', desc: 'Has desenterrado invocaciones sobrenaturales, fragmentos de conocimiento prohibido que te imbuyen de una capacidad mágica perpetua. Obtienes una invocación de tu elección (como Pacto del grimorio). Cada vez que subas un nivel de brujo, puedes sustituir una invocación por otra para la que cumplas las condiciones. Obtienes más invocaciones en los niveles 3, 5, 7 y 9.' },
+        { nombre: 'Invocaciones sobrenaturales', desc: 'Has desenterrado invocaciones sobrenaturales, fragmentos de conocimiento prohibido que te imbuyen de una capacidad mágica perpetua. Obtienes 1 invocación de tu elección (como Pacto del grimorio). Si una invocación tiene un requisito, debes cumplirlo para aprenderla. Cada vez que subas un nivel de brujo, puedes sustituir una invocación por otra para la que cumplas las condiciones (salvo que sea requisito de otra que tengas). No puedes elegir la misma invocación más de una vez, salvo que indique lo contrario. Obtienes más invocaciones al subir de nivel, según la columna «Invocaciones» de la tabla: 3 en el nivel 2, 5 en el 5, 6 en el 7, 7 en el 9, 8 en el 11, 9 en el 14 y 10 en el 17.' },
         { nombre: 'Magia del pacto', desc: 'Has sellado un pacto con una entidad misteriosa para obtener poderes mágicos. Conoces 2 trucos de brujo. Preparas conjuros de la lista de brujo (2 en nivel 1). Todos tus espacios de Magia del pacto son del mismo nivel (el más alto disponible) y se recuperan en descanso corto o largo. Aptitud mágica: Carisma. Puedes usar un canalizador arcano como canalizador mágico.' },
       ],
       2: [
