@@ -23,29 +23,29 @@ export const CLASES = [
       {
         id: 'arbol_mundo',
         nombre: 'Senda del Árbol del Mundo',
-        desc: 'Los bárbaros que siguen la senda del Árbol del Mundo conectan con el árbol cósmico Yggdrasil a través de su furia. Recurren a la magia del árbol para obtener vitalidad y como medio de transporte dimensional.',
+        desc: 'Los bárbaros que siguen la senda del Árbol del Mundo conectan con el árbol cósmico Yggdrasil a través de su furia. Este árbol crece entre los Planos Exteriores, a los que vincula entre sí además de con el Plano Material. Estos bárbaros recurren a la magia del árbol para obtener vitalidad y como medio de transporte dimensional.',
         rasgosNivel: {
           3: [
-            { nombre: 'Vitalidad del árbol', desc: 'Tu furia se nutre de la fuerza vital del Árbol del Mundo. Oleada de vitalidad: cuando te enfurezcas, obtendrás puntos de golpe temporales iguales a tu nivel de bárbaro. Fuerza revitalizante: al principio de cada uno de tus turnos mientras estés enfurecido, puedes elegir a otra criatura a 3 m o menos para que obtenga PG temporales (tira una cantidad de d6 igual a tu bonificación de daño por furia). Si permanecen cuando dejes de estar enfurecido, se desvanecerán.' },
+            { nombre: 'Vitalidad del árbol', desc: 'Tu furia se nutre de la fuerza vital del Árbol del Mundo. Obtienes los siguientes beneficios:\nOleada de vitalidad. Cuando te enfurezcas, obtendrás una cantidad de puntos de golpe temporales igual a tu nivel de bárbaro.\nFuerza revitalizante. Al principio de cada uno de tus turnos mientras estés enfurecido, puedes elegir a otra criatura a 3 m o menos de ti para que obtenga puntos de golpe temporales. Para determinarlos, tira una cantidad de d6 igual a tu bonificación de daño por furia y suma los resultados. Si algunos de estos puntos de golpe temporales permanecen cuando dejes de estar enfurecido, se desvanecerán.' },
           ],
           6: [
-            { nombre: 'Ramas del árbol', desc: 'Cuando una criatura que puedas ver comience su turno a 9 m o menos de ti mientras estás enfurecido, podrás llevar a cabo una reacción para invocar ramas espectrales del Árbol del Mundo. El objetivo deberá superar una tirada de salvación de Fuerza (CD 8 + tu modificador por Fuerza + tu bonificador por competencia) o se teletransportará a un espacio sin ocupar a 1,5 m de ti. Después, puedes reducir su velocidad a 0 hasta el final del turno actual.' },
+            { nombre: 'Ramas del árbol', desc: 'Cuando una criatura que puedas ver comience su turno a 9 m o menos de ti mientras estás enfurecido, podrás llevar a cabo una reacción para invocar unas ramas espectrales del Árbol del Mundo a su alrededor. El objetivo deberá superar una tirada de salvación de Fuerza (CD 8 más tu modificador por Fuerza y tu bonificador por competencia) o se teletransportará a un espacio sin ocupar que puedas ver a 1,5 m de ti o al espacio sin ocupar más cercano que puedas ver. Después de que el objetivo se teletransporte, puedes reducir su velocidad a 0 hasta el final del turno actual.' },
           ],
           10: [
-            { nombre: 'Raíces apaleadoras', desc: 'Durante tu turno, tu alcance es 3 m superior con cualquier arma cuerpo a cuerpo que tenga la propiedad de pesada o versátil, ya que los zarcillos del Árbol del Mundo se prolongan desde tu cuerpo. Cuando aciertes con un arma así en tu turno, podrás activar la propiedad de maestría de Derribar o Empujar, además de otra propiedad de maestría diferente que utilices con ese arma.' },
+            { nombre: 'Raíces apaleadoras', desc: 'Durante tu turno, tu alcance es 3 m superior con cualquier arma cuerpo a cuerpo que tenga la propiedad de pesada o versátil, ya que los zarcillos del Árbol del Mundo se prolongan desde tu cuerpo. Cuando aciertes con un arma así en tu turno, podrás activar la propiedad de maestría de derribar o empujar, además de otra propiedad de maestría diferente que utilices con ese arma.' },
           ],
           14: [
-            { nombre: 'Viajar por el árbol', desc: 'Cuando te enfureces y como acción adicional mientras estés enfurecido, puedes teletransportarte hasta 18 m a un espacio sin ocupar que puedas ver. Asimismo, una vez por furia, puedes aumentar el alcance del teletransporte a 45 m. Si lo haces, también puedes transportar hasta seis criaturas voluntarias que estén a 3 m o menos de ti. Cada criatura se teletransportará a un espacio sin ocupar de tu elección a 3 m o menos de tu destino.' },
+            { nombre: 'Viajar por el árbol', desc: 'Cuando te enfureces y como acción adicional mientras estés enfurecido, puedes teletransportarte hasta 18 m a un espacio sin ocupar que puedas ver.\nAsimismo, una vez por furia, puedes aumentar el alcance del teletransporte a 45 m. Si lo haces, también puedes transportar hasta seis criaturas voluntarias que estén a 3 m o menos de ti. Cada criatura se teletransportará a un espacio sin ocupar de tu elección a 3 m o menos de tu espacio de destino.' },
           ],
         },
       },
       {
         id: 'berserker',
         nombre: 'Senda del Berserker',
-        desc: 'Los bárbaros que recorren la senda del berserker ponen su furia principalmente al servicio de la violencia. Su senda se asienta en una rabia sin cortapisas y se embriagan del caos del combate.',
+        desc: 'Los bárbaros que recorren la senda del berserker ponen su furia principalmente al servicio de la violencia. Su senda se asienta en una rabia sin cortapisas y estos bárbaros se embriagan del caos del combate mientras dejan que su furia se apodere de ellos y los fortalezca.',
         rasgosNivel: {
           3: [
-            { nombre: 'Frenesí', desc: 'Si utilizas Ataque temerario mientras estás enfurecido, causarás daño adicional al primer objetivo al que aciertes en tu turno con un ataque basado en la Fuerza. Para determinar el daño adicional, tira una cantidad de d6 igual a tu bonificación de daño por furia y suma los resultados. El daño será del mismo tipo que el del arma o ataque sin armas utilizado.' },
+            { nombre: 'Frenesí', desc: 'Si utilizas Ataque temerario mientras estás enfurecido, causarás daño adicional al primer objetivo al que aciertes en tu turno con un ataque basado en la Fuerza. Para determinar el daño adicional, tira una cantidad de d6 igual a tu bonificación de daño por furia y suma los resultados. El daño será del mismo tipo que el del arma o ataque sin armas utilizado para el ataque.' },
           ],
           6: [
             { nombre: 'Furia irracional', desc: 'Tienes inmunidad a los estados de asustado y hechizado mientras estés enfurecido. Si estás asustado o hechizado cuando te dejes llevar por la furia, el estado terminará para ti.' },
@@ -54,47 +54,47 @@ export const CLASES = [
             { nombre: 'Represalia', desc: 'Cuando recibas daño de una criatura que esté a 1,5 m o menos de ti, puedes llevar a cabo una reacción para hacer un ataque cuerpo a cuerpo contra esa criatura usando un arma o un ataque sin armas.' },
           ],
           14: [
-            { nombre: 'Presencia intimidante', desc: 'Como acción adicional, puedes sembrar el terror con tu presencia amenazadora. Todas las criaturas de tu elección situadas en una emanación de 9 m deberán hacer una tirada de salvación de Sabiduría (CD 8 + tu modificador por Fuerza + tu bonificador por competencia). Si la fallan, tendrán el estado de asustadas durante 1 minuto. Al final de cada turno, repiten la salvación. Cuando uses este rasgo, no podrás volver a hacerlo hasta que finalices un descanso largo, a menos que gastes un uso de tu furia para restablecerlo.' },
+            { nombre: 'Presencia intimidante', desc: 'Como acción adicional, puedes sembrar el terror en los demás con tu mera presencia amenazadora y tu poder primigenio. Cuando lo hagas, todas las criaturas de tu elección situadas en una emanación de 9 m originada en ti deberán hacer una tirada de salvación de Sabiduría (CD 8 más tu modificador por Fuerza y tu bonificador por competencia). Si la fallan, tendrán el estado de asustadas durante 1 minuto. Al final de cada uno de sus turnos, las criaturas asustadas repiten la tirada de salvación y, si tienen éxito, se librarán del efecto.\nCuando uses este rasgo, no podrás volver a hacerlo hasta que finalices un descanso largo, a menos que gastes un uso de tu furia (no requiere acción) para restablecer su uso.' },
           ],
         },
       },
       {
         id: 'corazon_salvaje',
         nombre: 'Senda del Corazón Salvaje',
-        desc: 'Los bárbaros que siguen la senda del corazón salvaje sienten afinidad por los animales. Aprenden métodos mágicos de comunicarse con ellos y su furia los imbuye de una fuerza sobrenatural.',
+        desc: 'Los bárbaros que siguen la senda del corazón salvaje sienten afinidad por los animales. Aprenden métodos mágicos de comunicarse con ellos y su furia aumenta su conexión, ya que los imbuye de una fuerza sobrenatural.',
         rasgosNivel: {
           3: [
-            { nombre: 'Furia de lo salvaje', desc: 'Tu furia se sirve del poder primigenio de los animales. Cuando te enfurezcas, elige una opción: Águila (podrás llevar a cabo las acciones de destrabarse y correr como parte de esa acción adicional; mientras enfurecido, puedes usar una acción adicional para ambas acciones). Lobo (tus aliados tendrán ventaja en las tiradas de ataque contra cualquiera de tus enemigos a 1,5 m o menos de ti). Oso (tendrás resistencia a todos los tipos de daño salvo de fuerza, necrótico, psíquico y radiante).' },
+            { nombre: 'Furia de lo salvaje', desc: 'Tu furia se sirve del poder primigenio de los animales. Cuando te enfurezcas, obtendrás una de las siguientes opciones, a tu elección.\nÁguila. Cuando te enfurezcas, podrás llevar a cabo las acciones de destrabarse y correr como parte de esa acción adicional. Mientras estés enfurecido, puedes usar una acción adicional para llevar a cabo ambas acciones.\nLobo. Mientras estés enfurecido, tus aliados tendrán ventaja en las tiradas de ataque contra cualquiera de tus enemigos que se encuentre a 1,5 m o menos de ti.\nOso. Mientras estés enfurecido, tendrás resistencia a todos los tipos de daño salvo de fuerza, necrótico, psíquico y radiante.' },
             { nombre: 'Portavoz de los animales', desc: 'Puedes lanzar los conjuros hablar con los animales y sentidos de la bestia, pero solo como rituales. La Sabiduría es tu aptitud mágica para lanzarlos.' },
           ],
           6: [
-            { nombre: 'Aspecto de lo salvaje', desc: 'Obtienes una de las siguientes opciones, a tu elección. Tras finalizar un descanso largo, puedes cambiar de opción. Búho: tienes visión en la oscuridad hasta 18 m; si ya la posees, su alcance aumenta en 18 m. Pantera: tienes una velocidad trepando igual a tu velocidad. Salmón: tienes una velocidad nadando igual a tu velocidad.' },
+            { nombre: 'Aspecto de lo salvaje', desc: 'Obtienes una de las siguientes opciones, a tu elección. Tras finalizar un descanso largo, puedes cambiar de opción.\nBúho. Tienes visión en la oscuridad hasta 18 m. Si ya posees visión en la oscuridad, su alcance aumenta en 18 m.\nPantera. Tienes una velocidad trepando igual a tu velocidad.\nSalmón. Tienes una velocidad nadando igual a tu velocidad.' },
           ],
           10: [
             { nombre: 'Hablante de la naturaleza', desc: 'Puedes lanzar el conjuro comunión con la naturaleza, pero solo como ritual. La Sabiduría es tu aptitud mágica para lanzarlo.' },
           ],
           14: [
-            { nombre: 'Poder de lo salvaje', desc: 'Cuando te enfurezcas, elige una opción: Carnero (mientras enfurecido, podrás hacer que una criatura Grande o más pequeña sufra el estado de derribada si la aciertas con un ataque cuerpo a cuerpo). Halcón (mientras enfurecido, tendrás una velocidad volando igual a tu velocidad si no llevas ninguna armadura). León (mientras enfurecido, cualquier enemigo a 1,5 m o menos tendrá desventaja en las tiradas de ataque contra otros objetivos que no seáis tú u otro bárbaro con esta opción activa).' },
+            { nombre: 'Poder de lo salvaje', desc: 'Cuando te enfurezcas, obtendrás una de las siguientes opciones, a tu elección.\nCarnero. Mientras estés enfurecido, podrás hacer que una criatura Grande o más pequeña sufra el estado de derribada si la aciertas con un ataque cuerpo a cuerpo.\nHalcón. Mientras estés enfurecido, tendrás una velocidad volando igual a tu velocidad si no llevas ninguna armadura.\nLeón. Mientras estés enfurecido, cualquier enemigo que esté a 1,5 m o menos de ti tendrá desventaja en las tiradas de ataque contra otros objetivos que no seáis tú u otro bárbaro que tenga esta opción activa.' },
           ],
         },
       },
       {
         id: 'fanatico',
         nombre: 'Senda del Fanático',
-        desc: 'Los bárbaros que siguen la senda del fanático reciben beneficios de un dios o panteón. Experimentan su furia como un episodio eufórico de unión divina que les imbuye de poder.',
+        desc: 'Los bárbaros que siguen la senda del fanático reciben beneficios de un dios o panteón. Estos bárbaros experimentan su furia como un episodio eufórico de unión divina que les imbuye de poder. Habitualmente, se alían con sacerdotes y otros seguidores de su dios o panteón.',
         rasgosNivel: {
           3: [
-            { nombre: 'Furia divina', desc: 'Puedes canalizar el poder divino hacia tus ataques. En cada uno de tus turnos mientras estés enfurecido, la primera criatura a la que aciertes con un arma o ataque sin armas sufrirá una cantidad de daño adicional igual a 1d6 más la mitad de tu nivel de bárbaro (redondeando hacia abajo). El daño adicional es necrótico o radiante, que eliges cada vez que lo causas.' },
-            { nombre: 'Guerrero de los dioses', desc: 'Una entidad divina ayuda a garantizar que continúes la batalla. Cuentas con una reserva de cuatro d12 que puedes gastar para curarte. Como acción adicional, gasta dados de la reserva, tíralos y recupera una cantidad de puntos de golpe igual al resultado total. Tu reserva recupera todos los dados gastados tras finalizar un descanso largo. El número máximo aumenta: 5 dados en nivel 6, 6 en nivel 12 y 7 en nivel 17.' },
+            { nombre: 'Furia divina', desc: 'Puedes canalizar el poder divino hacia tus ataques. En cada uno de tus turnos mientras estés enfurecido, la primera criatura a la que aciertes con un arma o un ataque sin armas sufrirá una cantidad de daño adicional igual a 1d6 más la mitad de tu nivel de bárbaro (redondeando hacia abajo). El daño adicional es necrótico o radiante, que eliges cada vez que lo causas.' },
+            { nombre: 'Guerrero de los dioses', desc: 'Una entidad divina ayuda a garantizar que continúes la batalla. Cuentas con una reserva de cuatro d12 que puedes gastar para curarte. Como acción adicional, puedes gastar dados de la reserva, tirarlos y recuperar una cantidad de puntos de golpe igual al resultado total de la tirada. Tu reserva recupera todos los dados gastados tras finalizar un descanso largo.\nEl número máximo de dados de la reserva aumenta en uno cuando alcanzas los niveles 6 (5 dados), 12 (6 dados) y 17 (7 dados) de bárbaro.' },
           ],
           6: [
             { nombre: 'Foco fanático', desc: 'Una vez por furia, si fallas una tirada de salvación, podrás repetirla con un bonificador igual a tu bonificación de daño por furia y deberás utilizar el nuevo resultado.' },
           ],
           10: [
-            { nombre: 'Presencia ferviente', desc: 'Como acción adicional, profieres un grito de guerra imbuido de energía divina. Hasta diez criaturas de tu elección que estén a 18 m o menos de ti obtendrán ventaja en las tiradas de ataque y tiradas de salvación hasta el principio de tu siguiente turno. Cuando uses este rasgo, no podrás volver a hacerlo hasta que finalices un descanso largo, a menos que gastes un uso de tu furia para restablecerlo.' },
+            { nombre: 'Presencia ferviente', desc: 'Como acción adicional, profieres un grito de guerra imbuido de energía divina. Hasta diez criaturas de tu elección que estén a 18 m o menos de ti obtendrán ventaja en las tiradas de ataque y tiradas de salvación hasta el principio de tu siguiente turno.\nCuando uses este rasgo, no podrás volver a hacerlo hasta que finalices un descanso largo, a menos que gastes un uso de tu furia (no requiere acción) para restablecer su uso.' },
           ],
           14: [
-            { nombre: 'Furia de los dioses', desc: 'Cuando te enfureces, puedes adoptar la forma de un guerrero divino. Esta forma dura 1 minuto o hasta que tus puntos de golpe se reduzcan a 0 (una vez por descanso largo). Mientras tengas esta forma: Resistencia al daño necrótico, psíquico y radiante. Revitalización: cuando los PG de una criatura a 9 m o menos fueran a reducirse a 0, puedes usar una reacción para gastar un uso de tu furia y hacer que sus PG cambien a una cantidad igual a tu nivel de bárbaro. Vuelo: tienes una velocidad volando igual a tu velocidad y puedes levitar.' },
+            { nombre: 'Furia de los dioses', desc: 'Cuando te enfureces, puedes adoptar la forma de un guerrero divino. Esta forma dura 1 minuto o hasta que tus puntos de golpe se reduzcan a 0. Cuando uses este rasgo, no podrás volver a hacerlo hasta que finalices un descanso largo.\nMientras tengas esta forma, obtendrás los siguientes beneficios:\nResistencia. Tienes resistencia al daño necrótico, psíquico y radiante.\nRevitalización. Cuando los puntos de golpe de una criatura que esté a 9 m o menos de ti fueran a reducirse a 0, puedes llevar a cabo una reacción para gastar un uso de tu furia y hacer que los puntos de golpe del objetivo cambien a una cantidad igual a tu nivel de bárbaro.\nVuelo. Tienes una velocidad volando igual a tu velocidad y puedes levitar.' },
           ],
         },
       },
@@ -124,65 +124,65 @@ export const CLASES = [
       {
         id: 'danza',
         nombre: 'Colegio de la Danza',
-        desc: 'Los bardos del colegio de la danza saben que las palabras de creación se pronuncian a través del desplazamiento de los cuerpos celestes. Practican una forma de permanecer en armonía con la vorágine del cosmos que enfatiza la agilidad, la velocidad y la elegancia.',
+        desc: 'Los bardos del colegio de la danza saben que las palabras de creación no pueden encerrarse en un discurso o una canción: las palabras se pronuncian a través del desplazamiento de los cuerpos celestes y fluyen por los movimientos de las criaturas menores. Estos bardos practican una forma de permanecer en armonía con la vorágine del cosmos que enfatiza la agilidad, la velocidad y la elegancia.',
         rasgosNivel: {
           3: [
-            { nombre: 'Juego de pies deslumbrante', desc: 'Mientras no lleves armadura ni portes un escudo: Virtuoso de la danza (ventaja en pruebas de CAR (Interpretación) que impliquen bailar). Defensa sin armadura (CA base = 10 + modificador por DES + modificador por CAR). Ataques ágiles (al gastar un uso de Inspiración bárdica como parte de una acción, puedes realizar un ataque sin armas como parte de ella). Daño bárdico (puedes usar DES en lugar de FUE para ataques sin armas; al causar daño, puedes infligir daño contundente igual a tu dado de Inspiración bárdica + mod. DES, sin gastar el dado).' },
+            { nombre: 'Juego de pies deslumbrante', desc: 'Mientras no lleves armadura ni portes un escudo, obtienes los siguientes beneficios.\nVirtuoso de la danza. Tienes ventaja en cualquier prueba de Carisma (Interpretación) que hagas que implique bailar.\nDefensa sin armadura. Tu clase de armadura base es igual a 10 más tus modificadores por Destreza y Carisma.\nAtaques ágiles. Cuando gastes un uso de tu Inspiración bárdica como parte de una acción, una acción adicional o una reacción, puedes realizar un ataque sin armas como parte de esa acción, acción adicional o reacción.\nDaño bárdico. Puedes usar tu Destreza en lugar de tu Fuerza para las tiradas de ataque de tus ataques sin armas. Cuando causas daño con un ataque sin armas, puedes infligir una cantidad de daño contundente igual al resultado de una tirada con tu dado de Inspiración bárdica más tu modificador por Destreza, en lugar del daño normal del ataque. No gastas el dado con esta tirada.' },
           ],
           6: [
-            { nombre: 'Juego de pies conjunto', desc: 'Cuando tires iniciativa, puedes gastar un uso de tu Inspiración bárdica si no tienes el estado de incapacitado. Tira tu dado de Inspiración bárdica; tú y todos los aliados a 9 m o menos que puedan verte u oírte ganaréis un bonificador a la iniciativa igual al resultado.' },
-            { nombre: 'Movimiento inspirador', desc: 'Cuando un enemigo que puedas ver termine su turno a 1,5 m o menos de ti, puedes llevar a cabo una reacción y gastar un uso de tu Inspiración bárdica para moverte hasta la mitad de tu velocidad. Después, un aliado a 9 m o menos también podrá moverse hasta la mitad de su velocidad usando su reacción. Estos movimientos no provocan ataques de oportunidad.' },
+            { nombre: 'Juego de pies conjunto', desc: 'Cuando tires iniciativa, puedes gastar un uso de tu Inspiración bárdica si no tienes el estado de incapacitado. Cuando lo hagas, tira tu dado de Inspiración bárdica; tú y todos los aliados que estén a 9 m o menos de ti que puedan verte u oírte ganaréis un bonificador a la iniciativa igual al resultado.' },
+            { nombre: 'Movimiento inspirador', desc: 'Cuando un enemigo que puedas ver termine su turno a 1,5 m o menos de ti, puedes llevar a cabo una reacción y gastar un uso de tu Inspiración bárdica para moverte hasta la mitad de tu velocidad. Después, un aliado que elijas que esté a 9 m o menos de ti también podrá moverse hasta la mitad de su velocidad usando su reacción. Los movimientos realizados con este rasgo no provocan ataques de oportunidad.' },
           ],
           14: [
-            { nombre: 'Evasión dirigida', desc: 'Cuando sufras un efecto que te permita hacer una tirada de salvación de Destreza para sufrir solo la mitad de daño, no recibes daño alguno si la superas y solo sufres la mitad si la fallas. Si cualquier criatura a 1,5 m hace la misma salvación de DES, puedes compartir este beneficio. No puedes usar este rasgo si tienes el estado de incapacitado.' },
+            { nombre: 'Evasión dirigida', desc: 'Cuando sufras un efecto que te permita hacer una tirada de salvación de Destreza para sufrir solo la mitad de daño, no recibes daño alguno si la superas y solo sufres la mitad si la fallas. Si cualquier criatura que esté a 1,5 m de ti hace la misma tirada de salvación de Destreza, puedes compartir este beneficio con ella para la tirada.\nNo puedes usar este rasgo si tienes el estado de incapacitado.' },
           ],
         },
       },
       {
         id: 'conocimiento',
         nombre: 'Colegio del Conocimiento',
-        desc: 'Los bardos del colegio del conocimiento recaban conjuros y secretos de diversas fuentes. Se reúnen en bibliotecas y universidades para intercambiar conocimientos, y pueden sacar a la luz casos de corrupción o desvelar mentiras.',
+        desc: 'Los bardos del colegio del conocimiento recaban conjuros y secretos de diversas fuentes, como tratados intelectuales, ritos místicos y cuentos de campesinos. Los miembros del colegio se reúnen en bibliotecas y universidades para intercambiar sus conocimientos. También se encuentran en festivales o reuniones de Estado, donde pueden sacar a la luz casos de corrupción, desvelar mentiras o reírse de los vanidosos representantes de la autoridad.',
         rasgosNivel: {
           3: [
             { nombre: 'Competencias adicionales', desc: 'Ganas competencia en tres habilidades de tu elección.' },
-            { nombre: 'Palabras cortantes', desc: 'Cuando una criatura que puedas ver a 18 m o menos haga una tirada de daño o tenga éxito en una prueba de característica o tirada de ataque, puedes llevar a cabo una reacción para gastar un uso de tu Inspiración bárdica; tira tu dado y resta el resultado a la tirada de la criatura, lo que reducirá el daño o quizá convierta el éxito en un fallo.' },
+            { nombre: 'Palabras cortantes', desc: 'Aprendes a usar tu astucia para distraer, confundir y minar la confianza y las aptitudes de los demás de manera sobrenatural. Cuando una criatura que puedas ver a 18 m o menos de ti haga una tirada de daño o tenga éxito en una prueba de característica o una tirada de ataque, puedes llevar a cabo una reacción para gastar un uso de tu Inspiración bárdica; tira tu dado de Inspiración bárdica y resta el número obtenido al resultado de la tirada de la criatura, lo que reducirá el daño o quizá convierta el éxito en un fallo.' },
           ],
           6: [
-            { nombre: 'Descubrimientos mágicos', desc: 'Aprendes dos conjuros de tu elección de las listas de clérigo, druida o mago. Deben ser trucos o conjuros para los que tengas espacios. Siempre los tienes preparados y, cada vez que subas un nivel de bardo, podrás reemplazar uno por otro que cumpla los requisitos.' },
+            { nombre: 'Descubrimientos mágicos', desc: 'Aprendes dos conjuros de tu elección. Estos conjuros pueden proceder de las listas de conjuros de clérigo, druida o mago, o de cualquier combinación de estas (consulta la lista de conjuros en la sección de la clase). Los conjuros que elijas deben ser trucos o conjuros para los que tengas espacios de conjuro, como se muestra en la tabla «Rasgos de bardo».\nSiempre tienes preparados los conjuros elegidos y, cada vez que subas un nivel de bardo, podrás reemplazar uno de los conjuros por otro conjuro que cumpla estos requisitos.' },
           ],
           14: [
-            { nombre: 'Habilidad sin parangón', desc: 'Cuando hagas una prueba de característica o una tirada de ataque y falles, podrás gastar un uso de Inspiración bárdica; tira el dado y suma el resultado al d20, lo que podría convertir un fallo en un éxito. Si fallas la tirada, la Inspiración bárdica no se gasta.' },
+            { nombre: 'Habilidad sin parangón', desc: 'Cuando hagas una prueba de característica o una tirada de ataque y falles, podrás gastar un uso de Inspiración bárdica; tira el dado de Inspiración bárdica y suma el resultado al d20, lo que podría convertir un fallo en un éxito. Si fallas la tirada, la Inspiración bárdica no se gasta.' },
           ],
         },
       },
       {
         id: 'glamour',
         nombre: 'Colegio del Glamour',
-        desc: 'El colegio del glamour se originó con la magia cautivadora de los Parajes Feéricos. Estos bardos tejen hilos de belleza y terror en sus canciones e historias, y los más poderosos pueden envolverse en una majestuosidad sobrenatural.',
+        desc: 'El colegio del glamour se originó con la magia cautivadora de los Parajes Feéricos. Los bardos que estudian esta magia tejen hilos de belleza y terror en sus canciones e historias y los más poderosos de ellos pueden envolverse en una majestuosidad sobrenatural. Sus actuaciones suscitan el anhelo nostálgico de una inocencia olvidada, evocan los recuerdos inconscientes de temores arraigados y apelan a las emociones incluso de los oyentes más insensibles.',
         rasgosNivel: {
           3: [
-            { nombre: 'Magia cautivadora', desc: 'Siempre tienes preparados hechizar persona e imagen múltiple. Inmediatamente después de lanzar un conjuro de encantamiento o ilusionismo mediante un espacio, puedes hacer que una criatura visible a 18 m realice una salvación de SAB contra tu CD de conjuros; si falla, queda asustada o hechizada (a tu elección) durante 1 minuto (salvación al final de cada turno). Se recarga en descanso largo o gastando un uso de Inspiración bárdica.' },
-            { nombre: 'Manto de inspiración', desc: 'Como acción adicional, puedes gastar un uso de tu Inspiración bárdica y tirar el dado. Elige hasta un número de criaturas a 18 m igual a tu modificador por Carisma (mínimo 1). Cada una obtiene PG temporales iguales al doble del resultado del dado y luego podrá usar su reacción para moverse hasta su velocidad sin provocar ataques de oportunidad.' },
+            { nombre: 'Magia cautivadora', desc: 'Siempre tienes los conjuros hechizar persona e imagen múltiple preparados.\nAsimismo, inmediatamente después de que lances un conjuro de encantamiento o ilusionismo mediante un espacio de conjuro, podrás hacer que una criatura que puedas ver a 18 m o menos de ti realice una tirada de salvación de Sabiduría contra tu CD de salvación de conjuros. Si la falla, el objetivo tendrá el estado de asustado o hechizado (a tu elección) durante 1 minuto. El objetivo repetirá la tirada de salvación al final de cada uno de sus turnos y, si tiene éxito, se librará del efecto.\nCuando uses este beneficio, no podrás volver a hacerlo hasta que finalices un descanso largo. También puedes restablecer su uso gastando un uso de tu Inspiración bárdica (no requiere acción).' },
+            { nombre: 'Manto de inspiración', desc: 'Puedes urdir la magia feérica en una canción o danza que insufle energía a los demás. Como acción adicional, puedes gastar un uso de tu Inspiración bárdica y tirar un dado de Inspiración bárdica. Cuando lo hagas, elige una cantidad de otras criaturas a 18 m o menos de ti, hasta un máximo igual a tu modificador por Carisma (mínimo una criatura). Cada una de esas criaturas obtendrá una cantidad de puntos de golpe temporales igual al doble del resultado del dado de Inspiración bárdica y luego podrá usar su reacción para moverse hasta su velocidad sin provocar ataques de oportunidad.' },
           ],
           6: [
-            { nombre: 'Manto de majestad', desc: 'Siempre tienes preparado orden imperiosa. Como acción adicional, puedes lanzar orden imperiosa sin gastar espacio y adoptar una apariencia sobrenatural durante 1 minuto (o hasta perder concentración); durante este tiempo, puedes lanzar orden imperiosa como acción adicional sin espacio. Las criaturas que hayas hechizado fallan automáticamente la salvación. Se recarga en descanso largo o gastando un espacio de nivel 3+.' },
+            { nombre: 'Manto de majestad', desc: 'Siempre tienes el conjuro orden imperiosa preparado.\nComo acción adicional, puedes lanzar orden imperiosa sin gastar un espacio de conjuro y adoptar una apariencia sobrenatural durante 1 minuto o hasta que pierdas la concentración. Durante este tiempo, puedes lanzar orden imperiosa como acción adicional sin gastar un espacio de conjuro.\nCualquier criatura a la que hayas hechizado fallará automáticamente su tirada de salvación contra la orden imperiosa que lances con este rasgo.\nCuando uses este rasgo, no podrás volver a hacerlo hasta que finalices un descanso largo. También puedes restablecer su uso gastando un espacio de conjuro de nivel 3 o superior (no requiere acción).' },
           ],
           14: [
-            { nombre: 'Majestad inquebrantable', desc: 'Como acción adicional, puedes adoptar un aspecto majestuoso mágico durante 1 minuto (o hasta incapacitado). Durante ese tiempo, cuando una criatura te acierte con una tirada de ataque por primera vez en un turno, el atacante deberá superar una salvación de CAR contra tu CD de conjuros o el ataque fallará. Se recarga en descanso corto o largo.' },
+            { nombre: 'Majestad inquebrantable', desc: 'Como acción adicional, puedes adoptar un aspecto majestuoso mágico durante 1 minuto o hasta que tengas el estado de incapacitado. Durante ese tiempo, cuando una criatura te acierte con una tirada de ataque por primera vez en un turno, el atacante deberá superar una tirada de salvación de Carisma contra tu CD de salvación de conjuros o el ataque fallará, puesto que la criatura se amedrentará por tu majestuosidad.\nCuando adoptes este aspecto majestuoso, no podrás volver a hacerlo hasta que finalices un descanso corto o largo.' },
           ],
         },
       },
       {
         id: 'valor',
         nombre: 'Colegio del Valor',
-        desc: 'Los bardos del colegio del valor son narradores osados cuyos relatos conservan el recuerdo de los grandes héroes del pasado. Con sus canciones, inspiran a las nuevas generaciones a lograr hitos similares.',
+        desc: 'Los bardos del colegio del valor son narradores osados cuyos relatos conservan el recuerdo de los grandes héroes del pasado. Estos bardos cantan las hazañas de sus ídolos en salones abovedados o ante un público reunido en torno a refulgentes hogueras. Viajan para presenciar los grandes acontecimientos de primera mano y asegurarse de que su recuerdo no cae en el olvido. Con sus canciones, inspiran a las nuevas generaciones a lograr hitos similares a los de los héroes de antaño.',
         rasgosNivel: {
           3: [
-            { nombre: 'Entrenamiento marcial', desc: 'Ganas competencia con armas marciales y entrenamiento con armaduras medias y escudos. Además, puedes utilizar un arma sencilla o marcial como canalizador mágico para lanzar tus conjuros de bardo.' },
-            { nombre: 'Inspiración en combate', desc: 'Una criatura con tu dado de Inspiración bárdica puede usarlo para: Defensa (cuando una tirada de ataque acierte a la criatura, puede usar su reacción para tirar el dado y sumar el resultado a su CA contra ese ataque, quizá haciendo que falle) u Ofensiva (inmediatamente después de acertar, puede tirar el dado y sumar el resultado al daño del ataque).' },
+            { nombre: 'Entrenamiento marcial', desc: 'Ganas competencia con armas marciales y entrenamiento con armaduras medias y escudos.\nAdemás, puedes utilizar un arma sencilla o marcial como canalizador mágico para lanzar tus conjuros de bardo.' },
+            { nombre: 'Inspiración en combate', desc: 'Puedes emplear tu ingenio para cambiar las tornas de la batalla. Una criatura que tenga uno de tus dados de Inspiración bárdica podrá usarlo para lograr uno de los siguientes efectos.\nDefensa. Cuando una tirada de ataque acierte a la criatura, esta podrá usar su reacción para tirar el dado de Inspiración bárdica y sumar el resultado a su CA contra ese ataque, lo que podría hacer que falle.\nOfensiva. Inmediatamente después de que la criatura acierte a un objetivo con una tirada de ataque, podrá tirar el dado de Inspiración bárdica y sumar el resultado al daño del ataque contra el objetivo.' },
           ],
           6: [
-            { nombre: 'Ataque adicional', desc: 'Cuando lleves a cabo la acción de atacar en tu turno, podrás hacer dos ataques en lugar de uno. Además, podrás lanzar uno de tus trucos que tenga un tiempo de lanzamiento de una acción en vez de realizar uno de esos ataques.' },
+            { nombre: 'Ataque adicional', desc: 'Cuando lleves a cabo la acción de atacar en tu turno, podrás hacer dos ataques en lugar de uno.\nAdemás, podrás lanzar uno de tus trucos que tenga un tiempo de lanzamiento de una acción en vez de realizar uno de esos ataques.' },
           ],
           14: [
             { nombre: 'Magia de batalla', desc: 'Tras lanzar un conjuro que tenga un tiempo de lanzamiento de una acción, podrás hacer un ataque con un arma como acción adicional.' },
@@ -215,82 +215,82 @@ export const CLASES = [
       {
         id: 'celestial',
         nombre: 'Patrón Celestial',
-        desc: 'Tu pacto recurre a los Planos Superiores, los reinos de la dicha eterna. Tu pacto te permite experimentar una pizca de la luz sagrada que ilumina el multiverso.',
+        desc: 'Tu pacto recurre a los Planos Superiores, los reinos de la dicha eterna. Podrías llegar a un acuerdo con un empíreo, un couatl, una esfinge, un unicornio u otro ser de los cielos, o quizá prefieras recurrir a varios seres de este tipo para lograr objetivos comunes con los suyos. Tu pacto te permite experimentar una pizca de la luz sagrada que ilumina el multiverso.',
         rasgosNivel: {
           3: [
-            { nombre: 'Conjuros del celestial', desc: 'Siempre tienes preparados según nivel: niv.3 → auxilio, curar heridas, llama sagrada, luz, restablecimiento menor, saeta guía; niv.5 → luz del día, revivir; niv.7 → guardián de la fe, muro de fuego; niv.9 → invocar celestial, restablecimiento mayor.' },
-            { nombre: 'Luz sanadora', desc: 'Obtienes la facultad de canalizar energía celestial para curar heridas. Tienes una reserva de d6 (1 + tu nivel de brujo). Como acción adicional, puedes gastar dados de la reserva (máximo igual a tu modificador por Carisma, mínimo 1) para curarte o curar a una criatura visible a 18 m. Tira los dados y restablece PG iguales al resultado total. La reserva se recupera en descanso largo.' },
+            { nombre: 'Conjuros del celestial', desc: 'La magia de tu patrón garantiza que siempre tengas ciertos conjuros preparados. Cuando alcances un nivel de brujo especificado en la tabla «Conjuros del celestial», a partir de entonces siempre tendrás preparados los conjuros que se indican.\nNivel de brujo 3: auxilio, curar heridas, llama sagrada, luz, restablecimiento menor, saeta guía.\nNivel de brujo 5: luz del día, revivir.\nNivel de brujo 7: guardián de la fe, muro de fuego.\nNivel de brujo 9: invocar celestial, restablecimiento mayor.' },
+            { nombre: 'Luz sanadora', desc: 'Obtienes la facultad de canalizar energía celestial para curar heridas. Tienes una reserva de d6 para alimentar esta sanación. La cantidad de dados de tu reserva es de 1 más tu nivel de brujo.\nComo acción adicional, puedes gastar dados de tu reserva para curarte a ti mismo o a una criatura que puedas ver a 18 m o menos de ti. La cantidad máxima de dados que puedes usar a la vez es igual a tu modificador por Carisma (un dado como mínimo). Tira los dados que gastes y restablece una cantidad de puntos de golpe igual al resultado total de la tirada. Tu reserva recupera todos los dados gastados tras finalizar un descanso largo.' },
           ],
           6: [
-            { nombre: 'Alma radiante', desc: 'Tu vínculo con tu patrón te permite servir de canalizador de energía radiante. Tienes resistencia al daño radiante. Una vez por turno, si causas daño radiante o de fuego con un conjuro, puedes sumar tu modificador por Carisma al daño contra uno de sus objetivos.' },
+            { nombre: 'Alma radiante', desc: 'Tu vínculo con tu patrón te permite servir de canalizador de energía radiante. Tienes resistencia al daño radiante. Una vez por turno, si causas daño radiante o de fuego con un conjuro, puedes sumar tu modificador por Carisma al daño del conjuro contra uno de sus objetivos.' },
           ],
           10: [
-            { nombre: 'Resiliencia celestial', desc: 'Obtienes PG temporales siempre que uses Astucia mágica o finalices un descanso corto o largo. La cantidad es igual a tu nivel de brujo más tu modificador por Carisma. Además, eliges hasta cinco criaturas que puedas ver; cada una obtiene PG temporales iguales a la mitad de tu nivel de brujo más tu modificador por Carisma.' },
+            { nombre: 'Resiliencia celestial', desc: 'Obtienes puntos de golpe temporales siempre que uses el rasgo Astucia mágica o finalices un descanso corto o largo. La cantidad obtenida es igual a tu nivel de brujo más tu modificador por Carisma. Además, eliges hasta cinco criaturas que puedas ver cuando obtengas los puntos. Cada una de ellas obtiene una cantidad de puntos de golpe temporales igual a la mitad de tu nivel de brujo más tu modificador por Carisma.' },
           ],
           14: [
-            { nombre: 'Venganza ardiente', desc: 'Cuando tú o un aliado a 18 m o menos vayáis a hacer una tirada de salvación contra muerte, puedes emitir energía radiante. La criatura recupera PG iguales a la mitad de sus PG máximos y puede ponerse en pie. Todas las criaturas de tu elección a 9 m o menos sufren 2d8 + tu mod. CAR de daño radiante y quedan cegadas hasta el final del turno. Una vez por descanso largo.' },
+            { nombre: 'Venganza ardiente', desc: 'Cuando tú o un aliado a 18 m o menos de ti vayáis a hacer una tirada de salvación contra muerte, puedes emitir energía radiante para salvar a esa criatura. La criatura recupera una cantidad de puntos de golpe igual a la mitad de sus puntos de golpe máximos y puede poner fin a su estado de derribada. Todas las criaturas de tu elección que se encuentren a 9 m o menos de la criatura sufren una cantidad de daño radiante igual a 2d8 más tu modificador por Carisma y tienen el estado de cegadas hasta el final del turno actual.\nCuando uses este rasgo, no podrás volver a hacerlo hasta que finalices un descanso largo.' },
           ],
         },
       },
       {
         id: 'feerico',
         nombre: 'Patrón Feérico',
-        desc: 'Tu pacto recurre a la energía de los Parajes Feéricos. Tu patrón suele resultar caprichoso e inescrutable.',
+        desc: 'Tu pacto recurre a la energía de los Parajes Feéricos. Si eliges esta subclase, puedes hacer un trato con un señor feérico, como el Príncipe de la Escarcha; la Reina del Aire y la Oscuridad, gobernante de la Corte Crepuscular; Titania de la Corte del Verano, o sagas muy ancianas. Si no, puedes recurrir a una variedad de feéricos y tejer una red de favores y deudas. Sea quien sea, tu patrón suele resultar caprichoso e inescrutable.',
         rasgosNivel: {
           3: [
-            { nombre: 'Conjuros del señor feérico', desc: 'Siempre preparados según nivel: niv.3 → calmar emociones, dormir, fuego feérico, fuerza fantasmal, paso brumoso; niv.5 → crecimiento vegetal, desplazamiento; niv.7 → dominar bestia, invisibilidad mejorada; niv.9 → apariencia, dominar persona.' },
-            { nombre: 'Pasos feéricos', desc: 'Puedes lanzar paso brumoso sin gastar espacio una cantidad de veces igual a tu mod. CAR (mín. 1); recuperas todos los usos en descanso largo. Al lanzarlo, elige un efecto adicional: Paso burlón (criaturas a 1,5 m del espacio que abandonas deben superar salvación de SAB contra tu CD o tendrán desventaja en ataques contra otros hasta tu próximo turno) o Paso refrescante (tú o una criatura a 3 m obtenéis 1d10 PG temporales).' },
+            { nombre: 'Conjuros del señor feérico', desc: 'La magia de tu patrón garantiza que siempre tengas ciertos conjuros preparados. Cuando alcances un nivel de brujo especificado en la tabla «Conjuros del señor feérico», a partir de entonces siempre tendrás preparados los conjuros que se indican.\nNivel de brujo 3: calmar emociones, dormir, fuego feérico, fuerza fantasmal, paso brumoso.\nNivel de brujo 5: crecimiento vegetal, desplazamiento.\nNivel de brujo 7: dominar bestia, invisibilidad mejorada.\nNivel de brujo 9: apariencia, dominar persona.' },
+            { nombre: 'Pasos feéricos', desc: 'Tu patrón te otorga la capacidad de desplazarte entre los límites de los planos. Puedes lanzar paso brumoso sin gastar un espacio de conjuro una cantidad de veces igual a tu modificador por Carisma (mínimo una vez) y recuperas todos los usos tras finalizar un descanso largo.\nAdemás, siempre que lances el conjuro, puedes elegir uno de los siguientes efectos adicionales.\nPaso burlón. Las criaturas a 1,5 m o menos del espacio que hayas abandonado deberán superar una tirada de salvación de Sabiduría contra tu CD de salvación de conjuros o tendrán desventaja en las tiradas de ataque contra criaturas que no seas tú hasta el principio de tu siguiente turno.\nPaso refrescante. Inmediatamente después de teletransportarte, tú o una criatura que puedas ver a 3 m o menos de ti obtenéis 1d10 puntos de golpe temporales.' },
           ],
           6: [
-            { nombre: 'Escape brumoso', desc: 'Puedes lanzar paso brumoso como reacción al recibir daño. Además, se añaden opciones a Pasos feéricos: Paso aterrador (criaturas a 1,5 m del espacio que abandonas o al que apareces deben superar salvación de SAB o sufren 2d10 de daño psíquico) y Paso desvanecedor (tienes el estado de invisible hasta el principio de tu siguiente turno o hasta que ataques, causes daño o lances un conjuro).' },
+            { nombre: 'Escape brumoso', desc: 'Puedes lanzar paso brumoso como reacción en respuesta a recibir daño.\nAdemás, ahora cuentas con los siguientes efectos entre tus opciones de Pasos feéricos.\nPaso aterrador. Las criaturas a 1,5 m o menos del espacio que hayas abandonado o del espacio en el que aparezcas (a tu elección) deberán superar una tirada de salvación de Sabiduría contra tu CD de salvación de conjuros o sufrirán 2d10 de daño psíquico.\nPaso desvanecedor. Tienes el estado de invisible hasta el principio de tu siguiente turno o hasta justo después de que hagas una tirada de ataque, causes daño o lances un conjuro.' },
           ],
           10: [
-            { nombre: 'Defensas seductoras', desc: 'Eres inmune al estado de hechizado. Además, cuando una criatura visible te acierte con una tirada de ataque, puedes usar una reacción para reducir a la mitad el daño y obligar al atacante a hacer salvación de SAB contra tu CD; si falla, sufre daño psíquico igual al que tú recibas. Se recarga en descanso largo o gastando un espacio de Magia del pacto.' },
+            { nombre: 'Defensas seductoras', desc: 'Tu patrón te enseña a proteger tu mente y cuerpo. Eres inmune al estado de hechizado.\nAdemás, inmediatamente después de que una criatura que puedas ver te acierte con una tirada de ataque, puedes usar una reacción para reducir a la mitad el daño que recibes (redondeando hacia abajo) y obligar al atacante a hacer una tirada de salvación de Sabiduría contra tu CD de salvación de conjuros. Si la falla, sufrirá una cantidad de daño psíquico igual al daño que tú recibas. Cuando uses esta reacción, no podrás volver a hacerlo hasta que finalices un descanso largo, a menos que gastes un espacio de conjuro de Magia del pacto (no requiere acción) para restablecer su uso.' },
           ],
           14: [
-            { nombre: 'Magia embrujadora', desc: 'Inmediatamente después de lanzar un conjuro de encantamiento o ilusionismo usando una acción y un espacio de conjuro, puedes lanzar paso brumoso como parte de la misma acción sin gastar otro espacio.' },
+            { nombre: 'Magia embrujadora', desc: 'Tu patrón te otorga la capacidad de entrelazar tu magia con la teletransportación. Inmediatamente después de lanzar un conjuro de encantamiento o ilusionismo usando una acción y un espacio de conjuro, puedes lanzar paso brumoso como parte de la misma acción y sin gastar otro espacio de conjuro.' },
           ],
         },
       },
       {
         id: 'infernal',
         nombre: 'Patrón Infernal',
-        desc: 'Tu pacto recurre a los Planos Inferiores, los reinos de la perdición. Tu camino se verá definido por la medida en que luchas contra los deseos de corrupción y destrucción de tu patrón.',
+        desc: 'Tu pacto recurre a los Planos Inferiores, los reinos de la perdición. Puedes negociar con un señor demoníaco, como Demogorgon u Orcus, con un archidiablo como Asmodeo, o con un diablo de la sima, balor, yugoloth o una saga de la noche especialmente notable. Estos patrones desean la corrupción y la destrucción de todas las cosas (incluyéndote a ti en última instancia) y tu camino se verá definido por la medida en que luchas contra esos deseos.',
         rasgosNivel: {
           3: [
-            { nombre: 'Bendición del oscuro', desc: 'Cuando reduzcas a 0 los PG de un enemigo, obtienes PG temporales iguales a tu modificador por Carisma más tu nivel de brujo (mínimo 1). También obtienes este beneficio si otra criatura reduce a 0 los PG de un enemigo a 3 m o menos de ti.' },
-            { nombre: 'Conjuros del infernal', desc: 'Siempre preparados según nivel: niv.3 → manos ardientes, orden imperiosa, rayo abrasador, sugestión; niv.5 → bola de fuego, nube apestosa; niv.7 → escudo de fuego, muro de fuego; niv.9 → geas, plaga de insectos.' },
+            { nombre: 'Bendición del oscuro', desc: 'Cuando reduzcas a 0 los puntos de golpe de un enemigo, obtienes una cantidad de puntos de golpe temporales igual a tu modificador por Carisma más tu nivel de brujo (mínimo de 1 punto de golpe temporal). También obtienes este beneficio si otra criatura reduce a 0 los puntos de golpe de un enemigo a 3 m o menos de ti.' },
+            { nombre: 'Conjuros del infernal', desc: 'La magia de tu patrón garantiza que siempre tengas ciertos conjuros preparados. Cuando alcances un nivel de brujo especificado en la tabla «Conjuros del infernal», a partir de entonces siempre tendrás preparados los conjuros que se indican.\nNivel de brujo 3: manos ardientes, orden imperiosa, rayo abrasador, sugestión.\nNivel de brujo 5: bola de fuego, nube apestosa.\nNivel de brujo 7: escudo de fuego, muro de fuego.\nNivel de brujo 9: geas, plaga de insectos.' },
           ],
           6: [
-            { nombre: 'La suerte del oscuro', desc: 'Cuando hagas una prueba de característica o tirada de salvación, puedes sumar 1d10 a tu tirada (puedes hacerlo tras ver el resultado pero antes de sus efectos). Usos iguales a tu mod. CAR (mín. 1), no más de una vez por tirada. Recuperas todos en descanso largo.' },
+            { nombre: 'La suerte del oscuro', desc: 'Puedes invocar a tu patrón infernal para alterar el destino a tu favor. Cuando hagas una prueba de característica o una tirada de salvación, puedes utilizar este rasgo para sumar 1d10 a tu tirada. Puedes hacerlo después de ver el resultado de la tirada, pero antes de que ocurran sus efectos.\nPuedes usar este rasgo una cantidad de veces igual a tu modificador por Carisma (mínimo una vez), pero no más de una vez por tirada. Recuperas todos los usos tras finalizar un descanso largo.' },
           ],
           10: [
             { nombre: 'Resistencia infernal', desc: 'Tras finalizar un descanso corto o largo, elige un tipo de daño que no sea el de fuerza. Tienes resistencia a ese tipo de daño hasta que elijas uno distinto con este rasgo.' },
           ],
           14: [
-            { nombre: 'Arrastrar por el infierno', desc: 'Una vez por turno, al acertar con una tirada de ataque, puedes intentar teletransportar al objetivo a los Planos Inferiores. Debe superar salvación de CAR contra tu CD o desaparecerá y sufrirá 8d10 de daño psíquico y tendrá el estado de incapacitado hasta el final de tu siguiente turno, momento en que volverá. Se recarga en descanso largo o gastando un espacio de Magia del pacto.' },
+            { nombre: 'Arrastrar por el infierno', desc: 'Una vez por turno, cuando aciertas a una criatura con una tirada de ataque, puedes intentar teletransportar instantáneamente al objetivo a los Planos Inferiores. El objetivo deberá superar una tirada de salvación de Carisma contra tu CD de salvación de conjuros o desaparecerá y se precipitará a través de un paisaje de pesadilla. Si el objetivo no es un infernal, sufrirá 8d10 de daño psíquico y tendrá el estado de incapacitado hasta el final de tu siguiente turno, momento en el que volverá al espacio que ocupaba anteriormente o al espacio sin ocupar más cercano.\nCuando uses este rasgo, no podrás volver a hacerlo hasta que finalices un descanso largo, a menos que gastes un espacio de conjuro de Magia del pacto (no requiere acción) para restablecer su uso.' },
           ],
         },
       },
       {
         id: 'primigenio',
         nombre: 'Patrón Primigenio',
-        desc: 'Tu pacto recurre a un ser indescriptible del Reino Lejano o a un dios antiguo. Sus motivos son incomprensibles, pero los secretos que has descubierto te permiten extraer poder mágico de él.',
+        desc: 'Cuando eliges esta subclase, quizá te ates a un ser indescriptible del Reino Lejano o a un dios antiguo: entidades como Tharizdun, el Dios Encadenado; Zargon, el Ente que Regresa; Hadar, el Hambre Tenebrosa o el Gran Cthulhu, o quizá invoques a varias entidades sin subyugarte a una sola. Sus motivos son incomprensibles y seguramente el Primigenio no sea siquiera consciente de tu existencia, pero los secretos que has descubierto te permiten extraer poder mágico de él.',
         rasgosNivel: {
           3: [
-            { nombre: 'Conjuros del primigenio', desc: 'Siempre preparados según nivel: niv.3 → detectar pensamientos, fuerza fantasmal, risa horrible de Tasha, susurros discordantes; niv.5 → clarividencia, hambre de Hadar; niv.7 → confusión, invocar aberración; niv.9 → alterar los recuerdos, telequinesis.' },
+            { nombre: 'Conjuros del primigenio', desc: 'La magia de tu patrón garantiza que siempre tengas ciertos conjuros preparados. Cuando alcances un nivel de brujo especificado en la tabla «Conjuros del primigenio», a partir de entonces siempre tendrás preparados los conjuros que se indican.\nNivel de brujo 3: detectar pensamientos, fuerza fantasmal, risa horrible de Tasha, susurros discordantes.\nNivel de brujo 5: clarividencia, hambre de Hadar.\nNivel de brujo 7: confusión, invocar aberración.\nNivel de brujo 9: alterar los recuerdos, telequinesis.' },
             { nombre: 'Conjuros psíquicos', desc: 'Cuando lances un conjuro de brujo que cause daño, puedes cambiar su tipo de daño a psíquico. Además, cuando lances un conjuro de brujo de encantamiento o ilusionismo, puedes hacerlo sin componentes verbales ni somáticos.' },
-            { nombre: 'Mente iluminada', desc: 'Como acción adicional, elige una criatura visible a 9 m. Ambos podréis comunicaros telepáticamente a una distancia máxima de 1,5 km × tu mod. CAR (mín. 1,5 km), usando mentalmente un idioma que ambos conozcáis. Dura un número de minutos igual a tu nivel de brujo; termina antes si conectas con otra criatura.' },
+            { nombre: 'Mente iluminada', desc: 'Puedes establecer una conexión telepática con la mente de otra criatura. Como acción adicional, elige una criatura que puedas ver a 9 m o menos de ti. La criatura elegida y tú podréis comunicaros telepáticamente mientras estéis a una distancia máxima igual a 1,5 km x tu modificador por Carisma (mínimo de 1,5 km). Para entenderos, debéis emplear mentalmente un idioma que ambos conozcáis. La conexión telepática dura un número de minutos igual a tu nivel de brujo. Termina antes de tiempo si usas este rasgo para conectarte con otra criatura.' },
           ],
           6: [
-            { nombre: 'Combatiente clarividente', desc: 'Cuando formas un enlace telepático con Mente iluminada, puedes obligar a la criatura a hacer salvación de SAB contra tu CD. Si falla, tendrá desventaja en ataques contra ti y tú ventaja en ataques contra ella hasta que acabe el enlace. Se recarga en descanso corto o largo, o gastando un espacio de Magia del pacto.' },
+            { nombre: 'Combatiente clarividente', desc: 'Cuando formas un enlace telepático con una criatura usando Mente iluminada, puedes obligar a esa criatura a hacer una tirada de salvación de Sabiduría contra tu CD de salvación de conjuros. Si la falla, la criatura tendrá desventaja en las tiradas de ataque contra ti y tú tendrás ventaja en las tiradas de ataque contra ella hasta que acabe el enlace.\nCuando uses este rasgo, no podrás volver a hacerlo hasta que finalices un descanso corto o largo, a menos que gastes un espacio de conjuro de Magia del pacto (no requiere acción) para restablecer su uso.' },
           ],
           10: [
-            { nombre: 'Escudo mental', desc: 'Tus pensamientos no se pueden leer sin que tú lo permitas. Tienes resistencia al daño psíquico y, siempre que una criatura te cause daño psíquico, ella recibirá la misma cantidad.' },
-            { nombre: 'Maleficio sobrenatural', desc: 'Siempre tienes el conjuro maleficio preparado. Cuando lo lanzas y eliges una característica, el objetivo también tendrá desventaja en las tiradas de salvación de esa característica hasta que termine el conjuro.' },
+            { nombre: 'Escudo mental', desc: 'Tus pensamientos no se pueden leer mediante telepatía o cualquier otro medio sin que tú lo permitas. Además, tienes resistencia al daño psíquico y, siempre que una criatura te cause daño psíquico, ella recibirá la misma cantidad de daño que tú.' },
+            { nombre: 'Maleficio sobrenatural', desc: 'Tu patrón extraterrenal te concede una poderosa maldición. Siempre tienes el conjuro maleficio preparado. Cuando lanzas maleficio y eliges una característica, el objetivo también tendrá desventaja en las tiradas de salvación de la característica elegida hasta que termine el conjuro.' },
           ],
           14: [
-            { nombre: 'Crear siervo', desc: 'Cuando lanzas invocar aberración, puedes modificarlo para que no requiera concentración. La duración pasa a ser 1 minuto y la aberración obtiene PG temporales iguales a tu nivel de brujo más tu mod. CAR. Además, la primera vez en cada turno que la aberración acierte a una criatura bajo tu maleficio, le infligirá daño psíquico extra igual al daño adicional del conjuro.' },
+            { nombre: 'Crear siervo', desc: 'Cuando lanzas invocar aberración, puedes modificarlo para que no requiera concentración. La duración pasa a ser 1 minuto y la aberración obtiene puntos de golpe temporales iguales a tu nivel de brujo más tu modificador por Carisma. Además, la primera vez en cada turno que la aberración acierte a una criatura bajo tu maleficio, le infligirá daño psíquico extra igual al daño adicional del conjuro.' },
           ],
         },
       },
@@ -320,15 +320,15 @@ export const CLASES = [
       {
         id: 'guerra',
         nombre: 'Dominio de la Guerra',
-        desc: 'La guerra se manifiesta de muchas formas. Los clérigos de este dominio destacan en el combate e inspiran a los demás a pelear en buena lid.',
+        desc: 'La guerra se manifiesta de muchas formas. Puede convertir a las personas corrientes en héroes o puede ser desesperada y terrorífica, con actos de crueldad y cobardía capaces de eclipsar los ejemplos de excelencia y coraje. Los clérigos que utilizan la magia del dominio de la guerra destacan en el combate e inspiran a los demás a pelear en buena lid o brindar actos de violencia como si fueran oraciones.',
         rasgosNivel: {
           3: [
-            { nombre: 'Conjuros del dominio de la guerra', desc: 'Siempre preparados según nivel: niv.3 → arma espiritual, arma mágica, escudo de fe, saeta guía; niv.5 → espíritus guardianes, manto del cruzado; niv.7 → escudo de fuego, libertad de movimiento; niv.9 → golpe de viento acerado, inmovilizar monstruo.' },
-            { nombre: 'Golpe guiado', desc: 'Cuando tú o una criatura a 9 m o menos falléis una tirada de ataque, puedes gastar un uso de Canalizar divinidad para conceder un bonificador de +10 a la tirada, lo que podría hacer que acierte. Concedérselo a otra criatura requiere una reacción.' },
-            { nombre: 'Sacerdote guerrero', desc: 'Como acción adicional, puedes realizar un ataque con un arma o un ataque sin armas. Usos = mod. SAB (mínimo 1). Recuperas todos en descanso corto o largo.' },
+            { nombre: 'Conjuros del dominio de la guerra', desc: 'Tu conexión con este dominio divino garantiza que siempre tengas ciertos conjuros preparados. Cuando alcances un nivel de clérigo especificado en la tabla «Conjuros del dominio de la guerra», a partir de entonces siempre tendrás preparados los conjuros que se indican.\nNivel de clérigo 3: arma espiritual, arma mágica, escudo de fe, saeta guía.\nNivel de clérigo 5: espíritus guardianes, manto del cruzado.\nNivel de clérigo 7: escudo de fuego, libertad de movimiento.\nNivel de clérigo 9: golpe de viento acerado, inmovilizar monstruo.' },
+            { nombre: 'Golpe guiado', desc: 'Cuando tú o una criatura a 9 m o menos de ti falléis una tirada de ataque, podrás gastar un uso de Canalizar divinidad y conceder un bonificador de +10 a la tirada, lo que podría hacer que acierte. Cuando utilices este rasgo para mejorar la tirada de ataque de otra criatura, deberás llevar a cabo una reacción para ello.' },
+            { nombre: 'Sacerdote guerrero', desc: 'Como acción adicional, puedes realizar un ataque con un arma o un ataque sin armas. Puedes utilizar esta acción adicional una cantidad de veces igual a tu modificador por Sabiduría (mínimo una vez). Recuperas todos los usos tras finalizar un descanso corto o largo.' },
           ],
           6: [
-            { nombre: 'Bendición del dios de la guerra', desc: 'Puedes gastar un uso de Canalizar divinidad para lanzar arma espiritual o escudo de fe sin gastar espacio de conjuro. No requiere concentración; dura 1 minuto (termina antes si lanzas el conjuro de nuevo, quedas incapacitado o mueres).' },
+            { nombre: 'Bendición del dios de la guerra', desc: 'Puedes gastar un uso de Canalizar divinidad para lanzar arma espiritual o escudo de fe en vez de gastar un espacio de conjuro. Cuando lances cualquiera de esos conjuros de esta forma, no requerirá concentración. En su lugar, el conjuro durará 1 minuto, pero terminará antes de tiempo si lanzas el conjuro de nuevo, si tienes el estado incapacitado o si mueres.' },
           ],
           17: [
             { nombre: 'Avatar de la batalla', desc: 'Ganas resistencia al daño contundente, cortante y perforante.' },
@@ -338,54 +338,54 @@ export const CLASES = [
       {
         id: 'luz',
         nombre: 'Dominio de la Luz',
-        desc: 'El dominio de la luz se sirve del poder divino para producir fuegos abrasadores y revelaciones. Asumes la misión de ahuyentar la mentira y traer la luz a la oscuridad.',
+        desc: 'El dominio de la luz se sirve del poder divino para producir fuegos abrasadores y revelaciones. Los clérigos que emplean este poder son almas iluminadas e imbuidas del brillo y el poder de la visión perceptiva de sus deidades, y asumen la misión de ahuyentar la mentira y traer la luz a la oscuridad.',
         rasgosNivel: {
           3: [
-            { nombre: 'Conjuros del dominio de la luz', desc: 'Siempre preparados según nivel: niv.3 → fuego feérico, manos ardientes, rayo abrasador, ver invisibilidad; niv.5 → bola de fuego, luz del día; niv.7 → muro de fuego, ojo arcano; niv.9 → escudriñar, golpe flamígero.' },
-            { nombre: 'Fulgor protector', desc: 'Reacción: cuando una criatura visible a 9 m haga una tirada de ataque, impones desventaja a esa tirada con un resplandor de luz antes de que acierte o falle. Usos = mod. SAB (mín. 1). Se recuperan en descanso largo.' },
-            { nombre: 'Resplandor del amanecer', desc: 'Acción de magia: muestras tu símbolo y gastas un uso de Canalizar divinidad para emitir destello luminoso en emanación de 9 m. Disipa la oscuridad mágica en esa zona. Todas las criaturas de tu elección en ella deben pasar salvación de CON o sufrir 2d10 + nivel de clérigo de daño radiante (la mitad si superan).' },
+            { nombre: 'Conjuros del dominio de la luz', desc: 'Tu conexión con este dominio divino garantiza que siempre tengas ciertos conjuros preparados. Cuando alcances un nivel de clérigo especificado en la tabla «Conjuros del dominio de la luz», a partir de entonces siempre tendrás preparados los conjuros que se indican.\nNivel de clérigo 3: fuego feérico, manos ardientes, rayo abrasador, ver invisibilidad.\nNivel de clérigo 5: bola de fuego, luz del día.\nNivel de clérigo 7: muro de fuego, ojo arcano.\nNivel de clérigo 9: escudriñar, golpe flamígero.' },
+            { nombre: 'Fulgor protector', desc: 'Cuando una criatura que puedas ver a 9 m o menos de ti haga una tirada de ataque, puedes llevar a cabo una reacción para imponer desventaja a su tirada de ataque haciendo que una luz resplandezca ante ella antes de que acierte o falle.\nPuedes utilizar este rasgo una cantidad de veces igual a tu modificador por Sabiduría (mínimo una vez). Recuperas todos los usos tras finalizar un descanso largo.' },
+            { nombre: 'Resplandor del amanecer', desc: 'Como acción de magia, muestras tu símbolo sagrado y gastas un uso de Canalizar divinidad para emitir un destello luminoso en una emanación de 9 m originada en ti. Cualquier oscuridad mágica, como la que crea el conjuro oscuridad, se disipa en esa zona. Asimismo, todas las criaturas de tu elección situadas en esa zona deberán hacer una tirada de salvación de Constitución; sufrirán una cantidad de daño radiante igual a 2d10 más tu nivel de clérigo si la fallan o la mitad del daño si la superan.' },
           ],
           6: [
-            { nombre: 'Fulgor protector mejorado', desc: 'Recuperas todos los usos de Fulgor protector en descanso corto o largo. Además, al usar Fulgor protector, el objetivo del ataque al que reaccionas obtiene PG temporales = 2d6 + mod. SAB.' },
+            { nombre: 'Fulgor protector mejorado', desc: 'Recuperas todos los usos de tu Fulgor protector tras finalizar un descanso corto o largo.\nAdemás, cuando uses tu Fulgor protector, puedes conceder al objetivo del ataque al que reaccionas una cantidad de puntos de golpe temporales igual a 2d6 más tu modificador por Sabiduría.' },
           ],
           17: [
-            { nombre: 'Halo de luz', desc: 'Acción de magia: emites aura de luz solar 1 minuto (o hasta disiparla sin acción). Luz brillante 18 m, tenue 9 m más. Los enemigos en zona brillante tienen desventaja contra Resplandor del amanecer y conjuros de daño de fuego o radiante. Usos = mod. SAB (mín. 1). Se recuperan en descanso largo.' },
+            { nombre: 'Halo de luz', desc: 'Como acción de magia, puedes emitir un aura de luz solar que dura 1 minuto o hasta que la disipes (no requiere acción). Emitirás luz brillante en un radio de 18 m y luz tenue 9 m más allá. Los enemigos situados en la zona de luz brillante tendrán desventaja en las tiradas de salvación contra tu rasgo Resplandor del amanecer o contra cualquier conjuro que cause daño de fuego o radiante.\nPuedes usar este rasgo una cantidad de veces igual a tu modificador por Sabiduría (mínimo una vez) y recuperas todos los usos tras finalizar un descanso largo.' },
           ],
         },
       },
       {
         id: 'vida',
         nombre: 'Dominio de la Vida',
-        desc: 'El dominio de la vida se centra en la energía positiva que ayuda a sustentar la vida en el multiverso. Eres maestro de la curación y empleas la fuerza vital para sanar el sufrimiento.',
+        desc: 'El dominio de la vida se centra en la energía positiva que ayuda a sustentar la vida en el multiverso. Los clérigos que acceden a este dominio son maestros de la curación y emplean la fuerza vital para sanar el sufrimiento.',
         rasgosNivel: {
           3: [
-            { nombre: 'Conjuros del dominio de la vida', desc: 'Siempre preparados según nivel: niv.3 → auxilio, bendición, curar heridas, restablecimiento menor; niv.5 → palabra de curación en masa, revivir; niv.7 → aura de vida, guarda contra la muerte; niv.9 → curar heridas en masa, restablecimiento mayor.' },
-            { nombre: 'Discípulo de la vida', desc: 'Al gastar un espacio de conjuro para lanzar un conjuro que haga recuperar PG a una criatura, esa criatura recupera PG adicionales en el turno de lanzamiento = 2 + nivel del espacio.' },
-            { nombre: 'Preservar vida', desc: 'Acción de magia: muestras tu símbolo y gastas un uso de Canalizar divinidad para generar energía curativa = 5 × nivel de clérigo en PG. Distribúyelos entre criaturas maltrechas a 9 m (incluyéndote). No puede llevar a ninguna criatura por encima de la mitad de sus PG máximos.' },
+            { nombre: 'Conjuros del dominio de la vida', desc: 'Tu conexión con este dominio divino garantiza que siempre tengas ciertos conjuros preparados. Cuando alcances un nivel de clérigo especificado en la tabla «Conjuros del dominio de la vida», a partir de entonces siempre tendrás preparados los conjuros que se indican.\nNivel de clérigo 3: auxilio, bendición, curar heridas, restablecimiento menor.\nNivel de clérigo 5: palabra de curación en masa, revivir.\nNivel de clérigo 7: aura de vida, guarda contra la muerte.\nNivel de clérigo 9: curar heridas en masa, restablecimiento mayor.' },
+            { nombre: 'Discípulo de la vida', desc: 'Cuando uses un espacio de conjuro para lanzar un conjuro que haga recuperar puntos de golpe a una criatura, esa criatura recuperará puntos de golpe adicionales en el turno en que lances el conjuro. La cantidad de puntos de golpe adicionales es igual a 2 más el nivel del espacio de conjuro.' },
+            { nombre: 'Preservar vida', desc: 'Como acción de magia, muestras tu símbolo sagrado y gastas un uso de Canalizar divinidad para generar una energía curativa capaz de restaurar una cantidad de puntos de golpe igual a cinco veces tu nivel de clérigo. Elige criaturas maltrechas a 9 m o menos de ti (lo que puede incluirte a ti) y divide estos puntos de golpe entre ellas. Este rasgo no puede hacer que una criatura pase a tener más de la mitad de sus puntos de golpe máximos.' },
           ],
           6: [
-            { nombre: 'Sanador bendito', desc: 'Los conjuros de curación que lances sobre otros también te sanan. Inmediatamente después de usar un espacio de conjuro en un conjuro que restaure PG a una o varias criaturas que no seas tú, recuperas PG = 2 + nivel del espacio.' },
+            { nombre: 'Sanador bendito', desc: 'Los conjuros de curación que lances sobre otros también te sanan a ti. Inmediatamente después de usar un espacio de conjuro para lanzar un conjuro que haga recuperar puntos de golpe a una o varias criaturas que no seas tú, recuperarás una cantidad de puntos de golpe igual a 2 más el nivel del espacio de conjuro.' },
           ],
           17: [
-            { nombre: 'Sanación suprema', desc: 'En vez de tirar dados para restaurar PG con un conjuro o Canalizar divinidad, usas el máximo de cada dado. Por ejemplo, 2d6 se convierte en 12.' },
+            { nombre: 'Sanación suprema', desc: 'En vez de tirar uno o más dados para hacer que una criatura recupere puntos de golpe con un conjuro o con Canalizar divinidad, no tirarás estos dados para la curación, sino que utilizarás el número más alto de cada dado. Por ejemplo, en lugar de hacer que una criatura recupere 2d6 puntos de golpe, harás que recupere 12.' },
           ],
         },
       },
       {
         id: 'enganio',
         nombre: 'Dominio del Engaño',
-        desc: 'El dominio del engaño ofrece la magia de los embustes, las ilusiones y el sigilo. Prefieres el subterfugio y las bromas a la confrontación directa.',
+        desc: 'El dominio del engaño ofrece la magia de los embustes, las ilusiones y el sigilo. Los clérigos que emplean esta magia son una fuerza que perturba el mundo pinchando a los orgullosos, mofándose de los tiranos, liberando a los cautivos y desdeñando tradiciones vacías. Prefieren el subterfugio y las bromas a la confrontación directa.',
         rasgosNivel: {
           3: [
-            { nombre: 'Conjuros del dominio del engaño', desc: 'Siempre preparados según nivel: niv.3 → disfrazarse, hechizar persona, invisibilidad, pasar sin rastro; niv.5 → indetectable, patrón hipnótico; niv.7 → confusión, puerta dimensional; niv.9 → alterar los recuerdos, dominar persona.' },
-            { nombre: 'Bendición del embaucador', desc: 'Acción de magia: tú o una criatura voluntaria a 9 m o menos obtenéis ventaja en pruebas de Destreza (Sigilo). Dura hasta el siguiente descanso largo o hasta que vuelvas a usar este rasgo.' },
-            { nombre: 'Invocar duplicidad', desc: 'Acción adicional: gasta un uso de Canalizar divinidad para crear un duplicado ilusorio perfecto de ti en un espacio sin ocupar visible a 9 m. No es tangible; dura 1 minuto (o hasta disiparla sin acción/quedar incapacitado). Está animada e imita tus expresiones. Beneficios: Distraer (ventaja en ataques vs criaturas a 1,5 m de la ilusión que la vean), Lanzar conjuros (como si estuvieras en el espacio de la ilusión, usando tus sentidos), Mover (AA: mueves la ilusión hasta 9 m a espacio sin ocupar a 36 m).' },
+            { nombre: 'Conjuros del dominio del engaño', desc: 'Tu conexión con este dominio divino garantiza que siempre tengas ciertos conjuros preparados. Cuando alcances un nivel de clérigo especificado en la tabla «Conjuros del dominio del engaño», a partir de entonces siempre tendrás preparados los conjuros que se indican.\nNivel de clérigo 3: disfrazarse, hechizar persona, invisibilidad, pasar sin rastro.\nNivel de clérigo 5: indetectable, patrón hipnótico.\nNivel de clérigo 7: confusión, puerta dimensional.\nNivel de clérigo 9: alterar los recuerdos, dominar persona.' },
+            { nombre: 'Bendición del embaucador', desc: 'Como acción de magia, puedes escogerte a ti o a una criatura voluntaria a 9 m o menos de ti para que tenga ventaja en las pruebas de Destreza (Sigilo). Esta bendición dura hasta que finalices un descanso largo o hasta que vuelvas a usar este rasgo.' },
+            { nombre: 'Invocar duplicidad', desc: 'Como acción adicional, puedes gastar un uso de Canalizar divinidad para crear un duplicado ilusorio perfecto de ti en un espacio sin ocupar que puedas ver a 9 m o menos de ti. La ilusión no es tangible ni ocupa el espacio en el que se encuentra. Dura 1 minuto, pero termina antes de tiempo si la disipas (no requiere acción) o si tienes el estado de incapacitado. La ilusión está animada e imita tus expresiones y gestos. Mientras persista, obtienes los siguientes beneficios:\nDistraer. Cuando tanto tu ilusión como tú estéis a 1,5 m o menos de una criatura que pueda ver la ilusión, tendrás ventaja en las tiradas de ataque contra esa criatura, ya que la ilusión distrae al objetivo.\nLanzar conjuros. Puedes lanzar conjuros como si estuvieras en el espacio de la ilusión, pero debes utilizar tus propios sentidos.\nMover. Como acción adicional, puedes mover la ilusión hasta 9 m a un espacio sin ocupar que puedas ver a 36 m o menos de ti.' },
           ],
           6: [
-            { nombre: 'Transposición del embaucador', desc: 'Cuando uses una acción adicional para crear o mover la ilusión de Invocar duplicidad, puedes teletransportarte y cambiarle el lugar a la ilusión.' },
+            { nombre: 'Transposición del embaucador', desc: 'Siempre que utilices una acción adicional para crear o mover la ilusión de Invocar duplicidad, podrás teletransportarte y cambiarle el lugar a la ilusión.' },
           ],
           17: [
-            { nombre: 'Duplicidad mejorada', desc: 'La ilusión de Invocar duplicidad se vuelve más poderosa. Distracción compartida: tus aliados también tienen ventaja en ataques contra criaturas a 1,5 m de la ilusión. Ilusión sanadora: al desaparecer la ilusión, tú o una criatura de tu elección a 1,5 m recuperáis PG iguales a tu nivel de clérigo.' },
+            { nombre: 'Duplicidad mejorada', desc: 'La ilusión de Invocar duplicidad se vuelve más poderosa de las siguientes formas:\nDistracción compartida. Cuando tus aliados y tú hagáis tiradas de ataque contra una criatura que se encuentre a 1,5 m o menos de la ilusión, esas tiradas de ataque tendrán ventaja.\nIlusión sanadora. Cuando la ilusión desaparezca, tú o una criatura de tu elección a 1,5 m o menos de ella recuperaréis una cantidad de puntos de golpe igual a tu nivel de clérigo.' },
           ],
         },
       },

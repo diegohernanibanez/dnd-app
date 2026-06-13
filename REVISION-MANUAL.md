@@ -74,7 +74,7 @@ Cada sesión compara rasgos por nivel, dado de golpe, salvaciones, competencias,
 - [x] **B1** `[R ✓] [T ✓]` págs. 50–57 · Bárbaro (4 sendas) — revisado 2026-06-12
 - [x] **B2** `[R ✓] [T ✓]` págs. 58–67 · Bardo (4 colegios; lista de conjuros → F0) — revisado 2026-06-12
 - [x] **B3** `[R ✓] [T ✓]` págs. 68–79 · Brujo (invocaciones, 4 patrones; lista de conjuros → F0) — revisado 2026-06-12
-- [ ] **B4** págs. 80–89 · Clérigo (lista de conjuros + 4 dominios)
+- [x] **B4** `[R ✓] [T ✓]` págs. 80–89 · Clérigo (4 dominios; lista de conjuros → F0) — revisado 2026-06-12 (sin correcciones)
 - [ ] **B5** págs. 90–101 · Druida (lista de conjuros + 4 círculos)
 - [ ] **B6** págs. 102–111 · Explorador (lista de conjuros + 4 subclases)
 - [ ] **B7** págs. 112–121 · Guerrero (4 subclases)
@@ -108,6 +108,19 @@ Cada sesión compara rasgos por nivel, dado de golpe, salvaciones, competencias,
 
 ### Bloque G — Apéndices (opcional, según relevancia para la app)
 - [ ] **G1** págs. 360–377 · Ap. C: Glosario de reglas ↔ `src/components/Glossary.jsx`
+
+## Re-transcripción verbatim de B1–B4 (2026-06-13)
+
+Diego detectó que los rasgos de B1–B4 estaban **condensados/parafraseados**, violando el principio
+rector ("transcripción literal e íntegra, sin resumir"). Se re-transcribieron **verbatim total** (texto
+exacto del manual, sin abreviaturas, con las sub-secciones en su propia línea):
+- **B1 Bárbaro**, **B2 Bardo**, **B3 Brujo**, **B4 Clérigo**: clase base + 4 subclases cada una.
+- Se eliminaron las pseudo-entradas que no son rasgos del manual (notas "Furias: N usos", "Conjuros de
+  nivel X", "Canalizar divinidad: N usos", "Dado bárdico d12"): la progresión ya está descrita dentro del
+  rasgo correspondiente y esos niveles quedan sin entrada, igual que la columna de rasgos del manual.
+- Render: `white-space: pre-line` en `TextoTruncado` y `cs-traits__desc` para respetar los saltos `\n`
+  de las sub-secciones. Verificado en navegador (Furia muestra Resistencia/Daño por furia/Duración en líneas).
+- Pauta guardada en memoria ([[transcripcion-verbatim]]). **Aplicar verbatim de B5 en adelante.**
 
 ## Hallazgos
 
@@ -169,6 +182,17 @@ sola fórmula ✓.
   Único duplicado en todo el dataset (trasfondos/especies/linajes/dotes verificados sin duplicados).
   ⚠️ Personajes ya guardados con la subclase del Explorador (`subclaseSeleccionada: 'feerico'`) habría
   que migrarlos a `errante_feerico` (caso borde; sin personajes así en uso).
+
+### Sesión B4 — Clérigo (págs. 80–89) — sin correcciones
+
+**Lo que funciona (verificado ✓):** los 20 niveles de rasgos coinciden con la tabla (Lanzamiento de
+conjuros, Orden divina con sus opciones Protector/Taumaturgo, Canalizar divinidad con Chispa divina y
+Expulsar muertos vivientes y sus usos 2/3/4, Abrasar muertos vivientes, Golpes benditos y su mejora,
+Intercesión divina y la mayor). Niveles de subclase del clérigo **3/6/17** (propios de la clase) ✓.
+Trucos 3/4/5 ✓. Los 4 dominios (Guerra, Luz, Vida, Engaño) completos y fieles, con sus tres rasgos de
+nivel 3 cada uno, y conjuros de dominio que coinciden con `CONJUROS_SUBCLASE`. Lista de conjuros → **F0**.
+
+**Hallazgos:** ninguno — el clérigo ya estaba completo y correcto.
 
 ### Sesión B3 — Brujo (págs. 68–79)
 

@@ -1,3 +1,8 @@
+/* Respeta los saltos de línea (\n) de las sub-secciones del manual */
+.texto-truncado {
+  white-space: pre-line;
+}
+
 .texto-truncado__btn {
   background: none;
   border: none;
