@@ -3,7 +3,7 @@
 
 const ASI = {
   nombre: 'Mejora de característica',
-  desc: 'Obtienes la dote Mejora de característica (consulta el capítulo 5) u otra dote de tu elección para la que cumplas las condiciones. Vuelves a obtener este rasgo en los niveles 8, 12 y 16.',
+  desc: 'Eliges una dote: la de Mejora de característica (sube puntuaciones) u otra para la que cumplas los requisitos. Se repite en los niveles 8, 12 y 16.',
   esASI: true,
 }
 
@@ -21,7 +21,7 @@ const subclaseElegir = (tipo) => ({
 
 const donEpico = {
   nombre: 'Don Épico',
-  desc: 'Obtienes una dote de don épico (consulta el capítulo 5) u otra dote de tu elección para la que cumplas las condiciones.',
+  desc: 'Eliges una dote de la categoría «don épico» (u otra para la que cumplas los requisitos).',
   esASI: true,
   esDonEpico: true,
 }
@@ -35,54 +35,54 @@ export const NIVEL_DATOS = {
     nivelesASI: [4, 8, 12, 16],
     rasgosNivel: {
       1: [
-        { nombre: 'Defensa sin armadura', desc: 'Mientras no lleves armadura alguna, tu clase de armadura base será igual a 10 más tus modificadores por Destreza y Constitución. Obtienes este beneficio aunque lleves un escudo.' },
-        { nombre: 'Furia', desc: 'Puedes imbuirte de un poder primigenio llamado furia, que te otorga una fuerza y resistencia extraordinarias. Puedes dejarte llevar por ella como acción adicional si no llevas puesta una armadura pesada.\nPuedes dejarte llevar por la furia tantas veces como se indica para tu nivel de bárbaro en la columna «N.º de furias» de la tabla «Rasgos de bárbaro». Recuperas uno de los usos gastados tras finalizar un descanso corto y todos tras finalizar un descanso largo.\nMientras estés enfurecido, usa las siguientes reglas.\nResistencia al daño. Tienes resistencia al daño contundente, cortante y perforante.\nDaño por furia. Cuando llevas a cabo un ataque que use la Fuerza (ya sea con un arma o un ataque sin armas) y causas daño al objetivo, obtienes un bonificador al daño que aumenta conforme subes de nivel de bárbaro, como se muestra en la columna «Daño por furia» de la tabla «Rasgos de bárbaro».\nVentaja en Fuerza. Tienes ventaja en las pruebas de Fuerza y en las tiradas de salvación de Fuerza.\nSin concentración ni conjuros. No puedes mantener la concentración ni lanzar conjuros.\nDuración. La furia dura hasta el final de tu siguiente turno y termina antes si te pones una armadura pesada o recibes el estado de incapacitado. Si la furia sigue activa en tu siguiente turno, puedes prolongarla otro asalto de una de las siguientes formas: haces una tirada de ataque contra un enemigo; obligas a un enemigo a hacer una tirada de salvación; empleas una acción adicional para prolongar tu furia. Cada vez que prolongues la furia, durará hasta el final de tu siguiente turno. Puedes mantener una furia hasta 10 minutos.' },
-        { nombre: 'Maestría con armas', desc: 'Tu entrenamiento con armas te permite utilizar las propiedades de maestría con dos tipos de armas cuerpo a cuerpo sencillas o marciales de tu elección, como las hachas a dos manos y las hachas de mano. Tras finalizar un descanso largo, puedes llevar a cabo ejercicios con armas y cambiar una de dichas elecciones.\nCuando alcances ciertos niveles de bárbaro, adquirirás la capacidad de usar las propiedades de maestría con más tipos de armas, como se muestra en la columna «Maestría con armas» de la tabla «Rasgos de bárbaro».' },
+        { nombre: 'Defensa sin armadura', pagina: 51, desc: 'Sin armadura, tu CA base es 10 + tu modificador por Destreza + tu modificador por Constitución. Puedes llevar escudo igualmente.' },
+        { nombre: 'Furia', pagina: 51, desc: 'Acción adicional para enfurecerte (no con armadura pesada). Mientras dura: resistencia al daño contundente, cortante y perforante; bonificador al daño de tus ataques de Fuerza (sube por nivel); ventaja en pruebas y salvaciones de Fuerza; no puedes concentrarte ni lanzar conjuros. Dura hasta el final de tu próximo turno; la prolongas (hasta 10 minutos) si atacas, fuerzas una salvación o usas una acción adicional. Varios usos según tu nivel; recuperas uno en descanso corto y todos en descanso largo.' },
+        { nombre: 'Maestría con armas', pagina: 51, desc: 'Puedes aplicar la propiedad de maestría de 2 tipos de armas cuerpo a cuerpo (sencillas o marciales). El número de armas aumenta con el nivel. Puedes cambiar una elección tras un descanso largo.' },
       ],
       2: [
-        { nombre: 'Ataque temerario', desc: 'Puedes abandonar por completo tu defensa para atacar con una mayor fiereza. Cuando vayas a realizar la primera tirada de ataque de tu turno, puedes decidir atacar temerariamente. Si lo haces, tendrás ventaja en las tiradas de ataque que utilicen la Fuerza hasta el principio de tu siguiente turno, pero las tiradas de ataque contra ti también tendrán ventaja durante ese tiempo.' },
-        { nombre: 'Sentir el peligro', desc: 'Eres capaz de percibir de forma casi sobrenatural cuándo las cosas no son como deberían. Gracias a ello, se te da bien evitar el peligro. Tienes ventaja en las tiradas de salvación de Destreza salvo que tengas el estado de incapacitado.' },
+        { nombre: 'Ataque temerario', pagina: 52, desc: 'En tu primer ataque del turno puedes atacar temerariamente: ventaja en tus ataques de Fuerza hasta tu próximo turno, pero los ataques contra ti también tienen ventaja durante ese tiempo.' },
+        { nombre: 'Sentir el peligro', pagina: 52, desc: 'Ventaja en las tiradas de salvación de Destreza, salvo que estés incapacitado.' },
       ],
       3: [
-        { nombre: 'Conocimiento primigenio', desc: 'Ganas competencia en otra habilidad de tu elección de la lista de habilidades disponibles para los bárbaros en el nivel 1.\nAdemás, mientras estés enfurecido, puedes canalizar el poder primigenio cuando intentes determinadas tareas. Siempre que hagas una prueba de característica con una de las siguientes habilidades, podrás hacerla como una prueba de Fuerza incluso si normalmente utiliza otra característica: Acrobacias, Intimidación, Percepción, Sigilo o Supervivencia. Cuando utilizas esta capacidad, tu Fuerza representa el poder primigenio que fluye por ti y agudiza tu agilidad, porte y sentidos.' },
-        { nombre: 'Subclase de bárbaro', desc: 'Consigues una subclase de bárbaro de tu elección. Las subclases de la senda del Árbol del Mundo, la senda del berserker, la senda del corazón salvaje y la senda del fanático se detallan tras la descripción de esta clase. Una subclase es una especialización que te proporciona rasgos cuando alcanzas ciertos niveles de bárbaro. De aquí en adelante, obtienes todos los rasgos de tu subclase que sean de tu nivel de bárbaro e inferiores.', esSubclase: true },
+        { nombre: 'Conocimiento primigenio', pagina: 52, desc: 'Ganas competencia en otra habilidad de la lista de bárbaro. Además, mientras estés enfurecido puedes usar Fuerza en lugar de la característica normal para pruebas de Acrobacias, Intimidación, Percepción, Sigilo o Supervivencia.' },
+        { nombre: 'Subclase de bárbaro', pagina: 52, desc: 'Eliges tu senda de bárbaro (Árbol del Mundo, Berserker, Corazón Salvaje o Fanático). A partir de aquí obtienes sus rasgos según tu nivel de bárbaro.', esSubclase: true },
       ],
       4: [ASI],
       5: [
-        { nombre: 'Ataque adicional', desc: 'Cuando lleves a cabo la acción de atacar en tu turno, podrás hacer dos ataques en lugar de uno.' },
-        { nombre: 'Movimiento rápido', desc: 'Tu velocidad aumenta en 3 m si no llevas armadura pesada.' },
+        { nombre: 'Ataque adicional', pagina: 52, desc: 'Atacas dos veces en lugar de una al usar la acción de atacar.' },
+        { nombre: 'Movimiento rápido', pagina: 52, desc: 'Tu velocidad aumenta 3 m si no llevas armadura pesada.' },
       ],
       6: [subclaseRasgo()],
       7: [
-        { nombre: 'Instinto salvaje', desc: 'Tus instintos están tan afinados que tienes ventaja en las tiradas de iniciativa.' },
-        { nombre: 'Salto instintivo', desc: 'Como parte de la acción adicional para dejarte llevar por la furia, puedes moverte hasta la mitad de tu velocidad.' },
+        { nombre: 'Instinto salvaje', pagina: 52, desc: 'Ventaja en las tiradas de iniciativa.' },
+        { nombre: 'Salto instintivo', pagina: 53, desc: 'Al enfurecerte (acción adicional) puedes moverte hasta la mitad de tu velocidad.' },
       ],
       8: [ASI],
       9: [
-        { nombre: 'Golpe brutal', desc: 'Si utilizas Ataque temerario, puedes renunciar a cualquier ventaja en una tirada de ataque de tu elección basada en la Fuerza en tu turno. La tirada de ataque elegida no debe tener desventaja. Si la tirada de ataque elegida acierta, el objetivo sufre 1d10 de daño adicional del mismo tipo que inflija el arma o el ataque sin armas y puedes causar un efecto de Golpe brutal de tu elección. Tienes las siguientes opciones de efectos.\nGolpe enérgico. El objetivo es empujado 4,5 m respecto a ti en línea recta. Luego puedes moverte hasta la mitad de tu velocidad directamente hacia el objetivo sin provocar ataques de oportunidad.\nGolpe ralentizador. La velocidad del objetivo se reduce en 4,5 m hasta el principio de tu siguiente turno. Un objetivo solo puede sufrir un golpe ralentizador cada vez: el más reciente.' },
+        { nombre: 'Golpe brutal', pagina: 53, desc: 'Si usas Ataque temerario, puedes renunciar a la ventaja de un ataque de Fuerza; si acierta, causa 1d10 de daño extra y aplicas un efecto a elegir: empujar al objetivo 4,5 m en línea recta (y avanzar hacia él sin provocar ataques de oportunidad) o reducir su velocidad 4,5 m hasta tu próximo turno.' },
       ],
       10: [subclaseRasgo()],
       11: [
-        { nombre: 'Furia implacable', desc: 'Tu furia te permite seguir luchando incluso tras sufrir heridas graves. Si tus puntos de golpe se reducen a 0 mientras estás enfurecido, pero no mueres inmediatamente, puedes hacer una tirada de salvación de Constitución con CD 10. Si la superas, tus puntos de golpe pasarán a ser una cantidad igual al doble de tu nivel de bárbaro.\nSiempre que uses este rasgo después de la primera vez, la CD aumenta en 5. Tras finalizar un descanso corto o largo, la CD vuelve a ser 10.' },
+        { nombre: 'Furia implacable', pagina: 53, desc: 'Si caes a 0 PG mientras estás enfurecido y no mueres, una salvación de Constitución CD 10 te deja con PG iguales al doble de tu nivel de bárbaro. La CD sube +5 por cada uso adicional y vuelve a 10 tras un descanso corto o largo.' },
       ],
       12: [ASI],
       13: [
-        { nombre: 'Golpe brutal mejorado', desc: 'Has perfeccionado tus formas de atacar con fiereza. Entre las opciones de Golpe brutal se encuentran ahora los siguientes efectos:\nGolpe abrumador. El objetivo tiene desventaja en la siguiente tirada de salvación que haga y no puede llevar a cabo ataques de oportunidad hasta el principio de tu siguiente turno.\nGolpe desgarrador. Antes del principio de tu siguiente turno, la próxima tirada de ataque realizada por otra criatura contra el objetivo obtiene un bonificador de +5. Una tirada de ataque puede obtener solo un bonificador de un golpe desgarrador.' },
+        { nombre: 'Golpe brutal mejorado', pagina: 53, desc: 'Golpe brutal gana dos opciones más: dar desventaja en la próxima salvación del objetivo (y bloquear sus ataques de oportunidad), o conceder +5 al próximo ataque de un aliado contra ese objetivo.' },
       ],
       14: [subclaseRasgo()],
       15: [
-        { nombre: 'Furia persistente', desc: 'Cuando tires iniciativa, puedes recuperar todos los usos gastados de la furia. Tras recuperar los usos de la furia de esta manera, no podrás volver a hacerlo hasta que finalices un descanso largo.\nAdemás, tu furia es tan intensa que ahora dura 10 minutos sin necesidad de hacer nada para prolongarla de un asalto a otro. Tu furia termina antes si recibes el estado de inconsciente (no solo el de incapacitado) o te pones una armadura pesada.' },
+        { nombre: 'Furia persistente', pagina: 53, desc: 'Al tirar iniciativa puedes recuperar todos los usos de furia (una vez por descanso largo). Además, tu furia dura 10 minutos sin necesidad de prolongarla; solo termina si quedas inconsciente o te pones armadura pesada.' },
       ],
       16: [ASI],
       17: [
-        { nombre: 'Golpe brutal mejorado', desc: 'El daño adicional de tu Golpe brutal aumenta a 2d10. Además, puedes utilizar dos efectos diferentes de Golpe brutal siempre que uses tu rasgo Golpe brutal.' },
+        { nombre: 'Golpe brutal mejorado', pagina: 53, desc: 'El daño extra de Golpe brutal sube a 2d10 y puedes aplicar dos efectos diferentes a la vez.' },
       ],
       18: [
-        { nombre: 'Poderío indómito', desc: 'Si tu resultado en una prueba de Fuerza o una tirada de salvación de Fuerza es inferior a tu puntuación de Fuerza, puedes usar esa puntuación en lugar del resultado.' },
+        { nombre: 'Poderío indómito', pagina: 53, desc: 'Si tu resultado en una prueba o salvación de Fuerza es menor que tu puntuación de Fuerza, usas la puntuación en su lugar.' },
       ],
       19: [donEpico],
       20: [
-        { nombre: 'Campeón primordial', desc: 'Encarnas un poder primigenio. Tus puntuaciones de Fuerza y Constitución aumentan en 4, hasta un máximo de 25.' },
+        { nombre: 'Campeón primordial', pagina: 53, desc: 'Tu Fuerza y tu Constitución aumentan +4 (hasta un máximo de 25).' },
       ],
     },
   },
@@ -93,40 +93,40 @@ export const NIVEL_DATOS = {
     nivelesASI: [4, 8, 12, 16],
     rasgosNivel: {
       1: [
-        { nombre: 'Inspiración bárdica', desc: 'Puedes recurrir a tus palabras, música o danza para inspirar de forma sobrenatural a los demás. Esta inspiración se representa con tu dado de Inspiración bárdica, que es un d6.\nUtilizar la Inspiración bárdica. Como acción adicional, puedes inspirar a otra criatura que esté a 18 m o menos de ti y que te pueda ver u oír. Esa criatura obtiene uno de tus dados de Inspiración bárdica. Cada criatura no puede tener más de un dado de Inspiración bárdica.\nUna sola vez durante la siguiente hora, cuando la criatura falle una prueba con d20, podrá tirar el dado de Inspiración bárdica y sumar el resultado al d20, lo que podría hacerle superar la prueba. Un dado de Inspiración bárdica se gasta al tirarlo.\nNúmero de usos. Puedes conceder un dado de Inspiración bárdica una cantidad de veces igual a tu modificador por Carisma (mínimo una vez) y recuperas todos sus usos tras finalizar un descanso largo.\nA niveles superiores. Tu dado de Inspiración bárdica cambia cuando alcanzas ciertos niveles de bardo, como se muestra en la columna «Dado bárdico» de la tabla «Rasgos de bardo». El dado se convierte en un d8 en el nivel 5, un d10 en el nivel 10 y un d12 en el nivel 15.' },
-        { nombre: 'Lanzamiento de conjuros', desc: 'Has aprendido a lanzar conjuros mediante tus artes bárdicas. Consulta el capítulo 7 para ver las reglas sobre el lanzamiento de conjuros. La información presentada a continuación detalla cómo usar esas reglas con los conjuros de bardo, que encontrarás más adelante en la lista de conjuros de bardo de la descripción de la clase.\nTrucos. Conoces dos trucos de tu elección escogidos de entre los de la lista de conjuros de bardo. Se recomiendan burla dañina y luces danzantes. Cada vez que subas un nivel de bardo, puedes sustituir uno de tus trucos por otro truco de tu elección de la lista de conjuros de bardo. Cuando alcances los niveles 4 y 10 de bardo, aprenderás otro truco de tu elección de la lista de conjuros de bardo, como se muestra en la columna «Trucos» de la tabla «Rasgos de bardo».\nEspacios de conjuro. La tabla «Rasgos de bardo» muestra cuántos espacios de conjuro tienes para lanzar tus conjuros de nivel 1 y superiores. Recuperas todos los espacios utilizados tras finalizar un descanso largo.\nConjuros preparados de nivel 1 y superiores. Preparas una serie de conjuros de nivel 1 y superiores, que son los que podrás lanzar con este rasgo. Para empezar, elige cuatro conjuros de nivel 1 de la lista de conjuros de bardo. Se recomiendan hechizar persona, palabra de curación, rociada de color y susurros discordantes.\nEl número de conjuros de tu lista aumenta conforme subes de nivel de bardo, como se muestra en la columna «Conjuros preparados» de la tabla «Rasgos de bardo». Cuando ese número aumente, elige conjuros adicionales de la lista de conjuros de bardo hasta que el número de conjuros de tu lista coincida con el número de la tabla. Estos conjuros deben ser de un nivel para el que tengas espacios de conjuro. Por ejemplo, si eres un bardo de nivel 3, podrías preparar cualquier combinación de seis conjuros de nivel 1 o 2.\nSi otro rasgo de bardo te proporciona conjuros que siempre tienes preparados, esos conjuros no cuentan para el total que puedes preparar con este rasgo, pero sí que cuentan como conjuros de bardo para ti.\nCambiar los conjuros preparados. Cada vez que subas un nivel de bardo, puedes sustituir un conjuro de tu lista por otro conjuro de bardo para el que tengas espacios de conjuro.\nAptitud mágica. El Carisma es tu aptitud mágica en lo que respecta a tus conjuros de bardo.\nCanalizador mágico. Puedes utilizar un instrumento musical como canalizador mágico para tus conjuros de bardo.' },
+        { nombre: 'Inspiración bárdica', pagina: 59, desc: 'Acción adicional: das un dado de Inspiración bárdica (d6) a una criatura a 18 m que te vea u oiga (máx. uno por criatura). Durante la siguiente hora, cuando falle una prueba con d20, puede tirar el dado y sumarlo (el dado se gasta al tirarlo). Usos iguales a tu modificador por Carisma (mínimo 1); se recuperan en descanso largo. El dado sube a d8 (nivel 5), d10 (nivel 10) y d12 (nivel 15).' },
+        { nombre: 'Lanzamiento de conjuros', pagina: 59, desc: 'Lanzas conjuros de la lista de bardo (aptitud Carisma; canalizador: un instrumento musical). Empiezas con 2 trucos (más en niveles 4 y 10) y preparas conjuros de nivel 1+ según la tabla. Puedes cambiar trucos/preparados al subir de nivel.' },
       ],
       2: [
-        { nombre: 'Aprendiz de mucho', desc: 'Puedes sumar la mitad de tu bonificador por competencia (redondeando hacia abajo) a cualquier prueba de característica que hagas que utilice una habilidad en la que no seas competente y que no use de otro modo tu bonificador por competencia.\nPor ejemplo, si haces una prueba de Fuerza (Atletismo) y no eres competente en Atletismo, puedes sumar la mitad de tu bonificador por competencia a la prueba.' },
-        { nombre: 'Pericia', desc: 'Ganas pericia (consulta el glosario de reglas) en dos de tus competencias en habilidades de tu elección. Se recomiendan Interpretación y Persuasión si eres competente en ellas.\nEn el nivel 9 de bardo ganas pericia en otras dos competencias de tu elección.' },
+        { nombre: 'Aprendiz de mucho', pagina: 60, desc: 'Sumas la mitad de tu bonificador por competencia (redondeando hacia abajo) a las pruebas de característica que usen una habilidad en la que no seas competente y que no usen ya tu competencia.' },
+        { nombre: 'Pericia', pagina: 60, desc: 'Ganas pericia (doble competencia) en dos de tus habilidades. Ganas otras dos en el nivel 9.' },
       ],
       3: [
-        { nombre: 'Subclase de bardo', desc: 'Consigues una subclase de bardo de tu elección. Las subclases del colegio de la danza, el colegio del conocimiento, el colegio del glamour y el colegio del valor se detallan tras la descripción de esta clase. Una subclase es una especialización que te proporciona rasgos cuando alcanzas ciertos niveles de bardo. De aquí en adelante, obtienes todos los rasgos de tu subclase que sean de tu nivel de bardo e inferiores.', esSubclase: true },
+        { nombre: 'Subclase de bardo', pagina: 60, desc: 'Eliges tu colegio de bardo (Danza, Conocimiento, Glamour o Valor). A partir de aquí obtienes sus rasgos según tu nivel de bardo.', esSubclase: true },
       ],
       4: [ASI],
       5: [
-        { nombre: 'Fuente de inspiración', desc: 'Ahora recuperas todos los usos de Inspiración bárdica tras finalizar un descanso corto o largo.\nAdemás, puedes gastar un espacio de conjuro (no requiere acción) para recuperar un uso gastado de Inspiración bárdica.' },
+        { nombre: 'Fuente de inspiración', pagina: 61, desc: 'Recuperas todos los usos de Inspiración bárdica también en descanso corto. Además, puedes gastar un espacio de conjuro (sin acción) para recuperar un uso.' },
       ],
       6: [subclaseRasgo()],
       7: [
-        { nombre: 'Contraencantamiento', desc: 'Puedes emplear notas musicales o palabras de poder para interrumpir los efectos que afectan a la mente. Si tú o una criatura que esté a 9 m o menos de ti falláis una tirada de salvación contra un efecto que aplique el estado de asustado o hechizado, puedes llevar a cabo una reacción para que se repita la tirada de salvación, y la nueva tirada tendrá ventaja.' },
+        { nombre: 'Contraencantamiento', pagina: 61, desc: 'Si tú o una criatura a 9 m falláis una salvación contra un efecto de asustado o hechizado, reacción para repetir esa salvación con ventaja.' },
       ],
       8: [ASI],
       9: [
-        { nombre: 'Pericia', desc: 'Ganas pericia en otras dos de tus competencias en habilidades de tu elección.' },
+        { nombre: 'Pericia', pagina: 60, desc: 'Ganas pericia en otras dos de tus habilidades (segunda concesión de Pericia).' },
       ],
       10: [
-        { nombre: 'Secretos mágicos', desc: 'Has aprendido secretos de diversas tradiciones mágicas. Cada vez que alcances un nivel de bardo (incluido este) y aumente la cantidad de conjuros preparados de la tabla «Rasgos de bardo», podrás elegir cualquiera de los nuevos conjuros preparados de entre las listas de conjuros de bardo, clérigo, druida y mago. Los conjuros elegidos contarán como conjuros de bardo para ti (consulta las listas de conjuros en la sección de la clase correspondiente). Además, cuando sustituyas un conjuro preparado para esta clase, podrás hacerlo con un conjuro de esas listas.' },
+        { nombre: 'Secretos mágicos', pagina: 61, desc: 'Cuando subas de nivel y aumente tu número de conjuros preparados, los nuevos pueden salir también de las listas de clérigo, druida y mago (cuentan como conjuros de bardo). También puedes sustituir preparados por conjuros de esas listas.' },
       ],
       12: [ASI],
       14: [subclaseRasgo()],
       16: [ASI],
       18: [
-        { nombre: 'Inspiración superior', desc: 'Cuando tires iniciativa, recuperarás usos gastados de Inspiración bárdica hasta que tengas dos, si tuvieras menos de esta cifra.' },
+        { nombre: 'Inspiración superior', pagina: 61, desc: 'Al tirar iniciativa, recuperas usos de Inspiración bárdica hasta tener dos (si tuvieras menos).' },
       ],
       19: [donEpico],
       20: [
-        { nombre: 'Palabras de creación', desc: 'Ahora dominas dos de las palabras de creación: las palabras de la vida y de la muerte. Por tanto, siempre tienes preparados los conjuros palabra de poder: sanar y palabra de poder: matar. Cuando lances uno de estos conjuros, podrás hacer objetivo a una segunda criatura si esta se encuentra a 3 m o menos del primer objetivo.' },
+        { nombre: 'Palabras de creación', pagina: 61, desc: 'Siempre tienes preparados palabra de poder: sanar y palabra de poder: matar. Al lanzar cualquiera de los dos, puedes afectar a una segunda criatura que esté a 3 m del primer objetivo.' },
       ],
     },
   },
@@ -137,40 +137,40 @@ export const NIVEL_DATOS = {
     nivelesASI: [4, 8, 12, 16],
     rasgosNivel: {
       1: [
-        { nombre: 'Invocaciones sobrenaturales', desc: 'Has desenterrado invocaciones sobrenaturales, fragmentos de conocimiento prohibido que te imbuyen de una capacidad mágica perpetua o de otros saberes. Obtienes una invocación de tu elección, como Pacto del grimorio. Las invocaciones se detallan más adelante en la descripción de esta clase, en el apartado «Opciones de invocación sobrenatural».\nRequisitos. Si una invocación tiene un requisito, debes cumplirlo para poder aprenderla. Por ejemplo, si una invocación te pide un nivel 5 o superior de brujo, podrás seleccionar esa invocación cuando alcances ese nivel de brujo.\nSustituir y conseguir invocaciones. Cada vez que subas un nivel de brujo, puedes sustituir una de tus invocaciones por otra para la que cumplas las condiciones. No puedes sustituir una invocación si es un requisito de otra invocación que tengas.\nObtienes más invocaciones de tu elección cuando alcanzas ciertos niveles de brujo, como se muestra en la columna «Invocaciones» de la tabla «Rasgos de brujo». No puedes elegir la misma invocación más de una vez salvo que la descripción indique algo diferente.' },
-        { nombre: 'Magia del pacto', desc: 'Has sellado un pacto con una entidad misteriosa mediante una ceremonia ocultista para obtener poderes mágicos. Ese ente es una voz en las sombras y no tienes clara su identidad, pero el don que te ofrece sí que lo conoces: te ha dado la capacidad de lanzar conjuros. Consulta el capítulo 7 para ver las reglas sobre el lanzamiento de conjuros. La información presentada a continuación detalla cómo usar esas reglas con los conjuros de brujo, que encontrarás más adelante en la lista de conjuros de brujo de la descripción de la clase.\nTrucos. Conoces dos trucos de brujo de tu elección. Se recomiendan descarga sobrenatural y prestidigitación. Cada vez que subas un nivel de brujo, puedes sustituir uno de tus trucos de este rasgo por otro truco de brujo de tu elección. Cuando alcanzas los niveles 4 y 10 de brujo, aprendes otro truco de brujo de tu elección, como se muestra en la columna «Trucos» de la tabla «Rasgos de brujo».\nEspacios de conjuro. La tabla «Rasgos de brujo» muestra cuántos espacios de conjuro tienes para lanzar tus conjuros de brujo de los niveles 1 a 5. La tabla también te indica de qué nivel son dichos espacios, todos los cuales son del mismo nivel. Recuperas todos los espacios utilizados de Magia del pacto tras finalizar un descanso corto o largo. Por ejemplo, en el nivel 5 de brujo tienes dos espacios de conjuro de nivel 3. Para lanzar el conjuro de nivel 1 rayo de hechicería, deberás gastar uno de esos espacios y lo lanzarás como un conjuro de nivel 3.\nConjuros preparados de nivel 1 y superiores. Preparas una serie de conjuros de nivel 1 y superiores, que son los que podrás lanzar con este rasgo. Para empezar, elige dos conjuros de brujo de nivel 1. Se recomiendan hechizar persona y maleficio.\nEl número de conjuros de tu lista aumenta conforme subes de nivel de brujo, como se muestra en la columna «Conjuros preparados» de la tabla «Rasgos de brujo». Cuando ese número aumente, elige conjuros de brujo adicionales hasta que el número de conjuros de tu lista coincida con el número de la tabla. Los conjuros que elijas deben ser de un nivel igual o inferior al que aparece en la columna «Nivel de los espacios» para tu nivel. Cuando alcanzas el nivel 6, por ejemplo, aprendes un nuevo conjuro de brujo que puede ser de los niveles 1 a 3.\nSi otro rasgo de brujo te proporciona conjuros que siempre tienes preparados, esos conjuros no cuentan para el total que puedes preparar con este rasgo, pero sí que cuentan como conjuros de brujo para ti.\nCambiar los conjuros preparados. Cada vez que subas un nivel de brujo, puedes sustituir un conjuro de tu lista por otro conjuro de brujo de un nivel adecuado.\nAptitud mágica. El Carisma es tu aptitud mágica en lo que respecta a tus conjuros de brujo.\nCanalizador mágico. Puedes utilizar un canalizador arcano como canalizador mágico para tus conjuros de brujo.' },
+        { nombre: 'Invocaciones sobrenaturales', pagina: 69, desc: 'Obtienes 1 invocación a elegir (algunas tienen requisito de nivel u otra invocación). Ganas más al subir de nivel: 3 (nivel 2), 5 (5), 6 (7), 7 (9), 8 (11), 9 (14) y 10 (17). Puedes sustituir una invocación al subir de nivel. El listado completo está en «Opciones de invocación sobrenatural».' },
+        { nombre: 'Magia del pacto', pagina: 69, desc: 'Lanzas conjuros de la lista de brujo (aptitud Carisma; canalizador: un canalizador arcano). Conoces 2 trucos (más en niveles 4 y 10) y preparas conjuros según la tabla. Tus espacios de conjuro son todos del nivel más alto disponible y se recuperan también en descanso corto.' },
       ],
       2: [
-        { nombre: 'Astucia mágica', desc: 'Puedes llevar a cabo un rito esotérico durante 1 minuto. Al terminarlo, recuperas una cantidad de espacios de conjuro utilizados de Magia del pacto igual o inferior a la mitad de tu máximo (redondeando hacia arriba). Cuando uses este rasgo, no podrás volver a hacerlo hasta que finalices un descanso largo.' },
+        { nombre: 'Astucia mágica', pagina: 70, desc: 'Rito de 1 minuto que recupera espacios de Magia del pacto hasta la mitad de tu máximo (redondeando hacia arriba). Una vez por descanso largo.' },
       ],
       3: [
-        { nombre: 'Subclase de brujo', desc: 'Consigues una subclase de brujo de tu elección. Las subclases del patrón celestial, el patrón feérico, el patrón infernal y el patrón primigenio se detallan tras la descripción de esta clase. Una subclase es una especialización que te proporciona rasgos cuando alcanzas ciertos niveles de brujo. De aquí en adelante, obtienes todos los rasgos de tu subclase que sean de tu nivel de brujo e inferiores.', esSubclase: true },
+        { nombre: 'Subclase de brujo', pagina: 70, desc: 'Eliges tu patrón (Celestial, Feérico, Infernal o Primigenio). A partir de aquí obtienes sus rasgos según tu nivel de brujo.', esSubclase: true },
       ],
       4: [ASI],
       6: [subclaseRasgo()],
       8: [ASI],
       9: [
-        { nombre: 'Contactar patrón', desc: 'Antes solías ponerte en contacto con tu patrón a través de intermediarios. Ahora puedes comunicarte directamente, ya que siempre tienes el conjuro contactar con otro plano preparado. Con este rasgo, puedes lanzar el conjuro sin gastar un espacio de conjuro para contactar con tu patrón y superas automáticamente la tirada de salvación del conjuro.\nCuando lances el conjuro con este rasgo, no podrás volver a hacerlo de esta forma hasta que finalices un descanso largo.' },
+        { nombre: 'Contactar patrón', pagina: 71, desc: 'Siempre tienes preparado contactar con otro plano y puedes lanzarlo sin espacio para hablar con tu patrón (superas la salvación automáticamente). Una vez por descanso largo de esta forma.' },
       ],
       10: [subclaseRasgo()],
       11: [
-        { nombre: 'Arcanum místico', desc: 'Tu patrón te recompensa con un secreto mágico denominado arcanum. Escoge uno de los conjuros de brujo de nivel 6 como este arcanum.\nPuedes lanzar tu conjuro de arcanum una vez sin gastar un espacio de conjuro y debes finalizar un descanso largo antes de poder volver a lanzarlo de este modo.\nObtendrás más conjuros de brujo de tu elección que podrás lanzar de esta forma cuando alcances los niveles 13 (conjuro de nivel 7), 15 (conjuro de nivel 8) y 17 (conjuro de nivel 9) de brujo, como se muestra en la tabla «Rasgos de brujo». Recuperas todos los usos de tu Arcanum místico tras finalizar un descanso largo.\nSiempre que subas un nivel de brujo, puedes sustituir uno de tus conjuros de arcanum por otro conjuro de brujo del mismo nivel.' },
+        { nombre: 'Arcanum místico', pagina: 71, desc: 'Eliges un conjuro de brujo de nivel 6 que puedes lanzar una vez sin espacio (recarga en descanso largo). Sumas otro conjuro a esta reserva en los niveles 13 (nivel 7), 15 (nivel 8) y 17 (nivel 9). Puedes cambiar un arcanum por otro del mismo nivel al subir de nivel.' },
       ],
       12: [ASI],
       13: [
-        { nombre: 'Arcanum místico (conjuro de nivel 7)', desc: 'Obtienes otro conjuro de tu Arcanum místico, esta vez un conjuro de brujo de nivel 7 (consulta el rasgo Arcanum místico del nivel 11).' },
+        { nombre: 'Arcanum místico (conjuro de nivel 7)', pagina: 71, desc: 'Sumas un conjuro de brujo de nivel 7 a tu Arcanum místico (ver el rasgo del nivel 11).' },
       ],
       14: [subclaseRasgo()],
       15: [
-        { nombre: 'Arcanum místico (conjuro de nivel 8)', desc: 'Obtienes otro conjuro de tu Arcanum místico, esta vez un conjuro de brujo de nivel 8 (consulta el rasgo Arcanum místico del nivel 11).' },
+        { nombre: 'Arcanum místico (conjuro de nivel 8)', pagina: 71, desc: 'Sumas un conjuro de brujo de nivel 8 a tu Arcanum místico (ver el rasgo del nivel 11).' },
       ],
       16: [ASI],
       17: [
-        { nombre: 'Arcanum místico (conjuro de nivel 9)', desc: 'Obtienes otro conjuro de tu Arcanum místico, esta vez un conjuro de brujo de nivel 9 (consulta el rasgo Arcanum místico del nivel 11).' },
+        { nombre: 'Arcanum místico (conjuro de nivel 9)', pagina: 71, desc: 'Sumas un conjuro de brujo de nivel 9 a tu Arcanum místico (ver el rasgo del nivel 11).' },
       ],
       19: [donEpico],
       20: [
-        { nombre: 'Maestro sobrenatural', desc: 'Cuando empleas tu rasgo Astucia mágica, recuperas todos los espacios de conjuro utilizados de Magia del pacto.' },
+        { nombre: 'Maestro sobrenatural', pagina: 71, desc: 'Al usar Astucia mágica, recuperas todos los espacios de Magia del pacto gastados.' },
       ],
     },
   },
@@ -181,36 +181,36 @@ export const NIVEL_DATOS = {
     nivelesASI: [4, 8, 12, 16],
     rasgosNivel: {
       1: [
-        { nombre: 'Lanzamiento de conjuros', desc: 'Has aprendido a lanzar conjuros gracias a la oración y la meditación. Consulta el capítulo 7 para ver las reglas sobre el lanzamiento de conjuros. La información presentada a continuación detalla cómo usar esas reglas con los conjuros de clérigo, que encontrarás más adelante en la lista de conjuros de clérigo de la descripción de la clase.\nTrucos. Conoces tres trucos de tu elección escogidos de entre los de la lista de conjuros de clérigo. Se recomiendan guía, llama sagrada y taumaturgia. Cada vez que subas un nivel de clérigo, puedes sustituir uno de tus trucos por otro truco de tu elección de la lista de conjuros de clérigo. Cuando alcances los niveles 4 y 10 de clérigo, aprenderás otro truco de tu elección de la lista de conjuros de clérigo, como se muestra en la columna «Trucos» de la tabla «Rasgos de clérigo».\nEspacios de conjuro. La tabla «Rasgos de clérigo» muestra cuántos espacios de conjuro tienes para lanzar tus conjuros de nivel 1 y superiores. Recuperas todos los espacios utilizados tras finalizar un descanso largo.\nConjuros preparados de nivel 1 y superiores. Preparas una serie de conjuros de nivel 1 y superiores, que son los que podrás lanzar con este rasgo. Para empezar, elige cuatro conjuros de nivel 1 de la lista de conjuros de clérigo. Se recomiendan bendición, curar heridas, escudo de fe y saeta guía.\nEl número de conjuros de tu lista aumenta conforme subes de nivel de clérigo, como se muestra en la columna «Conjuros preparados» de la tabla «Rasgos de clérigo». Cuando ese número aumente, elige conjuros adicionales de la lista de conjuros de clérigo hasta que el número de conjuros de tu lista coincida con el número de la tabla. Estos conjuros deben ser de un nivel para el que tengas espacios de conjuro. Por ejemplo, si eres una clériga de nivel 3, podrías preparar cualquier combinación de seis conjuros de nivel 1 o 2.\nSi otro rasgo de clérigo te proporciona conjuros que siempre tienes preparados, esos conjuros no cuentan para el total que puedes preparar con este rasgo, pero sí que cuentan como conjuros de clérigo para ti.\nCambiar los conjuros preparados. Tras finalizar un descanso largo, puedes cambiar los conjuros que tienes preparados sustituyendo los que quieras por otros conjuros de clérigo para los que tengas espacios de conjuro.\nAptitud mágica. La Sabiduría es tu aptitud mágica en lo que respecta a tus conjuros de clérigo.\nCanalizador mágico. Puedes utilizar un símbolo sagrado como canalizador mágico para tus conjuros de clérigo.' },
-        { nombre: 'Orden divina', desc: 'Te has consagrado a una de las siguientes funciones sacras, a tu elección.\nProtector. Te has entrenado para el combate y ganas competencia con armas marciales y entrenamiento con armaduras pesadas.\nTaumaturgo. Conoces un truco adicional de la lista de conjuros de clérigo. Además, tu conexión mística con lo divino te proporciona un bonificador a tus pruebas de Inteligencia (Conocimiento arcano y Religión). El bonificador es igual a tu modificador por Sabiduría (mínimo de +1).' },
+        { nombre: 'Lanzamiento de conjuros', pagina: 81, desc: 'Lanzas conjuros de la lista de clérigo (aptitud Sabiduría; canalizador: un símbolo sagrado). Conoces 3 trucos (más en niveles 4 y 10) y preparas conjuros de nivel 1+ según la tabla. Puedes cambiar trucos al subir de nivel y los preparados tras un descanso largo.' },
+        { nombre: 'Orden divina', pagina: 82, desc: 'Eliges una función sacra. Protector: competencia con armas marciales y entrenamiento con armaduras pesadas. Taumaturgo: un truco extra de clérigo y un bonificador a las pruebas de Inteligencia (Conocimiento arcano y Religión) = tu modificador por Sabiduría (mínimo +1).' },
       ],
       2: [
-        { nombre: 'Canalizar divinidad', desc: 'Puedes canalizar energía divina directamente de los Planos Exteriores para alimentar varios efectos mágicos. Empiezas con dos de estos efectos: Chispa divina y Expulsar muertos vivientes, que se describen a continuación. Cada vez que utilices el rasgo Canalizar divinidad de esta clase, elige qué efecto de esta clase creas. En niveles superiores de clérigo recibes opciones adicionales.\nPuedes usar el rasgo Canalizar divinidad dos veces. Recuperas uno de los usos gastados tras finalizar un descanso corto y todos tras finalizar un descanso largo. Obtienes usos adicionales cuando alcanzas ciertos niveles de clérigo, como se muestra en la columna «Canalizar divinidad» de la tabla «Rasgos de clérigo».\nSi un efecto de Canalizar divinidad requiere una tirada de salvación, la CD será igual a la CD de salvación de conjuros del rasgo Lanzamiento de conjuros de esta clase.\nChispa divina. Como acción de magia, diriges tu símbolo sagrado hacia otra criatura que puedas ver a 9 m o menos de ti y concentras energía divina en ella. Tira 1d8 y suma tu modificador por Sabiduría. Puedes hacer que la criatura recupere una cantidad de puntos de golpe igual al resultado u obligar a la criatura a hacer una tirada de salvación de Constitución. Si la falla, sufrirá una cantidad de daño necrótico o radiante (a tu elección) igual a ese resultado. Si la supera, sufrirá la mitad de daño (redondeando hacia abajo). Tira 1d8 adicional cuando alcances los niveles 7 (2d8), 13 (3d8) y 18 (4d8) de clérigo.\nExpulsar muertos vivientes. Como acción de magia, muestras tu símbolo sagrado y rechazas a los muertos vivientes. Cada muerto viviente de tu elección a 9 m o menos de ti deberá hacer una tirada de salvación de Sabiduría. Si la falla, tendrá los estados de asustado e incapacitado durante 1 minuto. Durante ese tiempo, tratará de alejarse de ti todo lo que pueda en sus turnos. Este efecto termina antes de tiempo si la criatura sufre daño, si tienes el estado de incapacitado o si mueres.' },
+        { nombre: 'Canalizar divinidad', pagina: 82, desc: 'Energía divina con dos efectos iniciales (eliges al usarlo); CD igual a tu CD de salvación de conjuros. Chispa divina (acción de magia: 1d8 + Sabiduría a una criatura a 9 m, para curar o forzar una salvación de Constitución por daño necrótico/radiante; sube a 2d8/3d8/4d8 en niveles 7/13/18). Expulsar muertos vivientes (acción de magia: los muertos vivientes a 9 m hacen salvación de Sabiduría o quedan asustados e incapacitados 1 minuto, alejándose de ti). 2 usos (3 en nivel 6, 4 en el 18); recuperas 1 en descanso corto y todos en largo.' },
       ],
       3: [
-        { nombre: 'Subclase de clérigo', desc: 'Consigues una subclase de clérigo de tu elección. Las subclases del dominio de la guerra, el dominio de la luz, el dominio de la vida y el dominio del engaño se detallan tras la descripción de esta clase. Una subclase es una especialización que te proporciona rasgos cuando alcanzas ciertos niveles de clérigo. De aquí en adelante, obtienes todos los rasgos de tu subclase que sean de tu nivel de clérigo e inferiores.', esSubclase: true },
+        { nombre: 'Subclase de clérigo', pagina: 83, desc: 'Eliges tu dominio (Guerra, Luz, Vida o Engaño). A partir de aquí obtienes sus rasgos según tu nivel de clérigo (3, 6 y 17).', esSubclase: true },
       ],
       4: [ASI],
       5: [
-        { nombre: 'Abrasar muertos vivientes', desc: 'Cuando utilices Expulsar muertos vivientes, puedes tirar una cantidad de d8 igual a tu modificador por Sabiduría (mínimo 1d8) y sumar los resultados. Todos los muertos vivientes que fallen su tirada de salvación contra ese uso de Expulsar muertos vivientes sufrirán una cantidad de daño radiante igual al resultado total de las tiradas. Este daño no pone fin al efecto de expulsión.' },
+        { nombre: 'Abrasar muertos vivientes', pagina: 83, desc: 'Al usar Expulsar muertos vivientes, los que fallen la salvación sufren daño radiante igual a la suma de tu modificador por Sabiduría en d8 (mínimo 1d8). No termina la expulsión.' },
       ],
       6: [subclaseRasgo()],
       7: [
-        { nombre: 'Golpes benditos', desc: 'Te imbuyes de poder divino en la batalla. Obtienes una de las siguientes opciones, a tu elección (si obtienes cualquiera de ellas por una subclase de clérigo de un libro antiguo, utiliza solo la opción que escojas para este rasgo).\nGolpe divino. Una vez en cada uno de tus turnos, cuando aciertes a una criatura con una tirada de ataque usando un arma, podrás hacer que el objetivo sufra 1d8 de daño necrótico o radiante adicional (a tu elección).\nLanzamiento potente. Sumas tu modificador por Sabiduría al daño que causas con cualquier truco de clérigo.' },
+        { nombre: 'Golpes benditos', pagina: 83, desc: 'Eliges una opción permanente: Golpe divino (una vez por turno, al acertar con un arma, +1d8 de daño necrótico o radiante) o Lanzamiento potente (sumas tu modificador por Sabiduría al daño de tus trucos de clérigo).' },
       ],
       8: [ASI],
       10: [
-        { nombre: 'Intercesión divina', desc: 'Puedes recurrir a tu deidad o panteón para que intervenga en tu nombre. Como acción de magia, elige cualquier conjuro de clérigo de nivel 5 o inferior que no requiera una reacción para lanzarlo. Como parte de la misma acción, lanzas ese conjuro sin gastar un espacio de conjuro o sin necesidad de componentes materiales. No podrás volver a utilizar este rasgo hasta que finalices un descanso largo.' },
+        { nombre: 'Intercesión divina', pagina: 83, desc: 'Acción de magia: lanzas un conjuro de clérigo de nivel 5 o menor (que no requiera reacción) sin gastar espacio ni componentes materiales. Una vez por descanso largo.' },
       ],
       12: [ASI],
       14: [
-        { nombre: 'Golpes benditos mejorados', desc: 'La opción elegida para Golpes benditos se vuelve más poderosa.\nGolpe divino. El daño adicional de tu Golpe divino aumenta a 2d8.\nLanzamiento potente. Cuando lances un truco de clérigo y causes daño a una criatura con él, podrás transmitir vitalidad a ti o a otra criatura que esté a 18 m o menos de ti; se concederá una cantidad de puntos de golpe temporales igual al doble de tu modificador por Sabiduría.' },
+        { nombre: 'Golpes benditos mejorados', pagina: 83, desc: 'Mejora tu opción de Golpes benditos. Golpe divino: el daño extra sube a 2d8. Lanzamiento potente: al dañar con un truco de clérigo, das PG temporales = el doble de tu modificador por Sabiduría a ti o a una criatura a 18 m.' },
       ],
       16: [ASI],
       17: [subclaseRasgo()],
       19: [donEpico],
       20: [
-        { nombre: 'Intercesión divina mayor', desc: 'Puedes solicitar una intercesión divina todavía más poderosa. Cuando uses tu rasgo Intercesión divina, puedes elegir deseo al seleccionar un conjuro. Si lo haces, no podrás volver a usar Intercesión divina hasta que finalices 2d4 descansos largos.' },
+        { nombre: 'Intercesión divina mayor', pagina: 83, desc: 'Tu Intercesión divina puede elegir el conjuro deseo; si lo haces, no vuelves a usar Intercesión divina hasta finalizar 2d4 descansos largos.' },
       ],
     },
   },
@@ -221,43 +221,45 @@ export const NIVEL_DATOS = {
     nivelesASI: [4, 8, 12, 16],
     rasgosNivel: {
       1: [
-        { nombre: 'Lanzamiento de conjuros', desc: 'Has aprendido a lanzar conjuros estudiando las fuerzas místicas de la naturaleza. Conoces 2 trucos de druida (al subir de nivel, puedes sustituir uno; trucos adicionales en niveles 4 y 10). Preparas conjuros de la lista completa de druida (4 en nivel 1); el número aumenta según la tabla. Tras descanso largo puedes cambiar los preparados. Los espacios se recuperan en descanso largo. Aptitud mágica: Sabiduría. Puedes usar un canalizador druídico.' },
-        { nombre: 'Druídico', desc: 'Sabes druídico, el idioma secreto de los druidas. Al aprender esta lengua antigua accediste a la magia para comunicarte con los animales, por lo que siempre tienes hablar con los animales preparado. Puedes dejar mensajes ocultos en druídico; quien lo conozca los detectará, los demás deben superar INT (Investigación) CD 15.' },
-        { nombre: 'Orden primigenia', desc: 'Te has consagrado a una función sacra, a tu elección. Guardián — ganas competencia con armas marciales y entrenamiento con armaduras medias. Naturalista — conoces un truco de druida adicional y tu conexión mística te proporciona un bonificador a tus pruebas de Inteligencia (Conocimiento arcano y Naturaleza) igual a tu mod. SAB (mínimo +1).' },
+        { nombre: 'Lanzamiento de conjuros', pagina: 91, desc: 'Lanzas conjuros de la lista de druida (aptitud Sabiduría; canalizador: un canalizador druídico). Conoces 2 trucos (más en niveles 4 y 10) y preparas conjuros de nivel 1+ según la tabla. Puedes cambiar trucos al subir de nivel y los preparados tras un descanso largo.' },
+        { nombre: 'Druídico', pagina: 92, desc: 'Conoces el idioma secreto druídico y siempre tienes preparado hablar con los animales. Puedes dejar mensajes ocultos en druídico: quien lo conozca los detecta; los demás deben superar una prueba de Inteligencia (Investigación) CD 15 para verlos (y no pueden descifrarlos sin magia).' },
+        { nombre: 'Orden primigenia', pagina: 92, desc: 'Eliges una función sacra. Guardián: competencia con armas marciales y entrenamiento con armaduras medias. Naturalista: un truco extra de druida y un bonificador a las pruebas de Inteligencia (Conocimiento arcano y Naturaleza) = tu modificador por Sabiduría (mínimo +1).' },
       ],
       2: [
-        { nombre: 'Compañero salvaje', desc: 'Puedes invocar un espíritu de la naturaleza que adopta la forma de un animal. Acción de magia: gasta un espacio de conjuro o un uso de Forma salvaje para lanzar encontrar familiar sin componentes materiales. El familiar es un feérico y desaparece al finalizar un descanso largo.' },
-        { nombre: 'Forma salvaje', desc: 'El poder de la naturaleza te permite transformarte en un animal. Acción adicional: adoptas una forma de bestia conocida (empiezas con 4 formas, FD máx. ¼, sin vuelo; escala a 6 formas y FD ½ en niv. 4, y FD 1 con vuelo en niv. 8). Obtienes PG temporales = nivel de druida. Dura horas = mitad de tu nivel de druida; termina antes si usas Forma salvaje de nuevo, quedas incapacitado o mueres. 2 usos; recuperas 1 en descanso corto, todos en descanso largo.' },
+        { nombre: 'Compañero salvaje', pagina: 92, desc: 'Acción de magia: gastas un espacio de conjuro o un uso de Forma salvaje para lanzar encontrar familiar sin componentes; el familiar es un feérico y desaparece al terminar un descanso largo.' },
+        { nombre: 'Forma salvaje', pagina: 92, desc: 'Acción adicional: te transformas en una bestia que conozcas (empiezas con 4 formas, valor de desafío máximo ¼ y sin vuelo). Obtienes PG temporales = tu nivel de druida; dura horas = la mitad de tu nivel. 2 usos (más en niveles superiores); recuperas 1 en descanso corto y todos en descanso largo. Las formas y su valor de desafío mejoran con el nivel.' },
       ],
-      3: [subclaseElegir('círculo druídico')],
+      3: [
+        { nombre: 'Subclase de druida', pagina: 93, desc: 'Eliges tu círculo druídico (Luna, Tierra, Estrellas o Mar). A partir de aquí obtienes sus rasgos según tu nivel de druida.', esSubclase: true },
+      ],
       4: [
         ASI,
-        { nombre: 'Forma salvaje mejorada', desc: 'Tus formas conocidas aumentan a 6 y el FD máximo pasa a ½ (todavía sin velocidad volando).' },
+        { nombre: 'Forma salvaje mejorada', pagina: 93, desc: 'Tus formas conocidas suben a 6 y el valor de desafío máximo pasa a ½ (todavía sin velocidad volando).' },
       ],
       5: [
-        { nombre: 'Resurgimiento salvaje', desc: 'Una vez en cada uno de tus turnos, si no te quedan usos de Forma salvaje, puedes obtener un uso gastando un espacio de conjuro (no requiere acción). Además, puedes gastar un uso de Forma salvaje (no requiere acción) para obtener un espacio de conjuro de nivel 1; una vez por descanso largo.' },
+        { nombre: 'Resurgimiento salvaje', pagina: 93, desc: 'Una vez por turno, si no te quedan usos de Forma salvaje, recuperas uno gastando un espacio de conjuro (sin acción). Además, puedes gastar un uso de Forma salvaje para obtener un espacio de conjuro de nivel 1 (una vez por descanso largo).' },
       ],
       6: [subclaseRasgo()],
       7: [
-        { nombre: 'Furia elemental', desc: 'El poder de los elementos fluye por ti. Elige una opción permanente: Golpe primordial — una vez por turno, al acertar con un arma o ataque de bestia en Forma salvaje, el objetivo sufre 1d8 de daño de frío, fuego, relámpago o trueno adicional (a tu elección). Lanzamiento potente — sumas tu mod. SAB al daño que causas con cualquier truco de druida.' },
+        { nombre: 'Furia elemental', pagina: 93, desc: 'Eliges una opción permanente: Golpe primordial (una vez por turno, al acertar con un arma o ataque de bestia, +1d8 de daño de frío, fuego, relámpago o trueno) o Lanzamiento potente (sumas tu modificador por Sabiduría al daño de tus trucos de druida).' },
       ],
       8: [
         ASI,
-        { nombre: 'Forma salvaje mejorada', desc: 'Tus formas de bestia tienen ahora FD máx. 1 y pueden tener velocidad volando.' },
+        { nombre: 'Forma salvaje mejorada', pagina: 93, desc: 'Tus formas de bestia pasan a valor de desafío máximo 1 y pueden tener velocidad volando.' },
       ],
       10: [subclaseRasgo()],
       12: [ASI],
       14: [subclaseRasgo()],
       15: [
-        { nombre: 'Furia elemental mejorada', desc: 'La opción elegida para Furia elemental se vuelve más poderosa. Golpe primordial → el daño adicional sube a 2d8. Lanzamiento potente → cuando lances un truco de druida con alcance de 3 m o más, su alcance aumenta en 90 m.' },
+        { nombre: 'Furia elemental mejorada', pagina: 93, desc: 'Mejora tu opción de Furia elemental. Golpe primordial: el daño extra sube a 2d8. Lanzamiento potente: tus trucos de druida con alcance ≥3 m ganan +90 m de alcance.' },
       ],
       16: [ASI],
       18: [
-        { nombre: 'Conjurar como bestia', desc: 'Mientras utilices Forma salvaje, puedes lanzar conjuros en forma de bestia, salvo cualquier conjuro que tenga un componente material con coste especificado o que se consuma como parte del conjuro.' },
+        { nombre: 'Conjurar como bestia', pagina: 93, desc: 'Puedes lanzar conjuros mientras usas Forma salvaje, salvo los que requieran un componente material con coste o que se consuma.' },
       ],
       19: [donEpico],
       20: [
-        { nombre: 'Archidruida', desc: 'La vitalidad de la naturaleza florece en ti. Forma salvaje perenne — al tirar iniciativa sin usos de Forma salvaje, recuperas uno automáticamente. Mago de la naturaleza — convierte usos no gastados de Forma salvaje en un espacio de conjuro sin acción (cada uso aporta 2 niveles de conjuro); una vez por descanso largo. Longevidad — por cada diez años que pasan, tu cuerpo envejece solo uno.' },
+        { nombre: 'Archidruida', pagina: 94, desc: 'Al tirar iniciativa sin usos de Forma salvaje, recuperas uno. Puedes convertir usos no gastados de Forma salvaje en un espacio de conjuro (cada uso vale 2 niveles de conjuro). Además, envejeces mucho más lento.' },
       ],
     },
   },

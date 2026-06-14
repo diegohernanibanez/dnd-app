@@ -32,6 +32,12 @@ function ClaseCard({ clase, seleccionada, onClick }) {
   );
 }
 
+// Referencia de página al manual (para leer el texto completo en el libro propio)
+function PaginaRef({ pagina }) {
+  if (!pagina) return null
+  return <span className="rasgo-item__pagina" title="Texto completo en el Manual del Jugador 2024">p. {pagina}</span>
+}
+
 function RasgoItem({ rasgo }) {
   if (rasgo.esASI) {
     return (
@@ -39,6 +45,7 @@ function RasgoItem({ rasgo }) {
         <span className="rasgo-badge rasgo-badge--asi">🌟 ASI</span>
         <strong className="rasgo-item__nombre">{rasgo.nombre}.</strong>{' '}
         <TextoTruncado texto={rasgo.desc} className="rasgo-item__desc" />
+        <PaginaRef pagina={rasgo.pagina} />
       </li>
     )
   }
@@ -48,6 +55,7 @@ function RasgoItem({ rasgo }) {
         <span className="rasgo-badge rasgo-badge--sub">🔱 Subclase</span>
         <strong className="rasgo-item__nombre">{rasgo.nombre}.</strong>{' '}
         <TextoTruncado texto={rasgo.desc} className="rasgo-item__desc" />
+        <PaginaRef pagina={rasgo.pagina} />
       </li>
     )
   }
@@ -56,6 +64,7 @@ function RasgoItem({ rasgo }) {
       <li className="rasgo-item rasgo-item--subclase-rasgo">
         <strong className="rasgo-item__nombre">{rasgo.nombre}.</strong>{' '}
         <TextoTruncado texto={rasgo.desc} className="rasgo-item__desc" />
+        <PaginaRef pagina={rasgo.pagina} />
       </li>
     )
   }
@@ -63,6 +72,7 @@ function RasgoItem({ rasgo }) {
     <li className="rasgo-item">
       <strong className="rasgo-item__nombre">{rasgo.nombre}.</strong>{' '}
       <TextoTruncado texto={rasgo.desc} className="rasgo-item__desc" />
+      <PaginaRef pagina={rasgo.pagina} />
     </li>
   )
 }
