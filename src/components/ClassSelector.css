@@ -702,3 +702,15 @@
     opacity: .85;
   }
 }
+
+/* Referencia de página al manual junto a cada rasgo */
+.rasgo-item__pagina {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted, #888);
+  opacity: 0.7;
+  white-space: nowrap;
+  vertical-align: baseline;
+}

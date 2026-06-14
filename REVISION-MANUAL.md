@@ -75,7 +75,7 @@ Cada sesión compara rasgos por nivel, dado de golpe, salvaciones, competencias,
 - [x] **B2** `[R ✓] [T ✓]` págs. 58–67 · Bardo (4 colegios; lista de conjuros → F0) — revisado 2026-06-12
 - [x] **B3** `[R ✓] [T ✓]` págs. 68–79 · Brujo (invocaciones, 4 patrones; lista de conjuros → F0) — revisado 2026-06-12
 - [x] **B4** `[R ✓] [T ✓]` págs. 80–89 · Clérigo (4 dominios; lista de conjuros → F0) — revisado 2026-06-12 (sin correcciones)
-- [ ] **B5** págs. 90–101 · Druida (lista de conjuros + 4 círculos)
+- [x] **B5** `[R ✓] [T ✓]` págs. 90–101 · Druida (4 círculos; lista de conjuros → F0) — resumen propio + página 2026-06-13
 - [ ] **B6** págs. 102–111 · Explorador (lista de conjuros + 4 subclases)
 - [ ] **B7** págs. 112–121 · Guerrero (4 subclases)
 - [ ] **B8** págs. 122–135 · Hechicero (metamagia, lista de conjuros, 4 hechicerías)
@@ -109,22 +109,39 @@ Cada sesión compara rasgos por nivel, dado de golpe, salvaciones, competencias,
 ### Bloque G — Apéndices (opcional, según relevancia para la app)
 - [ ] **G1** págs. 360–377 · Ap. C: Glosario de reglas ↔ `src/components/Glossary.jsx`
 
-## Re-transcripción verbatim de B1–B4 (2026-06-13)
+## Cambio de enfoque: resúmenes propios + referencia de página (2026-06-13)
 
-Diego detectó que los rasgos de B1–B4 estaban **condensados/parafraseados**, violando el principio
-rector ("transcripción literal e íntegra, sin resumir"). Se re-transcribieron **verbatim total** (texto
-exacto del manual, sin abreviaturas, con las sub-secciones en su propia línea):
-- **B1 Bárbaro**, **B2 Bardo**, **B3 Brujo**, **B4 Clérigo**: clase base + 4 subclases cada una.
-- Se eliminaron las pseudo-entradas que no son rasgos del manual (notas "Furias: N usos", "Conjuros de
-  nivel X", "Canalizar divinidad: N usos", "Dado bárdico d12"): la progresión ya está descrita dentro del
-  rasgo correspondiente y esos niveles quedan sin entrada, igual que la columna de rasgos del manual.
-- Render: `white-space: pre-line` en `TextoTruncado` y `cs-traits__desc` para respetar los saltos `\n`
-  de las sub-secciones. Verificado en navegador (Furia muestra Resistencia/Daño por furia/Duración en líneas).
-- Pauta guardada en memoria ([[transcripcion-verbatim]]). **Aplicar verbatim de B5 en adelante.**
+**Importante — reemplaza la pauta "verbatim" anterior.** El texto verbatim del manual es material con
+copyright de Wizards of the Coast; reproducirlo a gran escala en la BD no corresponde, ni siquiera para
+uso no comercial. Las **mecánicas/reglas (hechos, números, niveles, dados) no tienen copyright** y son
+lo que la app realmente necesita.
+
+Nuevo criterio para todos los rasgos (clase y subclase), dotes, etc.:
+- `desc`: **resumen propio y conciso de la mecánica**, redactado con palabras propias (no una copia ni un
+  reword menor del libro). Captura qué hace el rasgo, no la prosa de "sabor".
+- `pagina`: número de página del Manual del Jugador 2024 donde está el texto completo, para que cada
+  jugador lo lea en su propio libro. Se muestra como "p. N" junto al rasgo (`PaginaRef` en `ClassSelector`).
+
+Estado de la reescritura:
+- [x] **B1 Bárbaro** (base + 4 sendas), **B2 Bardo** (base + 4 colegios), **B3 Brujo** (base + 28
+  invocaciones + 4 patrones) y **B4 Clérigo** (base + 4 dominios) rehechos con resúmenes propios + página.
+  Verificado: 0 restos verbatim; descripciones ≤ ~540 caracteres (antes ~1600). Helper compartido `ASI`
+  y `donEpico` también pasados a resumen propio. UI: `PaginaRef` muestra "p. N" junto a cada rasgo.
+- De **B5 en adelante**: aplicar directamente este criterio (resumen propio de la mecánica + `pagina`).
 
 ## Hallazgos
 
 Formato: `- [ ] (sesión) [R|T] pág. X — descripción — archivo:línea — severidad`
+
+### Sesión B5 — Druida (págs. 90–101)
+
+**Verificado (mecánicas ✓):** los 20 niveles de rasgos coinciden con la estructura del manual
+(Lanzamiento de conjuros, Druídico, Orden primigenia Guardián/Naturalista, Compañero salvaje, Forma
+salvaje y sus mejoras de valor de desafío 1/4→1/2→1 y vuelo, Resurgimiento salvaje, Furia elemental y su
+mejora, Conjurar como bestia, Archidruida). Niveles de subclase 3/6/10/14. Los 4 círculos (Luna, Tierra,
+Estrellas, Mar) con sus rasgos correctos; las listas de conjuros de círculo coinciden con
+`CONJUROS_SUBCLASE` (luna, tierra por terreno, mar; estrellas no tiene lista). Lista general → **F0**.
+Escrito como **resumen propio + página** (sin texto del manual). **Sin hallazgos de reglas.**
 
 ### Re-auditoría de multiclase (págs. 44–45) — 2026-06-12
 
