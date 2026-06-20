@@ -576,81 +576,85 @@ export const CLASES = [
       {
         id: 'acechador',
         nombre: 'Acechador en la Penumbra',
-        desc: 'Los acechadores en la penumbra están familiarizados con los lugares más oscuros y utilizan magia procedente del Páramo Sombrío para combatir a los enemigos que se ocultan en las tinieblas.',
+        desc: 'Explorador que recurre a la magia de las sombras del Páramo Sombrío para emboscar y combatir a sus enemigos en la oscuridad.',
+        pagina: 106,
         rasgosNivel: {
           3: [
-            { nombre: 'Conjuros de acechador en la penumbra', desc: 'Conjuros siempre preparados según nivel: Lv3 Disfrazarse, Lv5 Truco de la cuerda, Lv9 Terror, Lv13 Invisibilidad mejorada, Lv17 Apariencia.' },
-            { nombre: 'Emboscador pavoroso', desc: 'Tres beneficios. Iniciativa: sumas tu mod. SAB a la tirada de iniciativa. Golpe pavoroso: al acertar con un arma, puedes infligir 2d6 de daño psíquico adicional (una vez por turno; usos = mod. SAB, mín. 1; recuperas tras descanso largo). Salto emboscador: en tu primer turno de cada combate, tu velocidad aumenta 3 m hasta el final de ese turno.' },
-            { nombre: 'Visión en la umbra', desc: 'Visión en la oscuridad hasta 18 m (o +18 m si ya la tenías). Mientras estés en oscuridad total, tienes el estado invisible frente a criaturas que dependan de visión en la oscuridad para verte.' },
+            { nombre: 'Conjuros de acechador en la penumbra', pagina: 106, desc: 'Conjuros siempre preparados según nivel: Lv3 Disfrazarse, Lv5 Truco de la cuerda, Lv9 Terror, Lv13 Invisibilidad mejorada, Lv17 Apariencia.' },
+            { nombre: 'Emboscador pavoroso', pagina: 106, desc: 'Tres beneficios. Iniciativa: sumas tu mod. SAB a la tirada de iniciativa. Golpe pavoroso: al acertar con un arma, puedes infligir 2d6 de daño psíquico adicional (una vez por turno; usos = mod. SAB, mín. 1; recuperas tras descanso largo). Salto emboscador: en tu primer turno de cada combate, tu velocidad aumenta 3 m hasta el final de ese turno.' },
+            { nombre: 'Visión en la umbra', pagina: 106, desc: 'Visión en la oscuridad hasta 18 m (o +18 m si ya la tenías). Mientras estés en oscuridad total, tienes el estado invisible frente a criaturas que dependan de visión en la oscuridad para verte.' },
           ],
           7: [
-            { nombre: 'Mente de hierro', desc: 'Ganas competencia en tiradas de salvación de Sabiduría. Si ya la tienes, ganas competencia en Inteligencia o Carisma (a tu elección).' },
+            { nombre: 'Mente de hierro', pagina: 107, desc: 'Ganas competencia en tiradas de salvación de Sabiduría. Si ya la tienes, ganas competencia en Inteligencia o Carisma (a tu elección).' },
           ],
           11: [
-            { nombre: 'Oleada del acechador', desc: 'El daño psíquico de tu golpe pavoroso aumenta a 2d8. Cuando uses el golpe pavoroso, puedes elegir un efecto adicional: Ataque súbito (ataca a otra criatura a 1,5 m del objetivo) o Terror masivo (el objetivo y criaturas a 3 m fallan TS de SAB o quedan asustadas hasta tu siguiente turno).' },
+            { nombre: 'Oleada del acechador', pagina: 107, desc: 'El daño psíquico de tu golpe pavoroso aumenta a 2d8. Cuando uses el golpe pavoroso, puedes elegir un efecto adicional: Ataque súbito (ataca a otra criatura a 1,5 m del objetivo) o Terror masivo (el objetivo y criaturas a 3 m fallan TS de SAB o quedan asustadas hasta tu siguiente turno).' },
           ],
           15: [
-            { nombre: 'Esquiva de las sombras', desc: 'Cuando una criatura haga una tirada de ataque contra ti, puedes usar una reacción para imponerle desventaja. Luego, tanto si acierta como si no, puedes teletransportarte hasta 9 m a un espacio sin ocupar que puedas ver.' },
+            { nombre: 'Esquiva de las sombras', pagina: 107, desc: 'Cuando una criatura haga una tirada de ataque contra ti, puedes usar una reacción para imponerle desventaja. Luego, tanto si acierta como si no, puedes teletransportarte hasta 9 m a un espacio sin ocupar que puedas ver.' },
           ],
         },
       },
       {
         id: 'cazador',
         nombre: 'Cazador',
-        desc: 'Protege la naturaleza y a la gente contra la destrucción. Acechas a tus presas en las tierras salvajes y empleas tus habilidades para proteger contra las fuerzas que buscan destruir.',
+        desc: 'Explorador que perfecciona sus técnicas de caza para proteger la naturaleza y a la gente frente a las fuerzas que buscan destruirlas.',
+        pagina: 107,
         rasgosNivel: {
           3: [
-            { nombre: 'El cazador y la presa', desc: 'Elige una opción (puedes cambiarla tras descanso corto/largo): Azote de colosos (cuando aciertas a una criatura que no tiene todos sus PG, inflige 1d8 de daño adicional, una vez por turno) o Destructor de hordas (una vez por turno, puedes hacer un segundo ataque contra una criatura distinta a 1,5 m del objetivo si no la has atacado este turno).' },
-            { nombre: 'Sabiduría del cazador', desc: 'Mientras una criatura tenga tu marca del cazador, sabes si tiene inmunidades, resistencias o vulnerabilidades y cuáles son.' },
+            { nombre: 'El cazador y la presa', pagina: 107, desc: 'Elige una opción (puedes cambiarla tras descanso corto/largo): Azote de colosos (cuando aciertas a una criatura que no tiene todos sus PG, inflige 1d8 de daño adicional, una vez por turno) o Destructor de hordas (una vez por turno, puedes hacer un segundo ataque contra una criatura distinta a 1,5 m del objetivo si no la has atacado este turno).' },
+            { nombre: 'Sabiduría del cazador', pagina: 107, desc: 'Mientras una criatura tenga tu marca del cazador, sabes si tiene inmunidades, resistencias o vulnerabilidades y cuáles son.' },
           ],
           7: [
-            { nombre: 'Tácticas defensivas', desc: 'Elige una opción (puedes cambiarla tras descanso corto/largo): Defensa contra ataques múltiples (cuando una criatura te acierta, tiene desventaja en sus demás ataques contra ti ese turno) o Escapar de la horda (los ataques de oportunidad tienen desventaja contra ti).' },
+            { nombre: 'Tácticas defensivas', pagina: 108, desc: 'Elige una opción (puedes cambiarla tras descanso corto/largo): Defensa contra ataques múltiples (cuando una criatura te acierta, tiene desventaja en sus demás ataques contra ti ese turno) o Escapar de la horda (los ataques de oportunidad tienen desventaja contra ti).' },
           ],
           11: [
-            { nombre: 'El cazador experto y la presa', desc: 'Una vez por turno, cuando inflijas daño a una criatura marcada con marca del cazador, también puedes infligir el daño adicional del conjuro a una criatura distinta que puedas ver a 9 m o menos de la primera.' },
+            { nombre: 'El cazador experto y la presa', pagina: 108, desc: 'Una vez por turno, cuando inflijas daño a una criatura marcada con marca del cazador, también puedes infligir el daño adicional del conjuro a una criatura distinta que puedas ver a 9 m o menos de la primera.' },
           ],
           15: [
-            { nombre: 'Defensa de cazador experto', desc: 'Cuando recibes daño, puedes usar una reacción para concederte resistencia a ese tipo de daño y cualquier otro daño del mismo tipo hasta el final de ese turno.' },
+            { nombre: 'Defensa de cazador experto', pagina: 108, desc: 'Cuando recibes daño, puedes usar una reacción para concederte resistencia a ese tipo de daño y cualquier otro daño del mismo tipo hasta el final de ese turno.' },
           ],
         },
       },
       {
         id: 'errante_feerico',
         nombre: 'Errante Feérico',
-        desc: 'Un aura mística te envuelve gracias a la bendición de los Parajes Feéricos. Tu risa alegre ilumina los corazones de los oprimidos y tu destreza marcial infunde terror a tus enemigos.',
+        desc: 'Explorador tocado por la magia de los Parajes Feéricos, que mezcla el júbilo y la furia feéricos con su destreza marcial.',
+        pagina: 108,
         rasgosNivel: {
           3: [
-            { nombre: 'Conjuros de errante feérico', desc: 'Conjuros siempre preparados según nivel: Lv3 Hechizar persona, Lv5 Paso brumoso, Lv9 Invocar feérico, Lv13 Puerta dimensional, Lv17 Engañar. También eliges una dádiva de los Parajes Feéricos (efecto cosmético aleatorio o elegido).' },
-            { nombre: 'Glamur sobrenatural', desc: 'Cuando hagas una prueba de Carisma, sumas tu modificador de SAB (mínimo +1). Además, ganas competencia en Engaño, Interpretación o Persuasión (a tu elección).' },
-            { nombre: 'Golpes pavorosos', desc: 'Cuando aciertas con un arma, puedes infligir 1d4 de daño psíquico adicional (una vez por turno). Aumenta a 1d6 en nivel 11.' },
+            { nombre: 'Conjuros de errante feérico', pagina: 108, desc: 'Conjuros siempre preparados según nivel: Lv3 Hechizar persona, Lv5 Paso brumoso, Lv9 Invocar feérico, Lv13 Puerta dimensional, Lv17 Engañar. También eliges una dádiva de los Parajes Feéricos (efecto cosmético aleatorio o elegido).' },
+            { nombre: 'Glamur sobrenatural', pagina: 109, desc: 'Cuando hagas una prueba de Carisma, sumas tu modificador de SAB (mínimo +1). Además, ganas competencia en Engaño, Interpretación o Persuasión (a tu elección).' },
+            { nombre: 'Golpes pavorosos', pagina: 109, desc: 'Cuando aciertas con un arma, puedes infligir 1d4 de daño psíquico adicional (una vez por turno). Aumenta a 1d6 en nivel 11.' },
           ],
           7: [
-            { nombre: 'Giro seductor', desc: 'Ventaja en TS para evitar/terminar los estados asustado o hechizado. Cuando tú u otra criatura a 36 m tenga éxito en esa TS, puedes usar una reacción para obligar a otra criatura a 36 m a hacer una TS de SAB: si la falla, queda asustada o hechizada (a tu elección) 1 minuto (TS al final de cada turno para terminar).' },
+            { nombre: 'Giro seductor', pagina: 109, desc: 'Ventaja en TS para evitar/terminar los estados asustado o hechizado. Cuando tú u otra criatura a 36 m tenga éxito en esa TS, puedes usar una reacción para obligar a otra criatura a 36 m a hacer una TS de SAB: si la falla, queda asustada o hechizada (a tu elección) 1 minuto (TS al final de cada turno para terminar).' },
           ],
           11: [
-            { nombre: 'Refuerzos feéricos', desc: 'Puedes lanzar invocar feérico sin componentes materiales, y una vez gratis por descanso largo sin espacio. Cuando lo lances, puedes modificarlo para que no requiera concentración (duración: 1 minuto).' },
+            { nombre: 'Refuerzos feéricos', pagina: 109, desc: 'Puedes lanzar invocar feérico sin componentes materiales, y una vez gratis por descanso largo sin espacio. Cuando lo lances, puedes modificarlo para que no requiera concentración (duración: 1 minuto).' },
           ],
           15: [
-            { nombre: 'Errante brumoso', desc: 'Puedes lanzar paso brumoso sin espacio de conjuro (usos = mod. SAB, mín. 1; recuperas tras descanso largo). Cuando lo lances, puedes traer a una criatura voluntaria a 1,5 m de ti al espacio de destino.' },
+            { nombre: 'Errante brumoso', pagina: 109, desc: 'Puedes lanzar paso brumoso sin espacio de conjuro (usos = mod. SAB, mín. 1; recuperas tras descanso largo). Cuando lo lances, puedes traer a una criatura voluntaria a 1,5 m de ti al espacio de destino.' },
           ],
         },
       },
       {
         id: 'bestias',
         nombre: 'Señor de las Bestias',
-        desc: 'Un señor de las bestias forma un vínculo místico con un animal especial y recurre a la magia primigenia y a una profunda conexión con el mundo natural.',
+        desc: 'Explorador que forja un vínculo místico con una bestia primigenia y combate codo con codo con ella gracias a su magia natural.',
+        pagina: 110,
         rasgosNivel: {
           3: [
-            { nombre: 'Compañero primigenio', desc: 'Invocas mágicamente una bestia primigenia. Elige un perfil: bestia de los mares, de tierra firme o del cielo. La bestia actúa en tu turno: se mueve y reacciona sola, pero solo hace la acción de esquivar salvo que uses una acción adicional para ordenarle otra acción (o sacrifiques un ataque para ordenarle golpe de bestia). Tras descanso largo, puedes invocar una bestia diferente. Si muere, puedes gastar una acción de magia + espacio de conjuro para revivirla.' },
+            { nombre: 'Compañero primigenio', pagina: 110, desc: 'Invocas mágicamente una bestia primigenia. Elige un perfil: bestia de los mares, de tierra firme o del cielo. La bestia actúa en tu turno: se mueve y reacciona sola, pero solo hace la acción de esquivar salvo que uses una acción adicional para ordenarle otra acción (o sacrifiques un ataque para ordenarle golpe de bestia). Tras descanso largo, puedes invocar una bestia diferente. Si muere, puedes gastar una acción de magia + espacio de conjuro para revivirla.' },
           ],
           7: [
-            { nombre: 'Entrenamiento excepcional', desc: 'Cuando uses una acción adicional para ordenarle a la bestia una acción, también puede usar su acción adicional para ayudar, correr, destrabarse o esquivar. Además, cuando acierta, puedes elegir que inflija daño de fuerza en lugar de su tipo normal.' },
+            { nombre: 'Entrenamiento excepcional', pagina: 110, desc: 'Cuando uses una acción adicional para ordenarle a la bestia una acción, también puede usar su acción adicional para ayudar, correr, destrabarse o esquivar. Además, cuando acierta, puedes elegir que inflija daño de fuerza en lugar de su tipo normal.' },
           ],
           11: [
-            { nombre: 'Furia bestial', desc: 'Cuando le ordenes a la bestia que realice la acción de golpe de bestia, puede usarla dos veces. Además, la primera vez por turno que acierte a una criatura marcada con marca del cazador, inflige daño de fuerza adicional igual al daño adicional del conjuro.' },
+            { nombre: 'Furia bestial', pagina: 110, desc: 'Cuando le ordenes a la bestia que realice la acción de golpe de bestia, puede usarla dos veces. Además, la primera vez por turno que acierte a una criatura marcada con marca del cazador, inflige daño de fuerza adicional igual al daño adicional del conjuro.' },
           ],
           15: [
-            { nombre: 'Compartir conjuros', desc: 'Cuando lances un conjuro que te haga objetivo a ti, puedes hacer que también afecte a tu bestia primigenia si se encuentra a 9 m o menos de ti.' },
+            { nombre: 'Compartir conjuros', pagina: 110, desc: 'Cuando lances un conjuro que te haga objetivo a ti, puedes hacer que también afecte a tu bestia primigenia si se encuentra a 9 m o menos de ti.' },
           ],
         },
       },
@@ -680,93 +684,97 @@ export const CLASES = [
       {
         id: 'caballero_arcano',
         nombre: 'Caballero Arcano',
-        desc: 'Los caballeros arcanos combinan la maestría marcial típica de los guerreros con el estudio minucioso de la magia. Sus conjuros complementan y amplían sus habilidades de combate.',
+        desc: 'Guerrero que refuerza su maestría marcial con magia arcana de la lista de mago para protegerse y golpear a varios enemigos a la vez.',
+        pagina: 115,
         rasgosNivel: {
           3: [
-            { nombre: 'Lanzamiento de conjuros', desc: 'Conoces 2 trucos de la lista de mago (+1 en nivel 10). Preparas 3 conjuros de mago de nivel 1 para empezar; el total crece según la tabla. Al subir de nivel puedes sustituir un conjuro. Aptitud mágica: Inteligencia. Puedes usar un canalizador arcano.' },
-            { nombre: 'Vínculo de guerra', desc: 'Aprendes un ritual de 1 hora (puede realizarse en descanso corto) que te vincula mágicamente a un arma. No podrán desarmarte de ella salvo que estés incapacitado. Si está en el mismo plano, puedes invocarla a tu mano como acción adicional. Puedes tener hasta dos armas vinculadas; si te vinculas a una tercera, debes romper el vínculo con una de las otras.' },
+            { nombre: 'Lanzamiento de conjuros', pagina: 115, desc: 'Conoces 2 trucos de la lista de mago (+1 en nivel 10). Preparas 3 conjuros de mago de nivel 1 para empezar; el total crece según la tabla. Al subir de nivel puedes sustituir un conjuro. Aptitud mágica: Inteligencia. Puedes usar un canalizador arcano.' },
+            { nombre: 'Vínculo de guerra', pagina: 117, desc: 'Aprendes un ritual de 1 hora (puede realizarse en descanso corto) que te vincula mágicamente a un arma. No podrán desarmarte de ella salvo que estés incapacitado. Si está en el mismo plano, puedes invocarla a tu mano como acción adicional. Puedes tener hasta dos armas vinculadas; si te vinculas a una tercera, debes romper el vínculo con una de las otras.' },
           ],
           7: [
-            { nombre: 'Magia de guerra', desc: 'Cuando uses la acción de atacar, puedes sustituir uno de los ataques por el lanzamiento de un truco de mago con tiempo de lanzamiento de una acción.' },
+            { nombre: 'Magia de guerra', pagina: 117, desc: 'Cuando uses la acción de atacar, puedes sustituir uno de los ataques por el lanzamiento de un truco de mago con tiempo de lanzamiento de una acción.' },
           ],
           10: [
-            { nombre: 'Golpe sobrenatural', desc: 'Cuando aciertes con un ataque con arma, la criatura tiene desventaja en la siguiente TS contra un conjuro que lances antes del final de tu siguiente turno.' },
+            { nombre: 'Golpe sobrenatural', pagina: 117, desc: 'Cuando aciertes con un ataque con arma, la criatura tiene desventaja en la siguiente TS contra un conjuro que lances antes del final de tu siguiente turno.' },
           ],
           15: [
-            { nombre: 'Carga arcana', desc: 'Cuando uses Acción súbita, puedes teletransportarte hasta 9 m a un espacio sin ocupar que puedas ver (antes o después de la acción adicional).' },
+            { nombre: 'Carga arcana', pagina: 117, desc: 'Cuando uses Acción súbita, puedes teletransportarte hasta 9 m a un espacio sin ocupar que puedas ver (antes o después de la acción adicional).' },
           ],
           18: [
-            { nombre: 'Magia de guerra mejorada', desc: 'Cuando uses la acción de atacar, puedes sustituir dos de los ataques por el lanzamiento de un conjuro de mago de nivel 1 o 2 con tiempo de lanzamiento de una acción.' },
+            { nombre: 'Magia de guerra mejorada', pagina: 117, desc: 'Cuando uses la acción de atacar, puedes sustituir dos de los ataques por el lanzamiento de un conjuro de mago de nivel 1 o 2 con tiempo de lanzamiento de una acción.' },
           ],
         },
       },
       {
         id: 'campeon',
         nombre: 'Campeón',
-        desc: 'Un campeón se centra en desarrollar su destreza marcial en su incansable afán de victoria, combinando entrenamiento riguroso con un estado físico excelente.',
+        desc: 'Guerrero centrado en la excelencia física pura: golpes críticos más frecuentes, gran resistencia y aptitud atlética sobresaliente.',
+        pagina: 117,
         rasgosNivel: {
           3: [
-            { nombre: 'Atleta sobresaliente', desc: 'Tienes ventaja en las tiradas de iniciativa y en las pruebas de Fuerza (Atletismo). Además, justo después de causar un crítico, puedes moverte hasta la mitad de tu velocidad sin provocar ataques de oportunidad.' },
-            { nombre: 'Crítico mejorado', desc: 'Tus tiradas de ataque con armas y tus ataques sin armas pueden causar críticos con un resultado de 19 o 20 en el d20.' },
+            { nombre: 'Atleta sobresaliente', pagina: 117, desc: 'Tienes ventaja en las tiradas de iniciativa y en las pruebas de Fuerza (Atletismo). Además, justo después de causar un crítico, puedes moverte hasta la mitad de tu velocidad sin provocar ataques de oportunidad.' },
+            { nombre: 'Crítico mejorado', pagina: 118, desc: 'Tus tiradas de ataque con armas y tus ataques sin armas pueden causar críticos con un resultado de 19 o 20 en el d20.' },
           ],
           7: [
-            { nombre: 'Estilo de combate adicional', desc: 'Obtienes otra dote de estilo de combate de tu elección.' },
+            { nombre: 'Estilo de combate adicional', pagina: 118, desc: 'Obtienes otra dote de estilo de combate de tu elección.' },
           ],
           10: [
-            { nombre: 'Guerrero heroico', desc: 'Durante un combate, puedes otorgarte inspiración heroica siempre que empieces tu turno sin ella.' },
+            { nombre: 'Guerrero heroico', pagina: 118, desc: 'Durante un combate, puedes otorgarte inspiración heroica siempre que empieces tu turno sin ella.' },
           ],
           15: [
-            { nombre: 'Crítico superior', desc: 'Tus tiradas de ataque con armas y tus ataques sin armas pueden causar críticos con un resultado de 18, 19 o 20 en el d20.' },
+            { nombre: 'Crítico superior', pagina: 118, desc: 'Tus tiradas de ataque con armas y tus ataques sin armas pueden causar críticos con un resultado de 18, 19 o 20 en el d20.' },
           ],
           18: [
-            { nombre: 'Superviviente', desc: 'Alcanzas la cumbre de la resistencia en batalla. Desafiar a la muerte: ventaja en tiradas de salvación contra muerte; si sacas 18–20, obtienes el beneficio de sacar 20. Mejoría heroica: al principio de cada turno, recuperas 5 + mod. CON PG si estás maltrecho y tienes al menos 1 PG.' },
+            { nombre: 'Superviviente', pagina: 118, desc: 'Alcanzas la cumbre de la resistencia en batalla. Desafiar a la muerte: ventaja en tiradas de salvación contra muerte; si sacas 18–20, obtienes el beneficio de sacar 20. Mejoría heroica: al principio de cada turno, recuperas 5 + mod. CON PG si estás maltrecho y tienes al menos 1 PG.' },
           ],
         },
       },
       {
         id: 'psiconico',
         nombre: 'Guerrero Psiónico',
-        desc: 'Los guerreros psiónicos despiertan el poder de sus mentes para mejorar sus capacidades físicas. Emplean el poder psiónico para imbuir sus ataques, arremeter con energía telequinética y crear barreras de fuerza mental.',
+        desc: 'Guerrero que canaliza energía psiónica para imbuir sus ataques, moverse con telequinesis y crear barreras de fuerza mental.',
+        pagina: 118,
         rasgosNivel: {
           3: [
-            { nombre: 'Poder psiónico', desc: 'Tienes dados de energía psiónica (4d6 en nivel 3; d8 en nivel 5; d10 en nivel 11; d12 en nivel 17; cantidad también escala). Recuperas 1 dado tras descanso corto y todos tras descanso largo. Tres usos: Campo protector (reacción: gasta un dado para reducir daño en resultado + mod. INT); Golpe psiónico (tras acertar, gasta un dado para infligir daño de fuerza = resultado + mod. INT); Movimiento telequinético (acción de magia: mueves objeto/criatura voluntaria hasta 9 m; gratis una vez por descanso corto/largo, o gasta un dado).' },
+            { nombre: 'Poder psiónico', pagina: 118, desc: 'Tienes dados de energía psiónica (4d6 en nivel 3; d8 en nivel 5; d10 en nivel 11; d12 en nivel 17; cantidad también escala). Recuperas 1 dado tras descanso corto y todos tras descanso largo. Tres usos: Campo protector (reacción: gasta un dado para reducir daño en resultado + mod. INT); Golpe psiónico (tras acertar, gasta un dado para infligir daño de fuerza = resultado + mod. INT); Movimiento telequinético (acción de magia: mueves objeto/criatura voluntaria hasta 9 m; gratis una vez por descanso corto/largo, o gasta un dado).' },
           ],
           7: [
-            { nombre: 'Adepto telequinético', desc: 'Empujón telequinético: cuando inflijas daño con golpe psiónico, el objetivo hace TS de FUE (CD 8 + mod. INT + BC) o queda derribado o se desplaza 3 m. Salto psiónico: acción adicional para obtener velocidad de vuelo = doble de tu velocidad hasta el final del turno (una vez por descanso corto/largo, o gasta un dado).' },
+            { nombre: 'Adepto telequinético', pagina: 119, desc: 'Empujón telequinético: cuando inflijas daño con golpe psiónico, el objetivo hace TS de FUE (CD 8 + mod. INT + BC) o queda derribado o se desplaza 3 m. Salto psiónico: acción adicional para obtener velocidad de vuelo = doble de tu velocidad hasta el final del turno (una vez por descanso corto/largo, o gasta un dado).' },
           ],
           10: [
-            { nombre: 'Mente robusta', desc: 'Tienes resistencia al daño psíquico. Si comienzas tu turno con el estado asustado o hechizado, puedes gastar un dado de energía psiónica para poner fin a todos esos efectos.' },
+            { nombre: 'Mente robusta', pagina: 119, desc: 'Tienes resistencia al daño psíquico. Si comienzas tu turno con el estado asustado o hechizado, puedes gastar un dado de energía psiónica para poner fin a todos esos efectos.' },
           ],
           15: [
-            { nombre: 'Bastión de fuerza', desc: 'Como acción adicional, eliges hasta mod. INT criaturas (mín. 1) a 9 m de ti. Cada criatura elegida tiene cobertura media durante 1 minuto o hasta que estés incapacitado. Una vez por descanso largo, o gasta un dado para restablecer el uso.' },
+            { nombre: 'Bastión de fuerza', pagina: 119, desc: 'Como acción adicional, eliges hasta mod. INT criaturas (mín. 1) a 9 m de ti. Cada criatura elegida tiene cobertura media durante 1 minuto o hasta que estés incapacitado. Una vez por descanso largo, o gasta un dado para restablecer el uso.' },
           ],
           18: [
-            { nombre: 'Maestro telequinético', desc: 'Siempre tienes preparado el conjuro telequinesis. Puedes lanzarlo sin espacio ni componentes (aptitud: INT) una vez por descanso largo (o gasta un dado). Mientras concentres el conjuro, puedes realizar un ataque con un arma como acción adicional en cada uno de tus turnos.' },
+            { nombre: 'Maestro telequinético', pagina: 119, desc: 'Siempre tienes preparado el conjuro telequinesis. Puedes lanzarlo sin espacio ni componentes (aptitud: INT) una vez por descanso largo (o gasta un dado). Mientras concentres el conjuro, puedes realizar un ataque con un arma como acción adicional en cada uno de tus turnos.' },
           ],
         },
       },
       {
         id: 'maestro_combate',
         nombre: 'Maestro del Combate',
-        desc: 'Los maestros del combate estudian el arte de la batalla y aprenden técnicas marciales transmitidas generación tras generación, combinando habilidades de combate con el estudio académico.',
+        desc: 'Guerrero que domina maniobras de combate alimentadas por dados de supremacía, controlando el campo de batalla con técnica y táctica.',
+        pagina: 119,
         rasgosNivel: {
           3: [
-            { nombre: 'Estudioso de la guerra', desc: 'Ganas competencia con un tipo de herramientas de artesano de tu elección y con una habilidad de tu elección de la lista de guerrero.' },
-            { nombre: 'Supremacía en combate', desc: 'Aprendes 3 maniobras de tu elección (solo una por ataque). 4 dados de supremacía d8; recuperas todos tras descanso corto o largo. CD de maniobra = 8 + mod. FUE o DES + BC. Las maniobras incluyen: Arremetida, Ataque amenazador, Ataque de barrido, Ataque preciso, Ataque provocador, Ataque y derribo, Ataque y desarme, Ataque y distracción, Ataque y empujón, Ataque y maniobra, Cambio de posición ventajoso, Contraataque, Emboscada, Evaluación táctica, Finta, Juego de pies evasivo, Orden de ataque, Parada, Presencia imponente y otros.' },
+            { nombre: 'Estudioso de la guerra', pagina: 119, desc: 'Ganas competencia con un tipo de herramientas de artesano de tu elección y con una habilidad de tu elección de la lista de guerrero.' },
+            { nombre: 'Supremacía en combate', pagina: 119, desc: 'Aprendes 3 maniobras de tu elección (solo una por ataque). 4 dados de supremacía d8; recuperas todos tras descanso corto o largo. CD de maniobra = 8 + mod. FUE o DES + BC. Las maniobras incluyen: Arremetida, Ataque amenazador, Ataque de barrido, Ataque preciso, Ataque provocador, Ataque y derribo, Ataque y desarme, Ataque y distracción, Ataque y empujón, Ataque y maniobra, Cambio de posición ventajoso, Contraataque, Emboscada, Evaluación táctica, Finta, Juego de pies evasivo, Orden de ataque, Parada, Presencia imponente y Reagrupar.' },
           ],
           7: [
-            { nombre: 'Conoce a tu enemigo', desc: 'Como acción adicional, sabes si una criatura a 9 m tiene inmunidades, resistencias o vulnerabilidades. Una vez por descanso largo, o gasta un dado de supremacía para restablecer el uso.' },
-            { nombre: 'Supremacía en combate (7)', desc: 'Aprendes 2 maniobras adicionales y obtienes un 5.º dado de supremacía.' },
+            { nombre: 'Conoce a tu enemigo', pagina: 120, desc: 'Como acción adicional, sabes si una criatura a 9 m tiene inmunidades, resistencias o vulnerabilidades. Una vez por descanso largo, o gasta un dado de supremacía para restablecer el uso.' },
+            { nombre: 'Supremacía en combate (7)', pagina: 120, desc: 'Aprendes 2 maniobras adicionales y obtienes un 5.º dado de supremacía.' },
           ],
           10: [
-            { nombre: 'Supremacía en combate mejorada', desc: 'Tu dado de supremacía se convierte en un d10. Aprendes 2 maniobras adicionales.' },
+            { nombre: 'Supremacía en combate mejorada', pagina: 120, desc: 'Tu dado de supremacía se convierte en un d10. Aprendes 2 maniobras adicionales.' },
           ],
           15: [
-            { nombre: 'Incansable', desc: 'Una vez por turno, cuando uses una maniobra, puedes tirar 1d8 y usar el resultado en vez de gastar un dado de supremacía.' },
-            { nombre: 'Supremacía en combate (15)', desc: 'Aprendes 2 maniobras adicionales y obtienes un 6.º dado de supremacía.' },
+            { nombre: 'Incansable', pagina: 120, desc: 'Una vez por turno, cuando uses una maniobra, puedes tirar 1d8 y usar el resultado en vez de gastar un dado de supremacía.' },
+            { nombre: 'Supremacía en combate (15)', pagina: 120, desc: 'Aprendes 2 maniobras adicionales y obtienes un 6.º dado de supremacía.' },
           ],
           18: [
-            { nombre: 'Supremacía en combate definitiva', desc: 'Tu dado de supremacía se convierte en un d12.' },
+            { nombre: 'Supremacía en combate definitiva', pagina: 120, desc: 'Tu dado de supremacía se convierte en un d12.' },
           ],
         },
       },

@@ -76,7 +76,8 @@ Cada sesión compara rasgos por nivel, dado de golpe, salvaciones, competencias,
 - [x] **B3** `[R ✓] [T ✓]` págs. 68–79 · Brujo (invocaciones, 4 patrones; lista de conjuros → F0) — revisado 2026-06-12
 - [x] **B4** `[R ✓] [T ✓]` págs. 80–89 · Clérigo (4 dominios; lista de conjuros → F0) — revisado 2026-06-12 (sin correcciones)
 - [x] **B5** `[R ✓] [T ✓]` págs. 90–101 · Druida (4 círculos; lista de conjuros → F0) — resumen propio + página 2026-06-13
-- [ ] **B6** págs. 102–111 · Explorador (lista de conjuros + 4 subclases)
+- [x] **B6** `[R ✓] [T ✓]` págs. 103–111 · Explorador (4 subclases; lista de conjuros → F0) — resumen propio + página 2026-06-14
+- [x] **B7** `[R ✓] [T ✓]` págs. 113–121 · Guerrero (4 subclases; maniobras del Maestro del Combate) — resumen propio + página 2026-06-14
 - [ ] **B7** págs. 112–121 · Guerrero (4 subclases)
 - [ ] **B8** págs. 122–135 · Hechicero (metamagia, lista de conjuros, 4 hechicerías)
 - [ ] **B9** págs. 136–147 · Mago (lista de conjuros + 4 subclases)
@@ -142,6 +143,27 @@ mejora, Conjurar como bestia, Archidruida). Niveles de subclase 3/6/10/14. Los 4
 Estrellas, Mar) con sus rasgos correctos; las listas de conjuros de círculo coinciden con
 `CONJUROS_SUBCLASE` (luna, tierra por terreno, mar; estrellas no tiene lista). Lista general → **F0**.
 Escrito como **resumen propio + página** (sin texto del manual). **Sin hallazgos de reglas.**
+
+### Sesión B6 — Explorador (págs. 103–111)
+
+**Verificado (mecánicas ✓):** los 20 niveles coinciden con la estructura del manual (Lanzamiento de
+conjuros semilanzador, Enemigo predilecto, Maestría con armas, Estilo de combate con opción Guerrero
+druídico, Explorador hábil, Ataque adicional, Errante, Pericia, Infatigable, Cazador persistente, Velo de
+la naturaleza, Cazador preciso, Sentidos salvajes, Azote de enemigos d6→d10). Subclase en nivel 3, rasgos
+de subclase en 7/11/15. Las 4 subclases (Acechador en la Penumbra, Cazador, Errante Feérico, Señor de las
+Bestias) con sus rasgos correctos; `errante_feerico` ya estaba renombrado para no chocar en el seed. Lista
+general de conjuros → **F0**. Escrito como **resumen propio + página** (sin texto del manual). **Sin
+hallazgos de reglas.**
+
+### Sesión B7 — Guerrero (págs. 113–121)
+
+**Verificado (mecánicas ✓):** los 20 niveles coinciden con la estructura del manual (Estilo de combate,
+Maestría con armas 3→6, Tomar aliento 2→4, Acción súbita, Mente táctica, Ataque adicional, Desplazamiento
+táctico, Indómito 1→3, Maestro táctico, Dos/Tres ataques adicionales, Ataques estudiados). Subclase en
+nivel 3, rasgos de subclase en 7/10/15/18. Las 4 subclases (Caballero Arcano semilanzador de mago, Campeón,
+Guerrero Psiónico con dados de energía, Maestro del Combate con dados de supremacía) con sus rasgos
+correctos; las maniobras se listan por nombre dentro de Supremacía en combate. Escrito como **resumen
+propio + página** (sin texto del manual). **Sin hallazgos de reglas.**
 
 ### Re-auditoría de multiclase (págs. 44–45) — 2026-06-12
 
